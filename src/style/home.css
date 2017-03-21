@@ -2,10 +2,29 @@
     /*home*/
     .home-page {
         height: 100%;
-        background: -webkit-linear-gradient(60deg, #f05ea9, #5c98fc); /* Safari 5.1 - 6.0 */
-        background: -o-linear-gradient(60deg, #f05ea9, #5c98fc); /* Opera 11.1 - 12.0 */
-        background: -moz-linear-gradient(60deg, #f05ea9, #5c98fc); /* Firefox 3.6 - 15 */
-        background: linear-gradient(30deg, #f05ea9, #5c98fc); /* 标准的语法 */
+        background: -webkit-linear-gradient(45deg, #FD5EA3, #6E60EA 70%, #5C99FD); /* Safari 5.1 - 6.0 */
+        background: -o-linear-gradient(45deg, #FD5EA3, #6E60EA 70%, #5C99FD); /* Opera 11.1 - 12.0 */
+        background: -moz-linear-gradient(45deg, #FD5EA3, #6E60EA 70%, #5C99FD); /* Firefox 3.6 - 15 */
+        background: linear-gradient(45deg, #FD5EA3, #6E60EA 70%, #5C99FD); /* 标准的语法 */
+    }
+
+    .home-logout {
+        color: white;
+        position: relative;
+        top: 16px;
+        left: 11px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .home-logout i {
+        font-weight: 100;
+    }
+
+    .home-title {
+        font-size: 18px;
+        color: white;
+        margin-top: -7px;
     }
 
     .home-logo {
@@ -13,7 +32,7 @@
     }
 
     .home-logo > img {
-        width: 100px;
+        width: 80px;
     }
 
     .home-project {
@@ -32,7 +51,7 @@
 
     /*按钮*/
     .home-menu {
-        padding: 20px 0px;
+        padding: 10px 0px;
 
     }
     .home-menu > ul {
@@ -48,7 +67,7 @@
         background: #f4effb;
         float: left;
         width: 150px;
-        height: 90px;
+        height: 100px;
         margin: 3px;
         display: block;
         text-align: center;
@@ -59,7 +78,7 @@
     .home-menu > ul > li > a {
         color: #9b9b9b;
         font-size: 20px;
-        line-height: 90px;
+        line-height: 100px;
     }
 
     .home-menu-ico {
