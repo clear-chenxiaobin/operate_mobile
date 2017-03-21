@@ -36,13 +36,13 @@
                 url: '/app',
                 templateUrl: 'pages/app.html'
             })
-            .state('app.online', {
-                url: '/online',
-                templateUrl: 'pages/online.html'
-            })
             .state('app.home', {
                 url: '/home',
                 templateUrl: 'pages/home.html'
+            })
+            .state('app.overview', {
+                url: '/overview',
+                templateUrl: 'pages/overview.html'
             })
     }])
 
