@@ -1,0 +1,69 @@
+@media screen and (max-width: 768px) {
+    /*home*/
+    .home-page {
+        height: 100%;
+        background: -webkit-linear-gradient(60deg, #f05ea9, #5c98fc); /* Safari 5.1 - 6.0 */
+        background: -o-linear-gradient(60deg, #f05ea9, #5c98fc); /* Opera 11.1 - 12.0 */
+        background: -moz-linear-gradient(60deg, #f05ea9, #5c98fc); /* Firefox 3.6 - 15 */
+        background: linear-gradient(30deg, #f05ea9, #5c98fc); /* 标准的语法 */
+    }
+
+    .home-logo {
+        padding: 30px;
+    }
+
+    .home-logo > img {
+        width: 100px;
+    }
+
+    .home-project {
+        padding: 10px;
+    }
+
+    .home-project > select{
+        border-radius: 30px;
+        width: 180px;
+    }
+
+    .home-project > select{
+        text-align: center;
+        padding: 5px 10px;
+    }
+
+    /*按钮*/
+    .home-menu {
+        padding: 20px 0px;
+
+    }
+    .home-menu > ul {
+        position: relative;
+        width: 345px;
+        padding: 16px;
+        text-align: center;
+        margin-left: -172.5px;
+        left: 50%;
+    }
+
+    .home-menu > ul > li {
+        background: #f4effb;
+        float: left;
+        width: 150px;
+        height: 90px;
+        margin: 3px;
+        display: block;
+        text-align: center;
+        border-radius: 5px;
+        box-shadow: 0 0 1px 0.5px rgba(255,255,255,.7);
+    }
+
+    .home-menu > ul > li > a {
+        color: #9b9b9b;
+        font-size: 20px;
+        line-height: 90px;
+    }
+
+    .home-menu-ico {
+        height: 20px;
+        margin-top: -5px;
+    }
+}

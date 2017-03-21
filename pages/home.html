@@ -4,16 +4,23 @@
         <div class="home-title col-lg-6 text-center">运营数据平台</div>
     </div>
     <div class="panel-body">
-        <div class="home-logo">
-
+        <div class="home-logo text-center">
+            <img src="dist/img/logo.png">
         </div>
         <div class="text-center home-project">
             <select>
                 <option>OpenVoD</option>
             </select>
         </div>
-        <div>
-
+        <div class="home-menu">
+            <ul>
+                <li><a ng-click="home.goOverview()"><img class="home-menu-ico" src="dist/img/仪表盘.png">&nbsp;概览</a></li>
+                <li><a ng-click="home.goSpecific()"><img class="home-menu-ico" src="dist/img/具体.png">&nbsp;具体</a></li>
+                <li><a ng-click="home.goEvent()"><img class="home-menu-ico" src="dist/img/折线图.png">&nbsp;事件</a></li>
+                <li><a ng-click="home.goFunnel()"><img class="home-menu-ico" src="dist/img/漏斗.png">&nbsp;漏斗</a></li>
+                <li><a ng-click="home.goRemain()"><img class="home-menu-ico" src="dist/img/留存.png">&nbsp;留存</a></li>
+                <li><a ng-click="home.goUser()"><img class="home-menu-ico" src="dist/img/用户.png">&nbsp;用户</a></li>
+            </ul>
         </div>
     </div>
 </div>

@@ -7,6 +7,15 @@ html, body {
   width: 100%;
 }
 
+html, body, ul, li {
+  padding: 0px;
+  margin: 0px;
+}
+
+ul, li {
+  list-style: none;
+}
+
 .ng-table th {
   text-align: left;
 }
@@ -353,30 +362,4 @@ footer ul li {
 /*fullpage*/
 .full-page {
   height: 100%;
-}
-/*home*/
-.home-page {
-  height: 100%;
-  background: -webkit-linear-gradient(60deg, #f05ea9, #5c98fc); /* Safari 5.1 - 6.0 */
-  background: -o-linear-gradient(60deg, #f05ea9, #5c98fc); /* Opera 11.1 - 12.0 */
-  background: -moz-linear-gradient(60deg, #f05ea9, #5c98fc); /* Firefox 3.6 - 15 */
-  background: linear-gradient(30deg, #f05ea9, #5c98fc); /* 标准的语法 */
-}
-
-.home-project {
-  /*width: 200px;*/
-  /*border-radius: 20px;*/
-  /*position: relative;*/
-  /*margin-left: -100px;*/
-  /*left: 50%;*/
-  /*background: white;*/
-}
-
-.home-project > select{
-  border-radius: 30px;
-  width: 180px;
-}
-
-.home-project > select select{
-  text-align: center;
 }

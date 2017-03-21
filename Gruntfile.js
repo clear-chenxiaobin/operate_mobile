@@ -28,6 +28,7 @@ module.exports = function(grunt) {
               'dist/style/app.min.css': [
                   'src/style/app.css',
                   'src/style/login.css',
+                  'src/style/home.css',
               ]
             }
           }

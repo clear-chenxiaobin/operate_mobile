@@ -99,6 +99,30 @@
                 // util.setParams('token', '');
                 $state.go('login');
             }
+
+            self.goOverview = function(event) {
+                $state.go('login');
+            }
+
+            self.goSpecific = function(event) {
+                $state.go('login');
+            }
+
+            self.goEvent = function(event) {
+                $state.go('login');
+            }
+
+            self.goFunnel = function(event) {
+                $state.go('login');
+            }
+
+            self.goRemain = function(event) {
+                $state.go('login');
+            }
+
+            self.goUser = function(event) {
+                $state.go('login');
+            }
         }
 
     ])
