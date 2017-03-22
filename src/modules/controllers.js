@@ -52,7 +52,7 @@
                     url: util.getApiUrl('', 'editLangs.json', 'local')
                 }).then(function successCallback(response) {
                     util.setParams('editLangs', response.data.editLangs);
-                    $state.go('app.home');
+                    $state.go('app');
                 }, function errorCallback(response) {
 
                 });
@@ -83,7 +83,6 @@
                     $scope.app.showMaskClass = false;
                 }
             }
-
         }
     ])
 
@@ -99,29 +98,35 @@
                 // util.setParams('token', '');
                 $state.go('login');
             }
+        }
 
-            self.goOverview = function(event) {
-                $state.go('login');
+    ])
+
+    //概览模块
+    .controller('overviewController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
+            var self = this;
+            self.init = function() {
+
             }
 
-            self.goSpecific = function(event) {
-                $state.go('login');
+            self.backHome = function () {
+
+            }
+        }
+
+    ])
+
+    //具体模块
+    .controller('specificController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
+            var self = this;
+            self.init = function() {
+
             }
 
-            self.goEvent = function(event) {
-                $state.go('login');
-            }
+            self.backHome = function () {
 
-            self.goFunnel = function(event) {
-                $state.go('login');
-            }
-
-            self.goRemain = function(event) {
-                $state.go('login');
-            }
-
-            self.goUser = function(event) {
-                $state.go('login');
             }
         }
 

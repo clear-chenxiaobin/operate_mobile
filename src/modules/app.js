@@ -44,6 +44,18 @@
                 url: '/overview',
                 templateUrl: 'pages/overview.html'
             })
+            .state('app.specific', {
+                url: '/specific',
+                templateUrl: 'pages/specific.html'
+            })
+            .state('app.event', {
+                url: '/event',
+                templateUrl: 'pages/event.html'
+            })
+            .state('app.funnel', {
+                url: '/funnel',
+                templateUrl: 'pages/funnel.html'
+            })
     }])
 
 
