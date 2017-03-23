@@ -1,9 +1,83 @@
 <div ng-controller="specificController as specific" ng-init="specific.init()" class="specific-page">
-    <div class="panel-header">
-        <a class="specific-logout" ng-click="specific.backHome()"><i class="glyphicon glyphicon-remove"></i></a>
-        <div class="specific-title col-lg-6 text-center">具体</div>
+    <div class="panel-header page-top">
+        <a class="page-top-back" ui-sref="app.home"><img src="dist/img/返回.png"></a>
+        <div class="page-top-title text-center"><img src="dist/img/具体白.png">&nbsp;具体</div>
+        <a class="page-top-project"><img src="dist/img/小抽屉.png"></a>
     </div>
-    <div class="panel-body">
+
+    <!--筛选条件-->
+    <div class="body-top">
+        <ul>
+            <li class="col-xs-3 specific-sift-menu">
+                <!--Simple dropdown -->
+                <span uib-dropdown>
+                        <a href uib-dropdown-toggle>
+                            终端指标
+                            <i class="glyphicon glyphicon-chevron-down"></i>
+                        </a>
+                        <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                            <li ng-repeat="item in specific.term">
+                                <a href>{{item.name}}</a>
+                            </li>
+                        </ul>
+                    </span>
+            </li>
+            <li class="col-xs-3 specific-sift-menu">
+                    <span>
+                        <a>
+                            次数统计
+                        </a>
+                    </span>
+            </li>
+            <li class="col-xs-3 specific-sift-menu">
+                    <span>
+                        <a>
+                            营收统计
+                        </a>
+                    </span>
+            </li>
+            <li class="col-xs-3 specific-sift-menu">
+                <!--Simple dropdown -->
+                <span uib-dropdown>
+                        <a href uib-dropdown-toggle>
+                            其他指标
+                            <i class="glyphicon glyphicon-chevron-down"></i>
+                        </a>
+                        <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                            <li ng-repeat="item in specific.other">
+                                <a href>{{item}}</a>
+                            </li>
+                        </ul>
+                    </span>
+            </li>
+        </ul>
+    </div>
+    <!--筛选条件-->
+
+    <div class="page-body">
+        <div class="specific-highcharts">
+            <highchart title='specific.charts.title' series="specific.charts.series" options="specific.charts.options" style="width: 100%"></highchart>
+        </div>
+        <div class="specific-table">
+            <!--online table 开始-->
+            <table class="table">
+                <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
+                <th ng-if="specific.term[0].value"><a ng-click="specific.changeOrderby('cumulative')">{{specific.term[0].name}}</a></th>
+                <th ng-if="specific.term[1].value"><a ng-click="specific.changeOrderby('online')">{{specific.term[0].name}}</a></th>
+                <th ng-if="specific.term[2].value"><a ng-click="specific.changeOrderby('active')">{{specific.term[0].name}}</a></th>
+                <th ng-if="specific.term[3].value"><a ng-click="specific.changeOrderby('pay')">{{specific.term[0].name}}</a></th>
+                <th ng-if="specific.term[4].value"><a ng-click="specific.changeOrderby('new')">{{specific.term[0].name}}</a></th>
+                <tr ng-repeat="n in specific.dataSet | orderBy: specific.term.sort : specific.term.desc">
+                    <td>{{n.datetime}}</td>
+                    <td ng-if="specific.term[0].value">{{n.cumulative}}</td>
+                    <td ng-if="specific.term[1].value">{{n.online}}</td>
+                    <td ng-if="specific.term[2].value">{{n.active}}</td>
+                    <td ng-if="specific.term[3].value">{{n.pay}}</td>
+                    <td ng-if="specific.term[4].value">{{n.new}}</td>
+                </tr>
+            </table>
+            <!--online table 结束-->
+        </div>
 
     </div>
 </div>
