@@ -122,6 +122,10 @@
         function($http, $scope, $state, $location, $filter, $stateParams, $q, $log, util, CONFIG) {
             var self = this;
             self.init = function() {
+                self.project = [
+                    {name: 'opennVoD'},
+                    {name: '西塘'}
+                    ];
                 self.term = [
                     {name: '累计终端', value: true, sort: '', desc: false},
                     {name: '上线终端', value: true, sort: '', desc: false},
