@@ -118,35 +118,53 @@
     ])
 
     //具体模块
-    .controller('specificController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', '$log', 'util', 'CONFIG',
-        function($http, $scope, $state, $location, $filter, $stateParams, $q, $log, util, CONFIG) {
+    .controller('specificController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
             var self = this;
             self.init = function() {
                 self.project = [
                     {name: 'opennVoD'},
                     {name: '西塘'}
                     ];
+                self.activerow = 0;
                 self.term = [
                     {name: '累计终端', value: true, sort: '', desc: false},
                     {name: '上线终端', value: true, sort: '', desc: false},
                     {name: '活跃终端', value: true, sort: '', desc: false},
-                    {name: '付费终端', value: true, sort: '', desc: false},
+                    {name: '付费终端', value: false, sort: '', desc: false},
                     {name: '新增终端', value: false, sort: '', desc: false}
                 ];
+                self.selectCount = 3;
                 self.other = ['其他'];
                 self.orderby = {};
             }
 
-            self.backHome = function () {
-
+            self.isCurrent = function(index){
+                self.activerow = index;
             }
 
-            $scope.items = [
-                'The first choice!',
-                'And another choice for you.',
-                'but wait! A third!'
-            ];
+            /**
+             * 选择终端指标
+             * @param $index
+             * @returns {boolean}
+             */
+            self.selectTerm = function ($index) {
+                if (self.term[$index].value == true) {
+                    self.selectCount--;
+                } else if (self.term[$index].value == false && self.selectCount < 3) {
+                    self.selectCount++;
+                } else {
+                    alert('最多只能选择3个显示！');
+                    return false;
+                }
 
+                self.term[$index].value = !self.term[$index].value;
+            }
+
+            /**
+             * 初始化图表
+             * @type {{options: {chart: {type: string, zoomType: string}, legend: {layout: string, align: string, verticalAlign: string, x: number, y: number, floating: boolean, borderWidth: number, backgroundColor: (*)}, xAxis: {categories: [*], plotBands: [*]}, yAxis: {title: {text: string}}, tooltip: {shared: boolean, valueSuffix: string}, credits: {enabled: boolean}, plotOptions: {areaspline: {fillOpacity: number}}}, series: [*], title: {text: string}}}
+             */
             self.charts = {
                 options: {
                     chart: {

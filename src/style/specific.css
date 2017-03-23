@@ -1,35 +1,65 @@
-.specific-page {
-    background: #f3efe7;
-}
+@media screen and (max-width: 768px) {
+    .specific-page {
+        background: #f3efe7;
+    }
 
-.body-top {
-    background: white;
-    height: 45px;
-}
+    .specific-page .dropdown-menu {
+        min-width: 50px;
+    }
 
-.specific-sift-menu {
-    padding: 0px;
-    text-align: center;
-    line-height: 45px;
-}
+    .project-dropdown .dropdown-menu {
+        right: 0px;
+        left: inherit;
+        top: 45px;
+    }
 
-.page-body {
-    padding-bottom: 45px;
-}
+    .body-top {
+        background: white;
+        height: 45px;
+    }
 
-.specific-highcharts {
-    padding: 10px 0px;
-    width: 100%;
-}
+    .body-top i {
+        position: relative;
+        top: 3px;
+    }
 
-.specific-highcharts highchart {
-    width: 100%;
-    height: 369px;
-}
+    .specific-sift-menu {
+        padding: 0px;
+        text-align: center;
+        line-height: 45px;
+    }
 
-.specific-table {
-    background: white;
-    padding: 10px;
-    font-size: 12px;
-    margin-bottom: 10px;
+    .specific-sift-menu-btn {
+        color: #9B9B9B;
+        font-size: 14px;
+    }
+
+    .activedClass .specific-sift-menu-btn {
+        color: #4C9EFA;
+    }
+
+    .page-body {
+        padding-bottom: 45px;
+    }
+
+    .page-body .nav-tabs {
+        display: none;
+    }
+
+    .specific-highcharts {
+        padding: 10px 0px;
+        width: 100%;
+    }
+
+    .specific-highcharts highchart {
+        width: 100%;
+        height: 369px;
+    }
+
+    .specific-table {
+        background: white;
+        padding: 10px;
+        font-size: 12px;
+        margin-bottom: 10px;
+    }
 }
