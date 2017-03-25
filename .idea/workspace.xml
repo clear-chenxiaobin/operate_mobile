@@ -3,13 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="8e19177c-a17d-412d-8112-0f86e58aff18" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/js/app.min.js" afterPath="$PROJECT_DIR$/dist/js/app.min.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/dist/style/app.min.css" afterPath="$PROJECT_DIR$/dist/style/app.min.css" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pages/overview.html" afterPath="$PROJECT_DIR$/pages/overview.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pages/specific.html" afterPath="$PROJECT_DIR$/pages/specific.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/modules/app.js" afterPath="$PROJECT_DIR$/src/modules/app.js" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/modules/controllers.js" afterPath="$PROJECT_DIR$/src/modules/controllers.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/style/app.css" afterPath="$PROJECT_DIR$/src/style/app.css" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -60,37 +55,47 @@
       <file leaf-file-name="controllers.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/modules/controllers.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="995">
-              <caret line="709" column="31" lean-forward="true" selection-start-line="709" selection-start-column="31" selection-end-line="709" selection-end-column="31" />
+            <state relative-caret-position="136">
+              <caret line="54" column="35" lean-forward="false" selection-start-line="54" selection-start-column="35" selection-end-line="54" selection-end-column="35" />
               <folding>
-                <element signature="e#15082#15122#0" expanded="false" />
-                <element signature="e#30573#30620#0" expanded="false" />
+                <element signature="e#4824#4842#0" expanded="false" />
+                <element signature="e#6416#8258#0" expanded="false" />
+                <element signature="e#8466#10306#0" expanded="false" />
+                <element signature="e#10514#12355#0" expanded="false" />
+                <element signature="e#12563#14401#0" expanded="false" />
+                <element signature="e#16656#16669#0" expanded="false" />
+                <element signature="e#28154#28194#0" expanded="false" />
+                <element signature="e#29789#31629#0" expanded="false" />
+                <element signature="e#31666#31768#0" expanded="false" />
+                <element signature="e#31837#33677#0" expanded="false" />
+                <element signature="e#33714#33816#0" expanded="false" />
+                <element signature="e#33885#35720#0" expanded="false" />
+                <element signature="e#35757#35859#0" expanded="false" />
+                <element signature="e#35928#37763#0" expanded="false" />
+                <element signature="e#37800#37902#0" expanded="false" />
+                <element signature="e#43647#43694#0" expanded="false" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="overview.html" pinned="false" current-in-tab="false">
+      <file leaf-file-name="overview.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/pages/overview.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="255">
-              <caret line="22" column="23" lean-forward="true" selection-start-line="22" selection-start-column="23" selection-end-line="22" selection-end-column="23" />
+            <state relative-caret-position="1648">
+              <caret line="153" column="20" lean-forward="false" selection-start-line="153" selection-start-column="20" selection-end-line="153" selection-end-column="20" />
               <folding>
                 <element signature="e#302#308#0" expanded="true" />
-                <element signature="n#style#0;n#highchart#0;n#div#0;n#uib-tab#0;n#uib-tabset#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#highchart#0;n#div#0;n#uib-tab#1;n#uib-tabset#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#highchart#0;n#div#0;n#uib-tab#2;n#uib-tabset#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-                <element signature="n#style#0;n#highchart#0;n#div#0;n#uib-tab#3;n#uib-tabset#0;n#div#2;n#div#0;n#!!top" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="specific.html" pinned="false" current-in-tab="true">
+      <file leaf-file-name="specific.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/pages/specific.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="88" column="63" lean-forward="true" selection-start-line="88" selection-start-column="63" selection-end-line="88" selection-end-column="63" />
+            <state relative-caret-position="169">
+              <caret line="129" column="20" lean-forward="false" selection-start-line="129" selection-start-column="20" selection-end-line="131" selection-end-column="63" />
               <folding>
                 <element signature="e#301#307#0" expanded="true" />
                 <element signature="e#1513#1519#0" expanded="true" />
@@ -168,10 +173,10 @@
         <option value="$PROJECT_DIR$/test/data.json" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/src/modules/services.js" />
-        <option value="$PROJECT_DIR$/pages/overview.html" />
         <option value="$PROJECT_DIR$/src/modules/app.js" />
-        <option value="$PROJECT_DIR$/src/modules/controllers.js" />
         <option value="$PROJECT_DIR$/pages/specific.html" />
+        <option value="$PROJECT_DIR$/pages/overview.html" />
+        <option value="$PROJECT_DIR$/src/modules/controllers.js" />
       </list>
     </option>
   </component>
@@ -185,7 +190,7 @@
     <handled-path value="$PROJECT_DIR$/node_modules" />
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="22" />
+    <option name="x" value="367" />
     <option name="y" value="23" />
     <option name="width" value="1154" />
     <option name="height" value="939" />
@@ -409,7 +414,7 @@
       <workItem from="1490253701536" duration="125000" />
       <workItem from="1490253902127" duration="1153000" />
       <workItem from="1490255961008" duration="14137000" />
-      <workItem from="1490332360716" duration="29399000" />
+      <workItem from="1490332360716" duration="33350000" />
     </task>
     <task id="LOCAL-00001" summary="home页面">
       <created>1490081706802</created>
@@ -474,14 +479,21 @@
       <option name="project" value="LOCAL" />
       <updated>1490239931830</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="换成fusioncharts">
+      <created>1490427621233</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1490427621233</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="98659000" />
+    <option name="totallyTimeSpent" value="102610000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="22" y="23" width="1154" height="939" extended-state="0" />
+    <frame x="367" y="23" width="1154" height="939" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.19390348" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -517,11 +529,12 @@
     <MESSAGE value="具体模块" />
     <MESSAGE value="删除node_moudules" />
     <MESSAGE value="修改样式" />
-    <option name="LAST_COMMIT_MESSAGE" value="修改样式" />
+    <MESSAGE value="换成fusioncharts" />
+    <option name="LAST_COMMIT_MESSAGE" value="换成fusioncharts" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <option name="time" value="2" />
+      <option name="time" value="4" />
     </breakpoint-manager>
     <watches-manager />
   </component>
@@ -809,20 +822,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/pages/overview.html">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="255">
-          <caret line="22" column="23" lean-forward="true" selection-start-line="22" selection-start-column="23" selection-end-line="22" selection-end-column="23" />
-          <folding>
-            <element signature="e#302#308#0" expanded="true" />
-            <element signature="n#style#0;n#highchart#0;n#div#0;n#uib-tab#0;n#uib-tabset#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#highchart#0;n#div#0;n#uib-tab#1;n#uib-tabset#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#highchart#0;n#div#0;n#uib-tab#2;n#uib-tabset#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-            <element signature="n#style#0;n#highchart#0;n#div#0;n#uib-tab#3;n#uib-tabset#0;n#div#2;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/modules/app.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-39">
@@ -839,25 +838,49 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/modules/controllers.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="995">
-          <caret line="709" column="31" lean-forward="true" selection-start-line="709" selection-start-column="31" selection-end-line="709" selection-end-column="31" />
-          <folding>
-            <element signature="e#15082#15122#0" expanded="false" />
-            <element signature="e#30573#30620#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/pages/specific.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="88" column="63" lean-forward="true" selection-start-line="88" selection-start-column="63" selection-end-line="88" selection-end-column="63" />
+        <state relative-caret-position="169">
+          <caret line="129" column="20" lean-forward="false" selection-start-line="129" selection-start-column="20" selection-end-line="131" selection-end-column="63" />
           <folding>
             <element signature="e#301#307#0" expanded="true" />
             <element signature="e#1513#1519#0" expanded="true" />
             <element signature="e#2554#2560#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/modules/controllers.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="136">
+          <caret line="54" column="35" lean-forward="false" selection-start-line="54" selection-start-column="35" selection-end-line="54" selection-end-column="35" />
+          <folding>
+            <element signature="e#4824#4842#0" expanded="false" />
+            <element signature="e#6416#8258#0" expanded="false" />
+            <element signature="e#8466#10306#0" expanded="false" />
+            <element signature="e#10514#12355#0" expanded="false" />
+            <element signature="e#12563#14401#0" expanded="false" />
+            <element signature="e#16656#16669#0" expanded="false" />
+            <element signature="e#28154#28194#0" expanded="false" />
+            <element signature="e#29789#31629#0" expanded="false" />
+            <element signature="e#31666#31768#0" expanded="false" />
+            <element signature="e#31837#33677#0" expanded="false" />
+            <element signature="e#33714#33816#0" expanded="false" />
+            <element signature="e#33885#35720#0" expanded="false" />
+            <element signature="e#35757#35859#0" expanded="false" />
+            <element signature="e#35928#37763#0" expanded="false" />
+            <element signature="e#37800#37902#0" expanded="false" />
+            <element signature="e#43647#43694#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/pages/overview.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1648">
+          <caret line="153" column="20" lean-forward="false" selection-start-line="153" selection-start-column="20" selection-end-line="153" selection-end-column="20" />
+          <folding>
+            <element signature="e#302#308#0" expanded="true" />
           </folding>
         </state>
       </provider>
