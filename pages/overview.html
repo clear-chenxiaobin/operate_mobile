@@ -1,9 +1,146 @@
-<div ng-controller="overviewController as overview" ng-init="overview.init()" class="overview-page">
-    <div class="panel-header">
-        <a class="overview-logout" ng-click="overview.logout()"><i class="glyphicon glyphicon-remove"></i></a>
-        <div class="overview-title col-lg-6 text-center">运营数据平台</div>
+<div ng-controller="overviewController as overview" ng-init="overview.init()" class="specific-page">
+    <div class="panel-header page-top">
+        <a class="page-top-back" ui-sref="app.home"><img src="dist/img/返回.png"></a>
+        <div class="page-top-title text-center"><img src="dist/img/仪表盘白.png">&nbsp;概览</div>
+        <div uib-dropdown class="project-dropdown">
+            <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/小抽屉.png"></a>
+            <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="project-dropdown">
+                <li ng-repeat="item in overview.project">
+                    <a href>{{item.name}}</a>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="panel-body">
+
+    <!--筛选条件-->
+    <div class="body-top">
+        <ul>
+            <li class="col-xs-2 specific-sift-menu" ng-class="{activedClass:0 == overview.activerow}" ng-click="overview.isCurrent(0); active = 0">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        开机率
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-2 specific-sift-menu" ng-class="{activedClass:1 == overview.activerow}" ng-click="overview.isCurrent(1); active = 1">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        活跃率
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-4 specific-sift-menu" ng-class="{activedClass:2 == overview.activerow}" ng-click="overview.isCurrent(2); active = 2">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        付费终端转化率
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-4 specific-sift-menu" ng-class="{activedClass:3 == overview.activerow}" ng-click="overview.isCurrent(3); active = 3">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        平均没终端营收
+                    </a>
+                </span>
+            </li>
+        </ul>
+    </div>
+    <!--筛选条件-->
+
+    <div class="page-body">
+        <uib-tabset active="active">
+            <!--终端板块-->
+            <uib-tab index="0">
+                <div class="specific-highcharts">
+                    <highchart title='overview.charts.title' series="overview.chartsData" options="overview.charts.options" style="width: 100%"></highchart>
+                </div>
+                <div class="specific-table">
+                    <!--online table 开始-->
+                    <table class="table">
+                        <th><a ng-click="overview.changeOrderby('datetime')">日期</a></th>
+                        <th><a ng-click="overview.changeOrderby('addUpCount')">累计终端</a></th>
+                        <th><a ng-click="overview.changeOrderby('onlineCount')">上线终端</a></th>
+                        <th><a ng-click="overview.changeOrderby('onlineRate')">开机率</a></th>
+                        <tr ng-repeat="n in overview.dataSet | orderBy: overview.orderby.sort : overview.orderby.desc">
+                            <td>{{n.datetime}}</td>
+                            <td>{{n.addUpCount}}</td>
+                            <td>{{n.onlineCount}}</td>
+                            <td>{{n.onlineRate}}</td>
+                        </tr>
+                    </table>
+                    <!--online table 结束-->
+                </div>
+            </uib-tab>
+            <!--终端板块-->
+
+            <!--次数板块 开始-->
+            <uib-tab index="1">
+                <div class="specific-highcharts">
+                    <highchart title='overview.charts.title' series="overview.charts.series" options="overview.charts.options" style="width: 100%"></highchart>
+                </div>
+                <div class="specific-table">
+                    <!--online table 开始-->
+                    <table class="table">
+                        <th><a ng-click="overview.changeOrderby('datetime')">日期</a></th>
+                        <th><a ng-click="overview.changeOrderby('cumulative')">上线终端</a></th>
+                        <th><a ng-click="overview.changeOrderby('online')">活跃终端</a></th>
+                        <th><a ng-click="overview.changeOrderby('active')">活跃率</a></th>
+                        <tr ng-repeat="n in overview.dataSet | orderBy: overview.term.sort : overview.term.desc">
+                            <td>{{n.datetime}}</td>
+                            <td>{{n.cumulative}}</td>
+                            <td>{{n.online}}</td>
+                            <td>{{n.active}}</td>
+                        </tr>
+                    </table>
+                    <!--online table 结束-->
+                </div>
+            </uib-tab>
+            <!--次数板块 结束-->
+
+            <!--营收统计 开始-->
+            <uib-tab index="2">
+                <div class="overview-highcharts">
+                    <highchart title='overview.charts.title' series="overview.charts.series" options="overview.charts.options" style="width: 100%"></highchart>
+                </div>
+                <div class="overview-table">
+                    <!--online table 开始-->
+                    <table class="table">
+                        <th><a ng-click="overview.changeOrderby('datetime')">日期</a></th>
+                        <th><a ng-click="overview.changeOrderby('cumulative')">活跃终端</a></th>
+                        <th><a ng-click="overview.changeOrderby('online')">付费终端</a></th>
+                        <th><a ng-click="overview.changeOrderby('active')">转化率</a></th>
+                        <tr ng-repeat="n in overview.dataSet | orderBy: overview.term.sort : overview.term.desc">
+                            <td>{{n.datetime}}</td>
+                            <td>{{n.cumulative}}</td>
+                            <td>{{n.online}}</td>
+                            <td>{{n.active}}</td>
+                        </tr>
+                    </table>
+                    <!--online table 结束-->
+                </div>
+            </uib-tab>
+            <!--营收统计 结束-->
+
+            <!--其他指标 开始-->
+            <uib-tab index="3">
+                <div class="overview-highcharts">
+                    <highchart title='overview.charts.title' series="overview.charts.series" options="overview.charts.options" style="width: 100%"></highchart>
+                </div>
+                <div class="overview-table">
+                    <!--online table 开始-->
+                    <table class="table">
+                        <th><a ng-click="overview.changeOrderby('datetime')">日期</a></th>
+                        <th><a ng-click="overview.changeOrderby('active')">平均每终端营收</a></th>
+                        <tr ng-repeat="n in overview.dataSet | orderBy: overview.term.sort : overview.term.desc">
+                            <td>{{n.datetime}}</td>
+                            <td>{{n.active}}</td>
+                        </tr>
+                    </table>
+                    <!--online table 结束-->
+                </div>
+            </uib-tab>
+            <!--其他指标 结束-->
+        </uib-tabset>
 
     </div>
 </div>

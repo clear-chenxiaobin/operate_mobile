@@ -15,35 +15,53 @@
     <!--筛选条件-->
     <div class="body-top">
         <ul>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:0 == specific.activerow}" ng-click="specific.isCurrent(0); active = 0">
+            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:0 == specific.activerow}"
+                ng-click="specific.isCurrent(0); active = 0">
                 <!--Simple dropdown -->
                 <span uib-dropdown>
                     <a href uib-dropdown-toggle class="specific-sift-menu-btn">
                         终端指标
                         <i class="glyphicon glyphicon-chevron-down"></i>
                     </a>
-                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="term-dropdown">
                         <li ng-repeat="item in specific.term">
-                            <a href ng-click="specific.selectTerm($index)">{{item.name}}&nbsp;<i class="glyphicon glyphicon-ok-sign" ng-show="item.value"></i></a>
+                            <a href ng-click="specific.selectTerm($index)">
+                                {{item.name}}&nbsp;
+                                <i class="glyphicon glyphicon-check" ng-show="item.show"></i>
+                                <i class="glyphicon glyphicon-unchecked" ng-hide="item.show"></i>
+                            </a>
                         </li>
                     </ul>
                 </span>
             </li>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:1 == specific.activerow}" ng-click="specific.isCurrent(1); active = 1">
-                <span>
-                    <a class="specific-sift-menu-btn">
+            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:1 == specific.activerow}"
+                ng-click="specific.isCurrent(1); active = 1">
+                <span uib-dropdown>
+                    <a href uib-dropdown-toggle class="specific-sift-menu-btn">
                         次数统计
+                        <i class="glyphicon glyphicon-chevron-down"></i>
                     </a>
+                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="count-dropdown">
+                        <li ng-repeat="item in specific.countStatistics">
+                            <a href ng-click="specific.selectCountStatistics($index)">
+                                {{item.name}}&nbsp;
+                                <i class="glyphicon glyphicon-check" ng-show="item.show"></i>
+                                <i class="glyphicon glyphicon-unchecked" ng-hide="item.show"></i>
+                            </a>
+                        </li>
+                    </ul>
                 </span>
             </li>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:2 == specific.activerow}" ng-click="specific.isCurrent(2); active = 2">
+            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:2 == specific.activerow}"
+                ng-click="specific.isCurrent(2); active = 2">
                 <span>
                     <a class="specific-sift-menu-btn">
                         营收统计
                     </a>
                 </span>
             </li>
-            <li class="col-xs-3 specific-sift-menu" ng-click="active = 3">
+            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:3 == specific.activerow}"
+                ng-click="overview.isCurrent(3); active = 3">
                 <!--Simple dropdown -->
                 <span uib-dropdown>
                     <a href uib-dropdown-toggle class="specific-sift-menu-btn">
@@ -66,24 +84,39 @@
             <!--终端板块-->
             <uib-tab index="0">
                 <div class="specific-highcharts">
-                    <highchart title='specific.charts.title' series="specific.charts.series" options="specific.charts.options" style="width: 100%"></highchart>
+                    <div fusioncharts width="100%" height="400" type="msarea"
+                         chart="{{specific.attrs0}}" categories="{{specific.categories0}}"
+                         dataset="{{specific.dataset0}}"></div>
+                    <select>
+                        <option>小时</option>
+                        <option>日</option>
+                        <option>周</option>
+                        <option>月</option>
+                        <option>年</option>
+                    </select>
+                    </highchart>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
                     <table class="table">
                         <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
-                        <th ng-if="specific.term[0].value"><a ng-click="specific.changeOrderby('cumulative')">{{specific.term[0].name}}</a></th>
-                        <th ng-if="specific.term[1].value"><a ng-click="specific.changeOrderby('online')">{{specific.term[1].name}}</a></th>
-                        <th ng-if="specific.term[2].value"><a ng-click="specific.changeOrderby('active')">{{specific.term[2].name}}</a></th>
-                        <th ng-if="specific.term[3].value"><a ng-click="specific.changeOrderby('pay')">{{specific.term[3].name}}</a></th>
-                        <th ng-if="specific.term[4].value"><a ng-click="specific.changeOrderby('new')">{{specific.term[4].name}}</a></th>
-                        <tr ng-repeat="n in specific.dataSet | orderBy: specific.term.sort : specific.term.desc">
+                        <th ng-if="specific.term[0].show"><a ng-click="specific.changeOrderby('addUpCount')">{{specific.term[0].name}}</a>
+                        </th>
+                        <th ng-if="specific.term[1].show"><a ng-click="specific.changeOrderby('onlineCount')">{{specific.term[1].name}}</a>
+                        </th>
+                        <th ng-if="specific.term[2].show"><a ng-click="specific.changeOrderby('activeCount')">{{specific.term[2].name}}</a>
+                        </th>
+                        <th ng-if="specific.term[3].show"><a ng-click="specific.changeOrderby('payCount')">{{specific.term[3].name}}</a>
+                        </th>
+                        <th ng-if="specific.term[4].show"><a ng-click="specific.changeOrderby('newAddCount')">{{specific.term[4].name}}</a>
+                        </th>
+                        <tr ng-repeat="n in specific.dataSet0 | orderBy: specific.term.sort : specific.term.desc">
                             <td>{{n.datetime}}</td>
-                            <td ng-if="specific.term[0].value">{{n.cumulative}}</td>
-                            <td ng-if="specific.term[1].value">{{n.online}}</td>
-                            <td ng-if="specific.term[2].value">{{n.active}}</td>
-                            <td ng-if="specific.term[3].value">{{n.pay}}</td>
-                            <td ng-if="specific.term[4].value">{{n.new}}</td>
+                            <td ng-if="specific.term[0].show">{{n.addUpCount}}</td>
+                            <td ng-if="specific.term[1].show">{{n.onlineCount}}</td>
+                            <td ng-if="specific.term[2].show">{{n.activeCount}}</td>
+                            <td ng-if="specific.term[3].show">{{n.payCount}}</td>
+                            <td ng-if="specific.term[4].show">{{n.newAddCount}}</td>
                         </tr>
                     </table>
                     <!--online table 结束-->
@@ -94,44 +127,47 @@
             <!--次数板块 开始-->
             <uib-tab index="1">
                 <div class="specific-highcharts">
-                    <highchart title='specific.charts.title' series="specific.charts.series" options="specific.charts.options" style="width: 100%"></highchart>
-                </div>
-                <div class="specific-table">
-                    <!--online table 开始-->
-                    <table class="table">
-                        <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
-                        <th ng-if="specific.term[0].value"><a ng-click="specific.changeOrderby('cumulative')">总次数</a></th>
-                        <th ng-if="specific.term[1].value"><a ng-click="specific.changeOrderby('online')">单次次数</a></th>
-                        <th ng-if="specific.term[2].value"><a ng-click="specific.changeOrderby('active')">打包次数</a></th>
-                        <tr ng-repeat="n in specific.dataSet | orderBy: specific.term.sort : specific.term.desc">
-                            <td>{{n.datetime}}</td>
-                            <td ng-if="specific.term[0].value">{{n.cumulative}}</td>
-                            <td ng-if="specific.term[1].value">{{n.online}}</td>
-                            <td ng-if="specific.term[2].value">{{n.active}}</td>
-                        </tr>
-                    </table>
-                    <!--online table 结束-->
-                </div>
+                    <div fusioncharts width="100%" height="400" type="msarea"
+                         chart="{{specific.attrs1}}" categories="{{specific.categories1}}"
+                         dataset="{{specific.dataset1}}"></div>
+                    <div class="specific-table">
+                        <!--online table 开始-->
+                        <table class="table">
+                            <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
+                            <th><a ng-click="specific.changeOrderby('payCount')">总次数</a></th>
+                            <th><a ng-click="specific.changeOrderby('paySingleCount')">单次次数</a></th>
+                            <th><a ng-click="specific.changeOrderby('payPackageCount')">打包次数</a></th>
+                            <tr ng-repeat="n in specific.dataSet1 | orderBy: specific.countStatistics.sort : specific.countStatistics.desc">
+                                <td>{{n.datetime}}</td>
+                                <td>{{n.payCount}}</td>
+                                <td>{{n.paySingleCount}}</td>
+                                <td>{{n.payPackageCount}}</td>
+                            </tr>
+                        </table>
+                        <!--online table 结束-->
+                    </div>
             </uib-tab>
             <!--次数板块 结束-->
 
             <!--营收统计 开始-->
             <uib-tab index="2">
                 <div class="specific-highcharts">
-                    <highchart title='specific.charts.title' series="specific.charts.series" options="specific.charts.options" style="width: 100%"></highchart>
+                    <div fusioncharts width="100%" height="400" type="msarea"
+                         chart="{{specific.attrs2}}" categories="{{specific.categories2}}"
+                         dataset="{{specific.dataset2}}"></div>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
                     <table class="table">
                         <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
-                        <th ng-if="specific.term[0].value"><a ng-click="specific.changeOrderby('cumulative')">总收益</a></th>
-                        <th ng-if="specific.term[1].value"><a ng-click="specific.changeOrderby('online')">{{specific.term[0].name}}</a></th>
-                        <th ng-if="specific.term[2].value"><a ng-click="specific.changeOrderby('active')">{{specific.term[0].name}}</a></th>
-                        <tr ng-repeat="n in specific.dataSet | orderBy: specific.term.sort : specific.term.desc">
+                        <th><a ng-click="specific.changeOrderby('totalMovieRevenue')">总收益</a></th>
+                        <th><a ng-click="specific.changeOrderby('singleMovieRevenue')">单次点播收益</a></th>
+                        <th><a ng-click="specific.changeOrderby('packageMovieRevenue')">打包点播收益</a></th>
+                        <tr ng-repeat="n in specific.revenueData | orderBy: specific.term.sort : specific.term.desc">
                             <td>{{n.datetime}}</td>
-                            <td ng-if="specific.term[0].value">{{n.cumulative}}</td>
-                            <td ng-if="specific.term[1].value">{{n.online}}</td>
-                            <td ng-if="specific.term[2].value">{{n.active}}</td>
+                            <td>{{n.totalMovieRevenue}}</td>
+                            <td>{{n.singleMovieRevenue}}</td>
+                            <td>{{n.packageMovieRevenue}}</td>
                         </tr>
                     </table>
                     <!--online table 结束-->
@@ -142,20 +178,18 @@
             <!--其他指标 开始-->
             <uib-tab index="3">
                 <div class="specific-highcharts">
-                    <highchart title='specific.charts.title' series="specific.charts.series" options="specific.charts.options" style="width: 100%"></highchart>
+                    <div fusioncharts width="100%" height="400" type="msarea"
+                         chart="{{specific.attrs3}}" categories="{{specific.categories3}}"
+                         dataset="{{specific.dataset3}}"></div>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
                     <table class="table">
                         <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
-                        <th ng-if="specific.term[0].value"><a ng-click="specific.changeOrderby('cumulative')">指标1</a></th>
-                        <th ng-if="specific.term[1].value"><a ng-click="specific.changeOrderby('online')">{{specific.term[0].name}}</a></th>
-                        <th ng-if="specific.term[2].value"><a ng-click="specific.changeOrderby('active')">{{specific.term[0].name}}</a></th>
+                        <th><a ng-click="specific.changeOrderby('cumulative')">指标1</a></th>
                         <tr ng-repeat="n in specific.dataSet | orderBy: specific.term.sort : specific.term.desc">
                             <td>{{n.datetime}}</td>
-                            <td ng-if="specific.term[0].value">{{n.cumulative}}</td>
-                            <td ng-if="specific.term[1].value">{{n.online}}</td>
-                            <td ng-if="specific.term[2].value">{{n.active}}</td>
+                            <td>{{n.cumulative}}</td>
                         </tr>
                     </table>
                     <!--online table 结束-->
