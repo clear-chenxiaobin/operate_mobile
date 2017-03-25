@@ -10,11 +10,13 @@
 
     .home-logout {
         color: white;
-        position: relative;
-        top: 16px;
-        left: 11px;
-        width: 20px;
-        height: 20px;
+        position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 40px;
+        height: 40px;
+        padding: 17px;
+        z-index: 999;
     }
 
     .home-logout i {
@@ -24,11 +26,11 @@
     .home-title {
         font-size: 18px;
         color: white;
-        margin-top: -7px;
+        padding: 15px 0px;
     }
 
     .home-logo {
-        padding: 20px 30px 30px
+        padding: 15px 20px 20px;
     }
 
     .home-logo > img {
@@ -36,7 +38,7 @@
     }
 
     .home-project {
-        padding: 10px;
+        padding: 20px;
     }
 
     .home-project > select{
@@ -51,13 +53,12 @@
 
     /*按钮*/
     .home-menu {
-        padding: 10px 0px;
 
     }
     .home-menu > ul {
         position: relative;
         width: 345px;
-        padding: 16px;
+        padding: 20px 16px;
         text-align: center;
         margin-left: -172.5px;
         left: 50%;

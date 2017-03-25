@@ -95,9 +95,39 @@
 
             }
 
-            self.logout = function(event) {
-                // util.setParams('token', '');
+            self.logout = function() {
+                util.setParams('token', '');
                 $state.go('login');
+            }
+
+            self.getProject = function () {
+                var deferred = $q.defer();
+
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'projectList',
+                })
+
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('v1/project', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+
+                        deferred.resolve();
+                    }
+                    else {
+                        alert(data.errInfo);
+                        deferred.reject();
+                    }
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function (value) {
+                    self.loadingChart0 = false;
+                });
             }
         }
 

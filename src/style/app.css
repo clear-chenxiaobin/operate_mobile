@@ -375,6 +375,7 @@ footer {
     height: 47px;
     padding: 0px;
     border-top: 1px solid #34394B;
+    line-height: 45px;
 }
 
 footer ul li {
