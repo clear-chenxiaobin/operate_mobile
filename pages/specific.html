@@ -3,10 +3,16 @@
         <a class="page-top-back" ui-sref="app.home"><img src="dist/img/返回.png"></a>
         <div class="page-top-title text-center"><img src="dist/img/具体白.png">&nbsp;具体</div>
         <div uib-dropdown class="project-dropdown">
+            <!--<a class="page-top-project"><img src="dist/img/小抽屉.png"></a>-->
+            <!--<select ng-model="app.selectProject">-->
+                <!--<option ng-repeat="item in app.projectList" value="{{item.projectName}}">{{item.projectNameCHZ}}</option>-->
+            <!--</select>-->
             <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/小抽屉.png"></a>
             <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="project-dropdown">
-                <li ng-repeat="item in specific.project">
-                    <a href>{{item.name}}</a>
+                <li ng-repeat="item in app.projectList">
+                    <a href ng-click="specific.changeProject(item.projectName)">
+                        {{item.projectNameCHZ}}
+                    </a>
                 </li>
             </ul>
         </div>

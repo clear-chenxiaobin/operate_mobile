@@ -5,8 +5,10 @@
         <div uib-dropdown class="project-dropdown">
             <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/小抽屉.png"></a>
             <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="project-dropdown">
-                <li ng-repeat="item in overview.project">
-                    <a href>{{item.name}}</a>
+                <li ng-repeat="item in app.projectList">
+                    <a href ng-click="overview.changeProject(item.projectName)">
+                        {{item.projectNameCHZ}}
+                    </a>
                 </li>
             </ul>
         </div>

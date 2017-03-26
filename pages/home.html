@@ -8,8 +8,8 @@
             <img src="dist/img/logo.png">
         </div>
         <div class="text-center home-project">
-            <select>
-                <option>OpenVoD</option>
+            <select ng-model="app.selectProject">
+                <option ng-repeat="item in app.projectList" value="{{item.projectName}}">{{item.projectNameCHZ}}</option>
             </select>
         </div>
         <div class="home-menu">

@@ -92,7 +92,7 @@
         function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
             var self = this;
             self.init = function() {
-
+                self.getProject();
             }
 
             self.logout = function() {
@@ -115,6 +115,14 @@
                 }).then(function successCallback(response) {
                     var data = response.data;
                     if (data.rescode == '200') {
+                        $scope.app.projectList = [];
+                        $scope.app.projectList[0] = ({projectName: "all", projectNameCHZ: "所有项目"});
+                        data.data.forEach(function (el) {
+                            $scope.app.projectList.push({projectName: el.ProjectName, projectNameCHZ: el.ProjectNameCHZ})
+                        });
+                        $scope.app.selectProject = "all";
+
+                        util.setParams('project', "all");
 
                         deferred.resolve();
                     }
@@ -138,11 +146,6 @@
         function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
             var self = this;
             self.init = function() {
-                self.project = [
-                    {name: 'opennVoD'},
-                    {name: '西塘'}
-                ];
-
                 self.term = [
                     {name: '累计终端', value: true, sort: '', desc: false},
                     {name: '上线终端', value: true, sort: '', desc: false},
@@ -160,6 +163,15 @@
              */
             self.isCurrent = function(index){
                 self.activerow = index;
+            }
+
+            /**
+             * 切换项目
+             * @param projectName
+             */
+            self.changeProject = function (projectName) {
+                util.setParams('project', projectName);
+                self.loadChart();
             }
 
             /**
@@ -420,7 +432,7 @@
                     token: util.getParams("token"),
                     action: 'getTermOnlineRateInfo',
                     endTime: '2017-03-23 10:00:00',
-                    project: ["all"],
+                    project: [util.getParams("project")],
                     timespans: 7,
                     type: 2
                 })
@@ -503,7 +515,7 @@
                     token: util.getParams("token"),
                     action: 'getTermActiveRateInfo',
                     endTime: '2017-03-23 10:00:00',
-                    project: ["all"],
+                    project: [util.getParams("project")],
                     timespans: 7,
                     type: 2
                 })
@@ -546,7 +558,7 @@
                     token: util.getParams("token"),
                     action: 'getTermPayRateInfo',
                     endTime: '2017-03-23 10:00:00',
-                    project: ["all"],
+                    project: [util.getParams("project")],
                     timespans: 7,
                     type: 2
                 })
@@ -589,7 +601,7 @@
                     token: util.getParams("token"),
                     action: 'getPerTermRevenueInfo',
                     endTime: '2017-03-23 10:00:00',
-                    project: ["all"],
+                    project: [util.getParams("project")],
                     timespans: 7,
                     type: 2
                 })
@@ -684,6 +696,15 @@
                     self.activerow = index;
                     self.loadChart();
                 }
+            }
+
+            /**
+             * 切换项目
+             * @param projectName
+             */
+            self.changeProject = function (projectName) {
+                util.setParams('project', projectName);
+                self.loadChart();
             }
 
             /**
@@ -1029,7 +1050,7 @@
                         token: util.getParams("token"),
                         action: 'getTermStatisticsInfo',
                         endTime: '2017-03-23 10:00:00',
-                        project: ["all"],
+                        project: [util.getParams("project")],
                         timespans: 7,
                         type: 2
                     })
@@ -1119,7 +1140,7 @@
                         token: util.getParams("token"),
                         action: 'getPayCountStatisticsInfo',
                         endTime: '2017-03-23 10:00:00',
-                        project: ["all"],
+                        project: [util.getParams("project")],
                         timespans: 7,
                         type: 2
                     })
@@ -1229,7 +1250,7 @@
                         token: util.getParams("token"),
                         action: 'getRevenueStatisticsInfo',
                         endTime: '2017-03-23 10:00:00',
-                        project: ["all"],
+                        project: [util.getParams("project")],
                         timespans: 7,
                         type: 2
                     })
@@ -1300,7 +1321,7 @@
                             token: util.getParams("token"),
                             action: 'getActiveStatisticsInfo',
                             endTime: '2017-03-23 10:00:00',
-                            project: ["all"],
+                            project: [util.getParams("project")],
                             timespans: 6,
                             type: 2
                         })
@@ -1352,7 +1373,7 @@
                             token: util.getParams("token"),
                             action: 'getXiTangTicketStatisticsInfo',
                             endTime: '2017-03-23 10:00:00',
-                            project: ["all"],
+                            project: [util.getParams("project")],
                             timespans: 7,
                             type: 2
                         })
