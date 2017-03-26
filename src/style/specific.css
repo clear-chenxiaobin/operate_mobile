@@ -5,12 +5,17 @@
 
     .specific-page .dropdown-menu {
         min-width: 50px;
+        font-size: 12px;
     }
 
     .project-dropdown .dropdown-menu {
         right: 0px;
         left: inherit;
         top: 45px;
+    }
+
+    .specific-page .dropdown-menu > li > a {
+        padding: 3px 5px;
     }
 
     .body-top {

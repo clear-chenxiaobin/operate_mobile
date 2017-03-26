@@ -61,7 +61,7 @@
                 </span>
             </li>
             <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:3 == specific.activerow}"
-                ng-click="overview.isCurrent(3); active = 3">
+                ng-click="specific.isCurrent(3); active = 3">
                 <!--Simple dropdown -->
                 <span uib-dropdown>
                     <a href uib-dropdown-toggle class="specific-sift-menu-btn">
@@ -70,7 +70,11 @@
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
                         <li ng-repeat="item in specific.other">
-                            <a href>{{item}}</a>
+                            <a href ng-click="specific.selectOther($index)">
+                                {{item.name}}&nbsp;
+                                <i class="glyphicon glyphicon-check" ng-show="item.show"></i>
+                                <i class="glyphicon glyphicon-unchecked" ng-hide="item.show"></i>
+                            </a>
                         </li>
                     </ul>
                 </span>
@@ -177,23 +181,49 @@
 
             <!--其他指标 开始-->
             <uib-tab index="3">
-                <div class="specific-highcharts">
-                    <div fusioncharts width="100%" height="400" type="msarea"
+                <!--终端时长 开始-->
+                <div class="specific-highcharts" ng-show="specific.other[0].show">
+                    <div fusioncharts width="100%" height="400" type="mscombidy2d"
                          chart="{{specific.attrs3}}" categories="{{specific.categories3}}"
                          dataset="{{specific.dataset3}}"></div>
                 </div>
-                <div class="specific-table">
-                    <!--online table 开始-->
+                <div class="specific-table"  ng-show="specific.other[0].show">
+                    <!--终端时长 table 开始-->
                     <table class="table">
                         <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
-                        <th ng-repeat=""><a ng-click="specific.changeOrderby('cumulative')">指标1</a></th>
-                        <tr ng-repeat="n in specific.dataSet | orderBy: specific.term.sort : specific.term.desc">
+                        <th><a ng-click="specific.changeOrderby('totalActiveTime')">活跃时长</a></th>
+                        <th><a ng-click="specific.changeOrderby('activeCount')">活跃终端数</a></th>
+                        <tr ng-repeat="n in specific.dataSet3 | orderBy: specific.term.sort : specific.term.desc">
                             <td>{{n.datetime}}</td>
-                            <td>{{n.cumulative}}</td>
+                            <td>{{n.totalActiveTime}}</td>
+                            <td>{{n.activeCount}}</td>
                         </tr>
                     </table>
-                    <!--online table 结束-->
+                    <!--终端时长 table 结束-->
                 </div>
+                <!--终端时长 结束-->
+
+                <!--西塘票务 开始-->
+                <div class="specific-highcharts" ng-show="specific.other[1].show">
+                    <div fusioncharts width="100%" height="400" type="mscombidy2d"
+                         chart="{{specific.attrs3}}" categories="{{specific.categories3}}"
+                         dataset="{{specific.dataset3}}"></div>
+                </div>
+                <div class="specific-table"  ng-show="specific.other[1].show">
+                    <!--西塘票务 table 开始-->
+                    <table class="table">
+                        <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
+                        <th><a ng-click="specific.changeOrderby('totalActiveTime')">活跃时长</a></th>
+                        <th><a ng-click="specific.changeOrderby('activeCount')">活跃终端数</a></th>
+                        <tr ng-repeat="n in specific.dataSet3 | orderBy: specific.term.sort : specific.term.desc">
+                            <td>{{n.datetime}}</td>
+                            <td>{{n.totalActiveTime}}</td>
+                            <td>{{n.activeCount}}</td>
+                        </tr>
+                    </table>
+                    <!--西塘票务 table 结束-->
+                </div>
+                <!--西塘票务 结束-->
             </uib-tab>
             <!--其他指标 结束-->
         </uib-tabset>

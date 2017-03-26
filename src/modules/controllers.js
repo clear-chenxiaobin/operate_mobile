@@ -664,8 +664,8 @@
                 ];
                 self.selectCount = 3;
                 self.other = [
-                    {name: '西塘', show: true, sort: '', desc: false},
-                    {name: '活跃时长', show: false, sort: '', desc: false},
+                    {name: '活跃时长', show: true, sort: '', desc: false},
+                    {name: '西塘票务', show: false, sort: '', desc: false},
                 ];
 
                 self.initCharts();
@@ -730,6 +730,17 @@
                     }
 
                 }
+            }
+
+            /**
+             * 选择其他指标
+             * @param $index
+             */
+            self.selectOther = function ($index) {
+                self.other.forEach(function (el) {
+                    el.show = false;
+                })
+                self.other[$index].show = true;
             }
 
             /**
@@ -933,8 +944,9 @@
                 self.attrs3 = {
                     "caption": " ",
                     "xAxisname": "时间",
-                    "yAxisName": "金额",
-                    "numberPrefix": "¥ ",                 //前缀
+                    "pYAxisName": "活跃时长",
+                    "sYAxisName": "活跃终端数",
+                    "numberPrefix": "",                   //前缀
                     "numberSuffix": "",                   //后缀
                     "plotFillAlpha" : "",
 
@@ -1269,59 +1281,128 @@
                 }
 
                 function loadOther() {
-                    var data = JSON.stringify({
-                        token: util.getParams("token"),
-                        action: 'getRevenueStatisticsInfo',
-                        endTime: '2017-03-23 10:00:00',
-                        project: ["all"],
-                        timespans: 7,
-                        type: 2
+                    var select = 0;
+                    self.other.forEach(function (el, index) {
+                        if (el.show == true) select = index;
                     })
-                    self.loadingChart2 = true;
 
-                    $http({
-                        method: 'POST',
-                        url: util.getApiUrl('v2/statistics', '', 'server'),
-                        data: data
-                    }).then(function successCallback(response) {
-                        var data = response.data;
-                        if (data.rescode == '200') {
-                            self.categories2[0].category = [];
-                            self.dataset2 = [];
-                            self.revenueData = [];
-                            data.timeList.forEach(function (el, index) {
-                                self.categories2[0].category.push({label: el.substring(5, 16)});
-                                self.revenueData.push({datetime: el.substring(5, 16)});
-                            });
+                    switch (select) {
+                        case 0:
+                            loadActiveTime();
+                            break;
+                        case 1:
+                            LoadXitang();
+                            break;
+                    }
 
-                            self.dataset2.push({seriesname: "总收益", data: []});
-                            data.totalMovieRevenue.forEach(function (el, index) {
-                                self.dataset2[0].data.push({value: el / 100});
-                                self.revenueData[index].totalMovieRevenue = el / 100;
-                            });
-                            self.dataset2.push({seriesname: "单次点播收益", data: []});
-                            data.singleMovieRevenue.forEach(function (el, index) {
-                                self.dataset2[1].data.push({value: el / 100});
-                                self.revenueData[index].singleMovieRevenue = el / 100;
-                            });
-                            self.dataset2.push({seriesname: "打包点播收益", data: []});
-                            data.packageMovieRevenue.forEach(function (el, index) {
-                                self.dataset2[2].data.push({value: el / 100});
-                                self.revenueData[index].packageMovieRevenue = el / 100;
-                            });
-                            deferred.resolve();
-                        }
-                        else {
-                            alert(data.errInfo);
+                    function loadActiveTime() {
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getActiveStatisticsInfo',
+                            endTime: '2017-03-23 10:00:00',
+                            project: ["all"],
+                            timespans: 6,
+                            type: 2
+                        })
+                        self.loadingChart3 = true;
+
+                        $http({
+                            method: 'POST',
+                            url: util.getApiUrl('v2/statistics', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response) {
+                            var data = response.data;
+                            if (data.rescode == '200') {
+                                self.categories3[0].category = [];
+                                self.dataset3 = [];
+                                self.dataSet3 = [];
+                                data.timeList.forEach(function (el, index) {
+                                    self.categories3[0].category.push({label: el.substring(5, 16)});
+                                    self.dataSet3.push({datetime: el.substring(5, 16)});
+                                });
+
+                                self.dataset3.push({seriesname: "活跃时长", data: []});
+                                data.totalActiveTime.forEach(function (el, index) {
+                                    self.dataset3[0].data.push({value: el});
+                                    self.dataSet3[index].totalActiveTime = el;
+                                });
+                                self.dataset3.push({seriesname: "活跃终端数", data: [], renderAs: "line", parentYAxis: "S"});
+                                data.activeCount.forEach(function (el, index) {
+                                    self.dataset3[1].data.push({value: el});
+                                    self.dataSet3[index].activeCount = el;
+                                });
+
+                                deferred.resolve();
+                            }
+                            else {
+                                alert(data.errInfo);
+                                deferred.reject();
+                            }
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
                             deferred.reject();
-                        }
-                    }, function errorCallback(response) {
-                        alert('连接服务器出错');
-                        deferred.reject();
-                    }).finally(function (value) {
-                        self.loadingChart2 = false;
-                    });
-                    return deferred.promise;
+                        }).finally(function (value) {
+                            self.loadingChart3 = false;
+                        });
+                        return deferred.promise;
+                    }
+
+                    function LoadXitang() {
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getXiTangTicketStatisticsInfo',
+                            endTime: '2017-03-23 10:00:00',
+                            project: ["all"],
+                            timespans: 7,
+                            type: 2
+                        })
+                        self.loadingChart2 = true;
+
+                        $http({
+                            method: 'POST',
+                            url: util.getApiUrl('v2/statistics', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response) {
+                            var data = response.data;
+                            if (data.rescode == '200') {
+                                self.categories3[0].category = [];
+                                self.dataset3 = [];
+                                self.revenueData = [];
+                                data.timeList.forEach(function (el, index) {
+                                    self.categories3[0].category.push({label: el.substring(5, 16)});
+                                    self.revenueData.push({datetime: el.substring(5, 16)});
+                                });
+
+                                self.dataset3.push({seriesname: "总收益", data: []});
+                                data.totalMovieRevenue.forEach(function (el, index) {
+                                    self.dataset3[0].data.push({value: el / 100});
+                                    self.revenueData[index].totalMovieRevenue = el / 100;
+                                });
+                                self.dataset3.push({seriesname: "单次点播收益", data: []});
+                                data.singleMovieRevenue.forEach(function (el, index) {
+                                    self.dataset3[1].data.push({value: el / 100});
+                                    self.revenueData[index].singleMovieRevenue = el / 100;
+                                });
+                                self.dataset3.push({seriesname: "打包点播收益", data: []});
+                                data.packageMovieRevenue.forEach(function (el, index) {
+                                    self.dataset3[2].data.push({value: el / 100});
+                                    self.revenueData[index].packageMovieRevenue = el / 100;
+                                });
+                                deferred.resolve();
+                            }
+                            else {
+                                alert(data.errInfo);
+                                deferred.reject();
+                            }
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
+                            deferred.reject();
+                        }).finally(function (value) {
+                            self.loadingChart2 = false;
+                        });
+                        return deferred.promise;
+                    }
+
                 }
             }
 
