@@ -96,13 +96,10 @@
                 <div class="specific-highcharts">
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{specific.attrs0}}" categories="{{specific.categories0}}"
-                         dataset="{{specific.dataset0}}"></div>
-                    <select class="select-charts-time">
-                        <option>小时</option>
-                        <option>日</option>
-                        <option>周</option>
-                        <option>月</option>
-                        <option>年</option>
+                         dataset="{{specific.dataset0}}">
+                    </div>
+                    <select class="select-charts-time" ng-model="specific.selectGra0" ng-change="specific.changeGra()"
+                            ng-options="x.id as x.name for x in granularity">
                     </select>
                 </div>
                 <div class="specific-table">
@@ -139,6 +136,9 @@
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{specific.attrs1}}" categories="{{specific.categories1}}"
                          dataset="{{specific.dataset1}}"></div>
+                    <select class="select-charts-time" ng-model="specific.selectGra1" ng-change="specific.changeGra()"
+                            ng-options="x.id as x.name for x in granularity">
+                    </select>
                 </div>
                 <div class="specific-table">
                     <!--次数 table 开始-->
@@ -165,6 +165,9 @@
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{specific.attrs2}}" categories="{{specific.categories2}}"
                          dataset="{{specific.dataset2}}"></div>
+                    <select class="select-charts-time" ng-model="specific.selectGra2" ng-change="specific.changeGra()"
+                            ng-options="x.id as x.name for x in granularity">
+                    </select>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
@@ -192,6 +195,9 @@
                     <div fusioncharts width="100%" height="400" type="mscombidy2d"
                          chart="{{specific.attrs3}}" categories="{{specific.categories3}}"
                          dataset="{{specific.dataset3}}"></div>
+                    <select class="select-charts-time" ng-model="specific.selectGra3" ng-change="specific.changeGra()"
+                            ng-options="x.id as x.name for x in granularity">
+                    </select>
                 </div>
                 <div class="specific-table"  ng-show="specific.other[0].show">
                     <!--终端时长 table 开始-->
@@ -212,8 +218,11 @@
                 <!--西塘票务 开始-->
                 <div class="specific-highcharts" ng-show="specific.other[1].show">
                     <div fusioncharts width="100%" height="400" type="mscombidy2d"
-                         chart="{{specific.attrs3}}" categories="{{specific.categories3}}"
-                         dataset="{{specific.dataset3}}"></div>
+                         chart="{{specific.attrs4}}" categories="{{specific.categories4}}"
+                         dataset="{{specific.dataset4}}"></div>
+                    <select class="select-charts-time" ng-model="specific.selectGra4" ng-change="specific.changeGra()"
+                            ng-options="x.id as x.name for x in granularity">
+                    </select>
                 </div>
                 <div class="specific-table"  ng-show="specific.other[1].show">
                     <!--西塘票务 table 开始-->

@@ -71,6 +71,14 @@
                 // 弹窗层
                 self.maskUrl = '';
                 self.maskParams = {};
+
+                $scope.granularity = [
+                    {id: 0, name: "小时"},
+                    {id: 1, name: "日"},
+                    {id: 2, name: "周"},
+                    {id: 3, name: "月"},
+                    {id: 4, name: "年"}
+                ]
             }
 
             // 添加 删除 弹窗，增加一个样式的class
@@ -682,6 +690,11 @@
 
                 self.initCharts();
 
+                self.selectGra0 = 0;
+                self.selectGra1 = 0;
+                self.selectGra2 = 0;
+                self.selectGra3 = 0;
+
                 self.loadChart();
                 self.orderby = {};
                 self.orderby.desc = false;
@@ -704,6 +717,14 @@
              */
             self.changeProject = function (projectName) {
                 util.setParams('project', projectName);
+                self.loadChart();
+            }
+
+            /**
+             * 修改粒度
+             */
+            self.changeGra = function () {
+
                 self.loadChart();
             }
 
@@ -1046,13 +1067,15 @@
                 function loadTerm() {
                     self.dataSet0 = [];
                     self.series0 = [];
+                    self.selectGra0 = Number(self.selectGra0);
+
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermStatisticsInfo',
                         endTime: '2017-03-23 10:00:00',
                         project: [util.getParams("project")],
                         timespans: 7,
-                        type: 2
+                        type: self.selectGra0
                     })
                     self.loadingChart0 = true;
 
@@ -1065,8 +1088,9 @@
                         if (data.rescode == '200') {
                             self.categories0[0].category = [];
                             data.timeList.forEach(function (el, index) {
-                                self.categories0[0].category.push({label: el.substring(5, 16)});
-                                self.dataSet0.push({datetime: el.substring(5, 16)});
+
+                                self.categories0[0].category.push({label: dtSubstring(el, self.selectGra0)});
+                                self.dataSet0.push({datetime: dtSubstring(el, self.selectGra0)});
                             });
 
                             self.dataset0.push({seriesname: "累计终端", data: []});
@@ -1133,8 +1157,7 @@
                     self.paySeries = [];
                     self.payData = [];
                     self.dataSet1 = [];
-
-
+                    self.selectGra1 = Number(self.selectGra1);
 
                     var data = JSON.stringify({
                         token: util.getParams("token"),
@@ -1142,7 +1165,7 @@
                         endTime: '2017-03-23 10:00:00',
                         project: [util.getParams("project")],
                         timespans: 7,
-                        type: 2
+                        type: self.selectGra1
                     })
                     self.loadingChart1 = true;
 
@@ -1190,8 +1213,8 @@
                             self.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                self.categories1[0].category.push({label: el.substring(5, 16)});
-                                self.wantPayData.push({datetime: el.substring(5, 16)});
+                                self.categories1[0].category.push({label: dtSubstring(el, self.selectGra1)});
+                                self.wantPayData.push({datetime: dtSubstring(el, self.selectGra1)});
                                 self.payData.push({datetime: el.substring(5, 16)});
                             });
 
@@ -1246,13 +1269,15 @@
                 }
                 
                 function loadRevenue() {
+                    self.selectGra2 = Number(self.selectGra2);
+
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getRevenueStatisticsInfo',
                         endTime: '2017-03-23 10:00:00',
                         project: [util.getParams("project")],
                         timespans: 7,
-                        type: 2
+                        type: self.selectGra2
                     })
                     self.loadingChart2 = true;
 
@@ -1267,8 +1292,8 @@
                             self.dataset2 = [];
                             self.revenueData = [];
                             data.timeList.forEach(function (el, index) {
-                                self.categories2[0].category.push({label: el.substring(5, 16)});
-                                self.revenueData.push({datetime: el.substring(5, 16)});
+                                self.categories2[0].category.push({label: dtSubstring(el, self.selectGra2)});
+                                self.revenueData.push({datetime: dtSubstring(el, self.selectGra2)});
                             });
 
                             self.dataset2.push({seriesname: "总收益", data: []});
@@ -1317,13 +1342,15 @@
                     }
 
                     function loadActiveTime() {
+                        self.selectGra3 = Number(self.selectGra3);
+
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getActiveStatisticsInfo',
                             endTime: '2017-03-23 10:00:00',
                             project: [util.getParams("project")],
                             timespans: 6,
-                            type: 2
+                            type: self.selectGra3
                         })
                         self.loadingChart3 = true;
 
@@ -1338,8 +1365,8 @@
                                 self.dataset3 = [];
                                 self.dataSet3 = [];
                                 data.timeList.forEach(function (el, index) {
-                                    self.categories3[0].category.push({label: el.substring(5, 16)});
-                                    self.dataSet3.push({datetime: el.substring(5, 16)});
+                                    self.categories3[0].category.push({label: dtSubstring(el, self.selectGra3)});
+                                    self.dataSet3.push({datetime: dtSubstring(el, self.selectGra3)});
                                 });
 
                                 self.dataset3.push({seriesname: "活跃时长", data: []});
@@ -1424,6 +1451,21 @@
                         return deferred.promise;
                     }
 
+                }
+
+                function dtSubstring(datetime, num) {
+                    switch (num) {
+                        case 0:
+                            return datetime.substring(5, 16);
+                        case 1:
+                            return datetime.substring(5, 10);
+                        case 2:
+                            return datetime.substring(5, 10);
+                        case 3:
+                            return datetime.substring(0, 7);
+                        case 4:
+                            return datetime.substring(0, 4);
+                    }
                 }
             }
 

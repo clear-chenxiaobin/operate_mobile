@@ -438,5 +438,8 @@ footer ul li {
         top: 105px;
         right: 20px;
         color: #9B9B9B;
+        border: 1px solid #9B9B9B;
+        background: transparent;
+        padding: 0px 0px 3px 5px;
     }
 }
