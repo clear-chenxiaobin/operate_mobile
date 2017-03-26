@@ -87,14 +87,13 @@
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{specific.attrs0}}" categories="{{specific.categories0}}"
                          dataset="{{specific.dataset0}}"></div>
-                    <select>
+                    <select class="select-charts-time">
                         <option>小时</option>
                         <option>日</option>
                         <option>周</option>
                         <option>月</option>
                         <option>年</option>
                     </select>
-                    </highchart>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
@@ -130,22 +129,23 @@
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{specific.attrs1}}" categories="{{specific.categories1}}"
                          dataset="{{specific.dataset1}}"></div>
-                    <div class="specific-table">
-                        <!--online table 开始-->
-                        <table class="table">
-                            <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
-                            <th><a ng-click="specific.changeOrderby('payCount')">总次数</a></th>
-                            <th><a ng-click="specific.changeOrderby('paySingleCount')">单次次数</a></th>
-                            <th><a ng-click="specific.changeOrderby('payPackageCount')">打包次数</a></th>
-                            <tr ng-repeat="n in specific.dataSet1 | orderBy: specific.countStatistics.sort : specific.countStatistics.desc">
-                                <td>{{n.datetime}}</td>
-                                <td>{{n.payCount}}</td>
-                                <td>{{n.paySingleCount}}</td>
-                                <td>{{n.payPackageCount}}</td>
-                            </tr>
-                        </table>
-                        <!--online table 结束-->
-                    </div>
+                </div>
+                <div class="specific-table">
+                    <!--次数 table 开始-->
+                    <table class="table">
+                        <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
+                        <th><a ng-click="specific.changeOrderby('payCount')">总次数</a></th>
+                        <th><a ng-click="specific.changeOrderby('paySingleCount')">单次次数</a></th>
+                        <th><a ng-click="specific.changeOrderby('payPackageCount')">打包次数</a></th>
+                        <tr ng-repeat="n in specific.dataSet1 | orderBy: specific.countStatistics.sort : specific.countStatistics.desc">
+                            <td>{{n.datetime}}</td>
+                            <td>{{n.payCount}}</td>
+                            <td>{{n.paySingleCount}}</td>
+                            <td>{{n.payPackageCount}}</td>
+                        </tr>
+                    </table>
+                    <!--次数 table 结束-->
+                </div>
             </uib-tab>
             <!--次数板块 结束-->
 
@@ -186,7 +186,7 @@
                     <!--online table 开始-->
                     <table class="table">
                         <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
-                        <th><a ng-click="specific.changeOrderby('cumulative')">指标1</a></th>
+                        <th ng-repeat=""><a ng-click="specific.changeOrderby('cumulative')">指标1</a></th>
                         <tr ng-repeat="n in specific.dataSet | orderBy: specific.term.sort : specific.term.desc">
                             <td>{{n.datetime}}</td>
                             <td>{{n.cumulative}}</td>
