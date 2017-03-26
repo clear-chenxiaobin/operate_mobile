@@ -211,7 +211,7 @@
 
             self.initCharts = function () {
                 self.attrs0 = {
-                    "caption": "",
+                    "caption": " ",
                     "xAxisname": "时间",
                     "yAxisName": "开机率",
                     "numberPrefix": "",                      //前缀
@@ -663,12 +663,11 @@
                     {name: '付 费 次 数', show: true, sort: '', desc: false},
                 ];
                 self.selectCount = 3;
-                self.other = ['其他'];
+                self.other = [
+                    {name: '西塘', show: true, sort: '', desc: false},
+                    {name: '活跃时长', show: false, sort: '', desc: false},
+                ];
 
-                // self.charts0 = new charts('终端 个', ' 个');
-                // self.charts1 = new charts('次数 次', ' 次');
-                // self.charts2 = new charts('金额 元', ' 元');
-                // self.charts1= new self.initCharts('', '时间', '次数', '');
                 self.initCharts();
 
                 self.loadChart();
@@ -780,9 +779,12 @@
             //     }
             // }
 
+            /**
+             * initCharts
+             */
             self.initCharts = function () {
                 self.attrs0 = {
-                    "caption": "",
+                    "caption": " ",
                     "xAxisname": "时间",
                     "yAxisName": "终端",
                     "numberPrefix": "",                      //前缀
@@ -831,7 +833,7 @@
                 self.dataset0 = [];
 
                 self.attrs1 = {
-                    "caption": "",
+                    "caption": " ",
                     "xAxisname": "时间",
                     "yAxisName": "次数",
                     "numberPrefix": "",                      //前缀
@@ -880,7 +882,7 @@
                 self.dataset1 = [];
 
                 self.attrs2 = {
-                    "caption": "",
+                    "caption": " ",
                     "xAxisname": "时间",
                     "yAxisName": "金额",
                     "numberPrefix": "¥ ",                 //前缀
@@ -929,7 +931,7 @@
                 self.dataset2 = [];
 
                 self.attrs3 = {
-                    "caption": "",
+                    "caption": " ",
                     "xAxisname": "时间",
                     "yAxisName": "金额",
                     "numberPrefix": "¥ ",                 //前缀
@@ -984,7 +986,11 @@
              */
             self.loadChart = function () {
                 var deferred = $q.defer();
-                self.dataSet0 = [];
+
+                self.dataset0 = [];
+                self.dataset1 = [];
+                self.dataset2 = [];
+                self.dataset3 = [];
 
                 switch (self.activerow) {
                     case 0:
@@ -997,6 +1003,7 @@
                         loadRevenue();
                         break;
                     case 3:
+                        loadOther();
                         break;
                 }
 
@@ -1004,7 +1011,7 @@
                  * 获取终端指标
                  */
                 function loadTerm() {
-                    self.dataset0 = [];
+                    self.dataSet0 = [];
                     self.series0 = [];
                     var data = JSON.stringify({
                         token: util.getParams("token"),
@@ -1093,6 +1100,7 @@
                     self.paySeries = [];
                     self.payData = [];
                     self.dataSet1 = [];
+
 
 
                     var data = JSON.stringify({
@@ -1205,6 +1213,62 @@
                 }
                 
                 function loadRevenue() {
+                    var data = JSON.stringify({
+                        token: util.getParams("token"),
+                        action: 'getRevenueStatisticsInfo',
+                        endTime: '2017-03-23 10:00:00',
+                        project: ["all"],
+                        timespans: 7,
+                        type: 2
+                    })
+                    self.loadingChart2 = true;
+
+                    $http({
+                        method: 'POST',
+                        url: util.getApiUrl('v2/statistics', '', 'server'),
+                        data: data
+                    }).then(function successCallback(response) {
+                        var data = response.data;
+                        if (data.rescode == '200') {
+                            self.categories2[0].category = [];
+                            self.dataset2 = [];
+                            self.revenueData = [];
+                            data.timeList.forEach(function (el, index) {
+                                self.categories2[0].category.push({label: el.substring(5, 16)});
+                                self.revenueData.push({datetime: el.substring(5, 16)});
+                            });
+
+                            self.dataset2.push({seriesname: "总收益", data: []});
+                            data.totalMovieRevenue.forEach(function (el, index) {
+                                self.dataset2[0].data.push({value: el / 100});
+                                self.revenueData[index].totalMovieRevenue = el / 100;
+                            });
+                            self.dataset2.push({seriesname: "单次点播收益", data: []});
+                            data.singleMovieRevenue.forEach(function (el, index) {
+                                self.dataset2[1].data.push({value: el / 100});
+                                self.revenueData[index].singleMovieRevenue = el / 100;
+                            });
+                            self.dataset2.push({seriesname: "打包点播收益", data: []});
+                            data.packageMovieRevenue.forEach(function (el, index) {
+                                self.dataset2[2].data.push({value: el / 100});
+                                self.revenueData[index].packageMovieRevenue = el / 100;
+                            });
+                            deferred.resolve();
+                        }
+                        else {
+                            alert(data.errInfo);
+                            deferred.reject();
+                        }
+                    }, function errorCallback(response) {
+                        alert('连接服务器出错');
+                        deferred.reject();
+                    }).finally(function (value) {
+                        self.loadingChart2 = false;
+                    });
+                    return deferred.promise;
+                }
+
+                function loadOther() {
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getRevenueStatisticsInfo',

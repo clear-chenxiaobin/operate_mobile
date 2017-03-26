@@ -432,4 +432,11 @@ footer ul li {
         margin-right: 10px;
         float: right;
     }
+
+    .select-charts-time {
+        position: absolute;
+        top: 105px;
+        right: 20px;
+        color: #9B9B9B;
+    }
 }
