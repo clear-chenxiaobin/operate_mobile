@@ -92,6 +92,21 @@
                     $scope.app.showMaskClass = false;
                 }
             }
+
+            $scope.dtSubstr = function(datetime, num) {
+                switch (num) {
+                    case 0:
+                        return datetime.substring(5, 16);
+                    case 1:
+                        return datetime.substring(5, 10);
+                    case 2:
+                        return datetime.substring(5, 10);
+                    case 3:
+                        return datetime.substring(0, 7);
+                    case 4:
+                        return datetime.substring(0, 4);
+                }
+            }
         }
     ])
 
@@ -161,6 +176,11 @@
                 ];
                 self.activerow = 0;
 
+                self.selectGra0 = 1;
+                self.selectGra1 = 1;
+                self.selectGra2 = 1;
+                self.selectGra3 = 1;
+
                 self.initCharts();
                 self.loadChart();
             }
@@ -171,6 +191,13 @@
              */
             self.isCurrent = function(index){
                 self.activerow = index;
+            }
+
+            /**
+             * 修改粒度
+             */
+            self.changeGra = function () {
+                self.loadChart();
             }
 
             /**
@@ -280,7 +307,7 @@
                 self.dataset0 = [];
 
                 self.attrs1 = {
-                    "caption": "",
+                    "caption": " ",
                     "xAxisname": "时间",
                     "yAxisName": "活跃率",
                     "numberPrefix": "",                      //前缀
@@ -329,7 +356,7 @@
                 self.dataset1 = [];
 
                 self.attrs2 = {
-                    "caption": "",
+                    "caption": " ",
                     "xAxisname": "时间",
                     "yAxisName": "付费转化率",
                     "numberPrefix": "",                     //前缀
@@ -378,9 +405,9 @@
                 self.dataset2 = [];
 
                 self.attrs3 = {
-                    "caption": "",
+                    "caption": " ",
                     "xAxisname": "时间",
-                    "yAxisName": "平均终端营收",
+                    "yAxisName": "平均每终端营收",
                     "numberPrefix": "",                 //前缀
                     "numberSuffix": "%",                   //后缀
                     "plotFillAlpha" : "",
@@ -442,7 +469,7 @@
                     endTime: '2017-03-23 10:00:00',
                     project: [util.getParams("project")],
                     timespans: 7,
-                    type: 2
+                    type: self.selectGra0
                 })
                 self.loadingChart0 = true;
 
@@ -455,8 +482,8 @@
                     if (data.rescode == '200') {
                         self.categories0[0].category = [];
                         data.timeList.forEach(function (el, index) {
-                            self.categories0[0].category.push({label: el.substring(5, 16)});
-                            self.dataSet0.push({datetime: el.substring(5, 16)});
+                            self.categories0[0].category.push({label: $scope.dtSubstr(el, self.selectGra0)});
+                            self.dataSet0.push({datetime: $scope.dtSubstr(el, self.selectGra0)});
                         });
 
                         self.dataset0.push({seriesname: "开机率", data: []});
@@ -525,7 +552,7 @@
                     endTime: '2017-03-23 10:00:00',
                     project: [util.getParams("project")],
                     timespans: 7,
-                    type: 2
+                    type: self.selectGra1
                 })
                 self.loadingChart1 = true;
 
@@ -538,8 +565,8 @@
                     if (data.rescode == '200') {
                         self.categories1[0].category = [];
                         data.timeList.forEach(function (el, index) {
-                            self.categories1[0].category.push({label: el.substring(5, 16)});
-                            self.dataSet1.push({datetime: el.substring(5, 16)});
+                            self.categories1[0].category.push({label: $scope.dtSubstr(el, self.selectGra1)});
+                            self.dataSet1.push({datetime: $scope.dtSubstr(el, self.selectGra1)});
                         });
 
                         self.dataset1.push({seriesname: "活跃率", data: []});
@@ -568,7 +595,7 @@
                     endTime: '2017-03-23 10:00:00',
                     project: [util.getParams("project")],
                     timespans: 7,
-                    type: 2
+                    type: self.selectGra2
                 })
                 self.loadingChart2 = true;
 
@@ -581,8 +608,8 @@
                     if (data.rescode == '200') {
                         self.categories2[0].category = [];
                         data.timeList.forEach(function (el, index) {
-                            self.categories2[0].category.push({label: el.substring(5, 16)});
-                            self.dataSet2.push({datetime: el.substring(5, 16)});
+                            self.categories2[0].category.push({label: $scope.dtSubstr(el, self.selectGra2)});
+                            self.dataSet2.push({datetime: $scope.dtSubstr(el, self.selectGra2)});
                         });
 
                         self.dataset2.push({seriesname: "付费转化率", data: []});
@@ -611,7 +638,7 @@
                     endTime: '2017-03-23 10:00:00',
                     project: [util.getParams("project")],
                     timespans: 7,
-                    type: 2
+                    type: self.selectGra3
                 })
                 self.loadingChart3 = true;
 
@@ -624,8 +651,8 @@
                     if (data.rescode == '200') {
                         self.categories3[0].category = [];
                         data.timeList.forEach(function (el, index) {
-                            self.categories3[0].category.push({label: el.substring(5, 16)});
-                            self.dataSet3.push({datetime: el.substring(5, 16)});
+                            self.categories3[0].category.push({label: $scope.dtSubstr(el, self.selectGra3)});
+                            self.dataSet3.push({datetime: $scope.dtSubstr(el, self.selectGra3)});
                         });
 
                         self.dataset3.push({seriesname: "付费转化率", data: []});
@@ -690,10 +717,10 @@
 
                 self.initCharts();
 
-                self.selectGra0 = 0;
-                self.selectGra1 = 0;
-                self.selectGra2 = 0;
-                self.selectGra3 = 0;
+                self.selectGra0 = 1;
+                self.selectGra1 = 1;
+                self.selectGra2 = 1;
+                self.selectGra3 = 1;
 
                 self.loadChart();
                 self.orderby = {};
@@ -724,7 +751,6 @@
              * 修改粒度
              */
             self.changeGra = function () {
-
                 self.loadChart();
             }
 
@@ -1067,7 +1093,6 @@
                 function loadTerm() {
                     self.dataSet0 = [];
                     self.series0 = [];
-                    self.selectGra0 = Number(self.selectGra0);
 
                     var data = JSON.stringify({
                         token: util.getParams("token"),
@@ -1157,7 +1182,6 @@
                     self.paySeries = [];
                     self.payData = [];
                     self.dataSet1 = [];
-                    self.selectGra1 = Number(self.selectGra1);
 
                     var data = JSON.stringify({
                         token: util.getParams("token"),
@@ -1269,8 +1293,6 @@
                 }
                 
                 function loadRevenue() {
-                    self.selectGra2 = Number(self.selectGra2);
-
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getRevenueStatisticsInfo',
@@ -1342,8 +1364,6 @@
                     }
 
                     function loadActiveTime() {
-                        self.selectGra3 = Number(self.selectGra3);
-
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getActiveStatisticsInfo',
@@ -1453,20 +1473,7 @@
 
                 }
 
-                function dtSubstring(datetime, num) {
-                    switch (num) {
-                        case 0:
-                            return datetime.substring(5, 16);
-                        case 1:
-                            return datetime.substring(5, 10);
-                        case 2:
-                            return datetime.substring(5, 10);
-                        case 3:
-                            return datetime.substring(0, 7);
-                        case 4:
-                            return datetime.substring(0, 4);
-                    }
-                }
+
             }
 
             /**

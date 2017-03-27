@@ -41,7 +41,7 @@
             <li class="col-xs-4 specific-sift-menu" ng-class="{activedClass:3 == overview.activerow}" ng-click="overview.isCurrent(3); active = 3">
                 <span>
                     <a class="specific-sift-menu-btn">
-                        平均没终端营收
+                        平均每终端营收
                     </a>
                 </span>
             </li>
@@ -57,7 +57,9 @@
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{overview.attrs0}}" categories="{{overview.categories0}}"
                          dataset="{{overview.dataset0}}"></div>
-                    <!--<highchart title='overview.charts.title' series="overview.chartsData" options="overview.charts.options" style="width: 100%"></highchart>-->
+                    <select class="select-charts-time" ng-model="overview.selectGra0" ng-change="overview.changeGra()"
+                            ng-options="x.id as x.name for x in granularity">
+                    </select>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
@@ -84,7 +86,9 @@
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{overview.attrs1}}" categories="{{overview.categories1}}"
                          dataset="{{overview.dataset1}}"></div>
-                    <!--<highchart title='overview.charts.title' series="overview.charts.series" options="overview.charts.options" style="width: 100%"></highchart>-->
+                    <select class="select-charts-time" ng-model="overview.selectGra1" ng-change="overview.changeGra()"
+                            ng-options="x.id as x.name for x in granularity">
+                    </select>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
@@ -111,7 +115,9 @@
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{overview.attrs2}}" categories="{{overview.categories2}}"
                          dataset="{{overview.dataset2}}"></div>
-                    <!--<highchart title='overview.charts.title' series="overview.charts.series" options="overview.charts.options" style="width: 100%"></highchart>-->
+                    <select class="select-charts-time" ng-model="overview.selectGra2" ng-change="overview.changeGra()"
+                            ng-options="x.id as x.name for x in granularity">
+                    </select>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
@@ -138,7 +144,9 @@
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{overview.attrs3}}" categories="{{overview.categories3}}"
                          dataset="{{overview.dataset3}}"></div>
-                    <!--<highchart title='overview.charts.title' series="overview.charts.series" options="overview.charts.options" style="width: 100%"></highchart>-->
+                    <select class="select-charts-time" ng-model="overview.selectGra3" ng-change="overview.changeGra()"
+                            ng-options="x.id as x.name for x in granularity">
+                    </select>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
