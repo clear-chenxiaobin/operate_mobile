@@ -216,28 +216,28 @@
                 <!--终端时长 结束-->
 
                 <!--西塘票务 开始-->
-                <div class="specific-highcharts" ng-show="specific.other[1].show">
-                    <div fusioncharts width="100%" height="400" type="mscombidy2d"
-                         chart="{{specific.attrs4}}" categories="{{specific.categories4}}"
-                         dataset="{{specific.dataset4}}"></div>
-                    <select class="select-charts-time" ng-model="specific.selectGra4" ng-change="specific.changeGra()"
-                            ng-options="x.id as x.name for x in granularity">
-                    </select>
-                </div>
-                <div class="specific-table"  ng-show="specific.other[1].show">
-                    <!--西塘票务 table 开始-->
-                    <table class="table">
-                        <th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>
-                        <th><a ng-click="specific.changeOrderby('totalActiveTime')">活跃时长</a></th>
-                        <th><a ng-click="specific.changeOrderby('activeCount')">活跃终端数</a></th>
-                        <tr ng-repeat="n in specific.dataSet3 | orderBy: specific.term.sort : specific.term.desc">
-                            <td>{{n.datetime}}</td>
-                            <td>{{n.totalActiveTime}}</td>
-                            <td>{{n.activeCount}}</td>
-                        </tr>
-                    </table>
-                    <!--西塘票务 table 结束-->
-                </div>
+                <!--<div class="specific-highcharts" ng-show="specific.other[1].show">-->
+                    <!--<div fusioncharts width="100%" height="400" type="mscombidy2d"-->
+                         <!--chart="{{specific.attrs4}}" categories="{{specific.categories4}}"-->
+                         <!--dataset="{{specific.dataset4}}"></div>-->
+                    <!--<select class="select-charts-time" ng-model="specific.selectGra4" ng-change="specific.changeGra()"-->
+                            <!--ng-options="x.id as x.name for x in granularity">-->
+                    <!--</select>-->
+                <!--</div>-->
+                <!--<div class="specific-table"  ng-show="specific.other[1].show">-->
+                    <!--&lt;!&ndash;西塘票务 table 开始&ndash;&gt;-->
+                    <!--<table class="table">-->
+                        <!--<th><a ng-click="specific.changeOrderby('datetime')">日期</a></th>-->
+                        <!--<th><a ng-click="specific.changeOrderby('totalActiveTime')">活跃时长</a></th>-->
+                        <!--<th><a ng-click="specific.changeOrderby('activeCount')">活跃终端数</a></th>-->
+                        <!--<tr ng-repeat="n in specific.dataSet3 | orderBy: specific.term.sort : specific.term.desc">-->
+                            <!--<td>{{n.datetime}}</td>-->
+                            <!--<td>{{n.totalActiveTime}}</td>-->
+                            <!--<td>{{n.activeCount}}</td>-->
+                        <!--</tr>-->
+                    <!--</table>-->
+                    <!--&lt;!&ndash;西塘票务 table 结束&ndash;&gt;-->
+                <!--</div>-->
                 <!--西塘票务 结束-->
             </uib-tab>
             <!--其他指标 结束-->
