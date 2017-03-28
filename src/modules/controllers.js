@@ -817,12 +817,15 @@
              * @returns {boolean}
              */
             self.selectTerm = function ($index) {
-                if (self.term[$index].show == true) {
+                if (self.term[$index].show == true && self.selectCount >= 2) {
                     self.selectCount--;
+                } else if (self.term[$index].show == true && self.selectCount < 2) {
+                    alert('最少选择1组数据！');
+                    return false;
                 } else if (self.term[$index].show == false && self.selectCount < 3) {
                     self.selectCount++;
                 } else {
-                    alert('最多只能选择3个显示！');
+                    alert('最多只能选择3组显示！');
                     return false;
                 }
                 self.term[$index].show = !self.term[$index].show;
