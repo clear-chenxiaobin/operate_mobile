@@ -144,7 +144,7 @@ a {
 }
 
 td {
-    min-width: 4em;
+    min-width: 3em;
 }
 
 .label > .glyphicon {
@@ -380,6 +380,11 @@ footer {
 
 footer ul li {
     list-style: none;
+}
+
+.datetimepicker {
+    border: 0px;
+    margin: 0;
 }
 
 @media screen and (max-width: 768px) {
