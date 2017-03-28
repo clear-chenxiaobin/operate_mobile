@@ -53,13 +53,41 @@
         <uib-tabset active="active">
             <!--开机率 开始-->
             <uib-tab index="0">
-                <div class="specific-highcharts">
+                <div class="charts-content">
+                    <div class="col-xs-12">
+                        <div class="dropdown col-xs-8">
+                            <a class="dropdown-toggle" id="dropdownEnd0" role="button" data-toggle="dropdown" data-target="" href="">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control" ng-model="overview.searchDate">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate[0]"
+                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
+                                                data-on-set-time="endDateOnSetDatetime()"
+                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
+
+                                </datetimepicker>
+                                <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate[0]"
+                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                                data-on-set-time="endDateOnSetTime()"
+                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
+
+                                </datetimepicker>
+                            </ul>
+
+                        </div>
+                        <div class="col-xs-4">
+                            <select class="select-charts-time" ng-model="overview.selectGra0" ng-change="overview.changeGra(overview.selectGra0, 0)"
+                                    ng-options="x.id as x.name for x in granularity">
+                            </select>
+                        </div>
+                    </div>
+
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{overview.attrs0}}" categories="{{overview.categories0}}"
                          dataset="{{overview.dataset0}}"></div>
-                    <select class="select-charts-time" ng-model="overview.selectGra0" ng-change="overview.changeGra()"
-                            ng-options="x.id as x.name for x in granularity">
-                    </select>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
@@ -82,13 +110,41 @@
 
             <!--活跃率 开始-->
             <uib-tab index="1">
-                <div class="specific-highcharts">
+                <div class="charts-content">
+                    <div class="col-xs-12">
+                        <div class="dropdown col-xs-8">
+                            <a class="dropdown-toggle" id="dropdownEnd1" role="button" data-toggle="dropdown" data-target="" href="">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control" ng-model="overview.searchDate">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate[1]"
+                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
+                                                data-on-set-time="endDateOnSetDatetime()"
+                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
+
+                                </datetimepicker>
+                                <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate[1]"
+                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                                data-on-set-time="endDateOnSetTime()"
+                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
+
+                                </datetimepicker>
+                            </ul>
+
+                        </div>
+                        <div class="col-xs-4">
+                            <select class="select-charts-time" ng-model="overview.selectGra1" ng-change="overview.changeGra(overview.selectGra1, 1)"
+                                    ng-options="x.id as x.name for x in granularity">
+                            </select>
+                        </div>
+                    </div>
+
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{overview.attrs1}}" categories="{{overview.categories1}}"
                          dataset="{{overview.dataset1}}"></div>
-                    <select class="select-charts-time" ng-model="overview.selectGra1" ng-change="overview.changeGra()"
-                            ng-options="x.id as x.name for x in granularity">
-                    </select>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
@@ -111,13 +167,40 @@
 
             <!--转化率 开始-->
             <uib-tab index="2">
-                <div class="specific-highcharts">
+                <div class="charts-content">
+                    <div class="col-xs-12">
+                        <div class="dropdown col-xs-8">
+                            <a class="dropdown-toggle" id="dropdownEnd2" role="button" data-toggle="dropdown" data-target="" href="">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control" ng-model="overview.searchDate">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate[2]"
+                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
+                                                data-on-set-time="endDateOnSetDatetime()"
+                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
+
+                                </datetimepicker>
+                                <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate[2]"
+                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                                data-on-set-time="endDateOnSetTime()"
+                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
+
+                                </datetimepicker>
+                            </ul>
+
+                        </div>
+                        <div class="col-xs-4">
+                            <select class="select-charts-time" ng-model="overview.selectGra2" ng-change="overview.changeGra(overview.selectGra2, 2)"
+                                    ng-options="x.id as x.name for x in granularity">
+                            </select>
+                        </div>
+                    </div>
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{overview.attrs2}}" categories="{{overview.categories2}}"
                          dataset="{{overview.dataset2}}"></div>
-                    <select class="select-charts-time" ng-model="overview.selectGra2" ng-change="overview.changeGra()"
-                            ng-options="x.id as x.name for x in granularity">
-                    </select>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
@@ -140,13 +223,40 @@
 
             <!--平均营收 开始-->
             <uib-tab index="3">
-                <div class="specific-highcharts">
+                <div class="charts-content">
+                    <div class="col-xs-12">
+                        <div class="dropdown col-xs-8">
+                            <a class="dropdown-toggle" id="dropdownEnd3" role="button" data-toggle="dropdown" data-target="" href="">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control" ng-model="overview.searchDate">
+                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate[3]"
+                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
+                                                data-on-set-time="endDateOnSetDatetime()"
+                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
+
+                                </datetimepicker>
+                                <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate[3]"
+                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                                data-on-set-time="endDateOnSetTime()"
+                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
+
+                                </datetimepicker>
+                            </ul>
+
+                        </div>
+                        <div class="col-xs-4">
+                            <select class="select-charts-time" ng-model="overview.selectGra3" ng-change="overview.changeGra(overview.selectGra3, 3)"
+                                    ng-options="x.id as x.name for x in granularity">
+                            </select>
+                        </div>
+                    </div>
                     <div fusioncharts width="100%" height="400" type="msarea"
                          chart="{{overview.attrs3}}" categories="{{overview.categories3}}"
                          dataset="{{overview.dataset3}}"></div>
-                    <select class="select-charts-time" ng-model="overview.selectGra3" ng-change="overview.changeGra()"
-                            ng-options="x.id as x.name for x in granularity">
-                    </select>
                 </div>
                 <div class="specific-table">
                     <!--online table 开始-->
