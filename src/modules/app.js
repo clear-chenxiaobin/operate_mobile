@@ -13,7 +13,7 @@
         'ngTable',
         'ui.bootstrap',
         'ui.bootstrap.datetimepicker',
-        'ng-fusioncharts'
+        'highcharts-ng'
     ])
     
     .config(['$translateProvider', function ($translateProvider) {
