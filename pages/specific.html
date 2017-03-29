@@ -118,14 +118,19 @@
                             </ul>
 
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-2">
+                            <select class="select-charts-time" ng-model="specific.selectDur0" ng-change="specific.loadChart()"
+                                    ng-options="x for x in durationList">
+                            </select>
+                        </div>
+                        <div class="col-xs-2">
                             <select class="select-charts-time" ng-model="specific.selectGra0" ng-change="specific.changeGra(specific.selectGra0, 0)"
                                     ng-options="x.id as x.name for x in granularity">
                             </select>
                         </div>
                     </div>
 
-                    <div fusioncharts width="100%" height="400" type="msarea"
+                    <div fusioncharts width="100%" height="346" type="msarea"
                          chart="{{specific.attrs0}}" categories="{{specific.categories0}}"
                          dataset="{{specific.dataset0}}">
                     </div>
@@ -186,13 +191,18 @@
                             </ul>
 
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-2">
+                            <select class="select-charts-time" ng-model="specific.selectDur1" ng-change="specific.loadChart()"
+                                    ng-options="x for x in durationList">
+                            </select>
+                        </div>
+                        <div class="col-xs-2">
                             <select class="select-charts-time" ng-model="specific.selectGra1" ng-change="specific.changeGra(specific.selectGra1, 1)"
                                     ng-options="x.id as x.name for x in granularity">
                             </select>
                         </div>
                     </div>
-                    <div fusioncharts width="100%" height="400" type="msarea"
+                    <div fusioncharts width="100%" height="346" type="msarea"
                          chart="{{specific.attrs1}}" categories="{{specific.categories1}}"
                          dataset="{{specific.dataset1}}"></div>
                 </div>
@@ -242,13 +252,18 @@
                             </ul>
 
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-2">
+                            <select class="select-charts-time" ng-model="specific.selectDur2" ng-change="specific.loadChart()"
+                                    ng-options="x for x in durationList">
+                            </select>
+                        </div>
+                        <div class="col-xs-2">
                             <select class="select-charts-time" ng-model="specific.selectGra2" ng-change="specific.changeGra(specific.selectGra2, 2)"
                                     ng-options="x.id as x.name for x in granularity">
                             </select>
                         </div>
                     </div>
-                    <div fusioncharts width="100%" height="400" type="msarea"
+                    <div fusioncharts width="100%" height="346" type="msarea"
                          chart="{{specific.attrs2}}" categories="{{specific.categories2}}"
                          dataset="{{specific.dataset2}}"></div>
                 </div>
@@ -299,13 +314,18 @@
                             </ul>
 
                         </div>
-                        <div class="col-xs-4">
+                        <div class="col-xs-2">
+                            <select class="select-charts-time" ng-model="specific.selectDur3" ng-change="specific.loadChart()"
+                                    ng-options="x for x in durationList">
+                            </select>
+                        </div>
+                        <div class="col-xs-2">
                             <select class="select-charts-time" ng-model="specific.selectGra3" ng-change="specific.changeGra(specific.selectGra3, 3)"
                                     ng-options="x.id as x.name for x in granularity">
                             </select>
                         </div>
                     </div>
-                    <div fusioncharts width="100%" height="400" type="mscombidy2d"
+                    <div fusioncharts width="100%" height="346" type="mscombidy2d"
                          chart="{{specific.attrs3}}" categories="{{specific.categories3}}"
                          dataset="{{specific.dataset3}}"></div>
                 </div>
@@ -327,7 +347,7 @@
 
                 <!--西塘票务 开始-->
                 <!--<div class="charts-content" ng-show="specific.other[1].show">-->
-                    <!--<div fusioncharts width="100%" height="400" type="mscombidy2d"-->
+                    <!--<div fusioncharts width="100%" height="346" type="mscombidy2d"-->
                          <!--chart="{{specific.attrs4}}" categories="{{specific.categories4}}"-->
                          <!--dataset="{{specific.dataset4}}"></div>-->
                     <!--<select class="select-charts-time" ng-model="specific.selectGra4" ng-change="specific.changeGra()"-->
