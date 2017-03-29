@@ -65,14 +65,14 @@
                         </div>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate[0]"
+                        <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate"
                                         data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
                                         data-on-set-time="endDateOnSetDatetime()"
                                         data-before-render="endDateBeforeRender($dates)"
                                         ng-change="overview.loadChart()">
 
                         </datetimepicker>
-                        <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate[0]"
+                        <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate"
                                         data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
                                         data-on-set-time="endDateOnSetTime()"
                                         data-before-render="endDateBeforeRender($dates)"
@@ -83,13 +83,13 @@
 
                 </div>
                 <div class="col-xs-2">
-                    <select class="select-charts-time" ng-model="overview.selectDur0" ng-change="overview.loadChart()"
+                    <select class="select-charts-time" ng-model="overview.selectDur" ng-change="overview.loadChart()"
                             ng-options="x for x in durationList">
                     </select>
                 </div>
                 <div class="col-xs-2">
-                    <select class="select-charts-time" ng-model="overview.selectGra0"
-                            ng-change="overview.changeGra(overview.selectGra0, 0)"
+                    <select class="select-charts-time" ng-model="overview.selectGra"
+                            ng-change="overview.changeGra(overview.selectGra)"
                             ng-options="x.id as x.name for x in granularity">
                     </select>
                 </div>

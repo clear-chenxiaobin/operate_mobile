@@ -202,16 +202,10 @@
 
                 $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
                 self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
-                self.selectGra0 = 1;
-                self.selectGra1 = 1;
-                self.selectGra2 = 1;
-                self.selectGra3 = 1;
-                self.isDate = [true, true, true, true];
+                self.selectGra = 1;
+                self.isDate = true;
 
-                self.selectDur0 = 7;
-                self.selectDur1 = 7;
-                self.selectDur2 = 7;
-                self.selectDur3 = 7;
+                self.selectDur = 7;
 
                 self.loadChart();
             }
@@ -230,12 +224,12 @@
             /**
              * 修改粒度
              */
-            self.changeGra = function (value, index) {
+            self.changeGra = function (value) {
                 if (value == 0) {
-                    self.isDate[index] = false;
+                    self.isDate = false;
                     if (self.searchDate.length == 10) self.searchDate += " 00:00";
                 } else {
-                    self.isDate[index] = true;
+                    self.isDate = true;
                     if (self.searchDate.length == 16) self.searchDate = self.searchDate.substring(0, 10);
                 }
                 self.loadChart();
@@ -317,8 +311,8 @@
                         action: 'getTermOnlineRateInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur0,
-                        type: self.selectGra0
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart0 = true;
 
@@ -335,8 +329,8 @@
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra0));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra0)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
                             self.charts.series.push({name: "开机率", data: []});
@@ -368,8 +362,8 @@
                         action: 'getTermActiveRateInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur1,
-                        type: self.selectGra1
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart1 = true;
 
@@ -386,8 +380,8 @@
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra1));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra1)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
                             self.charts.series.push({name: "活跃率", data: []});
@@ -420,8 +414,8 @@
                         action: 'getTermPayRateInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur2,
-                        type: self.selectGra2
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart2 = true;
 
@@ -438,8 +432,8 @@
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra2));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra2)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
                             self.charts.series.push({name: "付费转化率", data: []});
@@ -471,8 +465,8 @@
                         action: 'getPerTermRevenueInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur3,
-                        type: self.selectGra3
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart3 = true;
 
@@ -489,8 +483,8 @@
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra3));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra3)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
                             self.charts.series.push({name: "平均每终端营收", data: []});
@@ -580,16 +574,10 @@
 
                 $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
                 self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
-                self.selectGra0 = 1;
-                self.selectGra1 = 1;
-                self.selectGra2 = 1;
-                self.selectGra3 = 1;
-                self.isDate = [true, true, true, true];
+                self.selectGra = 1;
+                self.isDate = true;
 
-                self.selectDur0 = 7;
-                self.selectDur1 = 7;
-                self.selectDur2 = 7;
-                self.selectDur3 = 5;
+                self.selectDur = 7;
 
                 self.loadChart();
                 self.orderby = {};
@@ -619,12 +607,12 @@
             /**
              * 修改粒度
              */
-            self.changeGra = function (value, index) {
+            self.changeGra = function (value) {
                 if (value == 0) {
-                    self.isDate[index] = false;
+                    self.isDate = false;
                     if (self.searchDate.length == 10) self.searchDate += " 00:00";
                 } else {
-                    self.isDate[index] = true;
+                    self.isDate = true;
                     if (self.searchDate.length == 16) self.searchDate = self.searchDate.substring(0, 10);
                 }
                 self.loadChart();
@@ -794,8 +782,8 @@
                         action: 'getTermStatisticsInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur0,
-                        type: self.selectGra0
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart0 = true;
 
@@ -813,8 +801,8 @@
                             self.termData = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra0));
-                                self.termData.push({a: $scope.dtSubstr(el, self.selectGra0)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.termData.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
                             self.termSeries.push({name: "累计终端", data: []});
@@ -903,8 +891,8 @@
                         action: 'getPayCountStatisticsInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur1,
-                        type: self.selectGra1
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart1 = true;
 
@@ -925,9 +913,9 @@
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra1));
-                                self.wantPayData.push({a: $scope.dtSubstr(el, self.selectGra1)});
-                                self.payData.push({a: $scope.dtSubstr(el, self.selectGra1)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.wantPayData.push({a: $scope.dtSubstr(el, self.selectGra)});
+                                self.payData.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
                             self.wantPaySeries.push({name: "准付费次数", id: "series-0", data: []});
@@ -994,8 +982,8 @@
                         action: 'getRevenueStatisticsInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur2,
-                        type: self.selectGra2
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart2 = true;
 
@@ -1012,8 +1000,8 @@
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra2));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra2)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
                             self.charts.series.push({name: "总收益", data: []});
@@ -1067,8 +1055,8 @@
                             action: 'getActiveStatisticsInfo',
                             endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                             project: [util.getParams("project")],
-                            timespans: self.selectDur3,
-                            type: self.selectGra3
+                            timespans: self.selectDur,
+                            type: self.selectGra
                         })
                         self.loadingChart3 = true;
 
@@ -1085,13 +1073,13 @@
                                 self.charts.series = [];
 
                                 data.timeList.forEach(function (el, index) {
-                                    if (index < 5) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra3));
-                                    self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra3)});
+                                    if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                    self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                                 });
 
                                 self.charts.series.push({name: "活跃时长", data: []});
                                 data.totalActiveTime.forEach(function (el, index) {
-                                    if (index < 5) self.charts.series[0].data.push(Number((el / 3600).toFixed(2)));
+                                    if (index < 7) self.charts.series[0].data.push(Number((el / 3600).toFixed(2)));
 
                                     var h = Math.floor(el / 3600);
                                     var m = Math.floor((el - h * 3600) / 60);

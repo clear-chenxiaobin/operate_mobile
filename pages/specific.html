@@ -101,14 +101,14 @@
                         </div>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <datetimepicker ng-model="specific.searchDate" ng-if="!specific.isDate[0]"
+                        <datetimepicker ng-model="specific.searchDate" ng-if="!specific.isDate"
                                         data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
                                         data-on-set-time="endDateOnSetDatetime()"
                                         data-before-render="endDateBeforeRender($dates)"
                                         ng-change="specific.loadChart()">
 
                         </datetimepicker>
-                        <datetimepicker ng-model="specific.searchDate" ng-if="specific.isDate[0]"
+                        <datetimepicker ng-model="specific.searchDate" ng-if="specific.isDate"
                                         data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
                                         data-on-set-time="endDateOnSetTime()"
                                         data-before-render="endDateBeforeRender($dates)"
@@ -119,13 +119,13 @@
 
                 </div>
                 <div class="col-xs-2">
-                    <select class="select-charts-time" ng-model="specific.selectDur0" ng-change="specific.loadChart()"
+                    <select class="select-charts-time" ng-model="specific.selectDur" ng-change="specific.loadChart()"
                             ng-options="x for x in durationList">
                     </select>
                 </div>
                 <div class="col-xs-2">
-                    <select class="select-charts-time" ng-model="specific.selectGra0"
-                            ng-change="specific.changeGra(specific.selectGra0, 0)"
+                    <select class="select-charts-time" ng-model="specific.selectGra"
+                            ng-change="specific.changeGra(specific.selectGra)"
                             ng-options="x.id as x.name for x in granularity">
                     </select>
                 </div>
