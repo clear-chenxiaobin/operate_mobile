@@ -333,7 +333,7 @@
                                 self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.charts.series.push({name: "开机率", data: []});
+                            self.charts.series.push({name: "开机率", data: [], tooltip: {valueSuffix: '%'}});
                             data.onlineRate.forEach(function (el, index) {
                                 if (index < 7) self.charts.series[0].data.push(el * 100);
                                 self.dataSet[index].b = el * 100 + '%';
@@ -384,7 +384,7 @@
                                 self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.charts.series.push({name: "活跃率", data: []});
+                            self.charts.series.push({name: "活跃率", data: [], tooltip: {valueSuffix: '%'}});
                             data.activeRate.forEach(function (el, index) {
                                 if (index < 7) self.charts.series[0].data.push(el * 100);
                                 self.dataSet[index].b = el * 100 + '%';
@@ -436,7 +436,7 @@
                                 self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.charts.series.push({name: "付费转化率", data: []});
+                            self.charts.series.push({name: "付费转化率", data: [], tooltip: {valueSuffix: '%'}});
                             data.payRate.forEach(function (el, index) {
                                 if (index < 7) self.charts.series[0].data.push(el * 100);
                                 self.dataSet[index].b = el * 100 + '%';
@@ -487,7 +487,7 @@
                                 self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.charts.series.push({name: "平均每终端营收", data: []});
+                            self.charts.series.push({name: "平均每终端营收", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.revenue.forEach(function (el, index) {
                                 if (index < 7) self.charts.series[0].data.push(el);
                                 self.dataSet[index].b = el;
@@ -805,19 +805,19 @@
                                 self.termData.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.termSeries.push({name: "累计终端", data: []});
+                            self.termSeries.push({name: "累计终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.addUpCount.forEach(function (el, index) {
                                 if (index < 7) self.termSeries[0].data.push(el);
                                 self.termData[index].b = el;
                             });
 
-                            self.termSeries.push({name: "上线终端", data: []});
+                            self.termSeries.push({name: "上线终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.onlineCount.forEach(function (el, index) {
                                 if (index < 7) self.termSeries[1].data.push(el);
                                 self.termData[index].c = el;
                             });
 
-                            self.termSeries.push({name: "活跃终端", data: []});
+                            self.termSeries.push({name: "活跃终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.activeCount.forEach(function (el, index) {
                                 if (index < 7) self.termSeries[2].data.push(el);
                                 self.termData[index].d = el;
@@ -918,33 +918,33 @@
                                 self.payData.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.wantPaySeries.push({name: "准付费次数", id: "series-0", data: []});
+                            self.wantPaySeries.push({name: "准付费次数", id: "series-0", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.wantPayCount.forEach(function (el, index) {
                                 if (index < 7) self.wantPaySeries[0].data.push(el);
                                 self.wantPayData[index].b = el;
                             });
-                            self.wantPaySeries.push({name: "准付费次数(单次)", id: "series-1", data: []});
+                            self.wantPaySeries.push({name: "准付费次数(单次)", id: "series-1", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.wantPaySingleCount.forEach(function (el, index) {
                                 if (index < 7) self.wantPaySeries[1].data.push(el);
                                 self.wantPayData[index].c= el;
                             });
-                            self.wantPaySeries.push({name: "准付费次数(打包)", id: "series-2", data: []});
+                            self.wantPaySeries.push({name: "准付费次数(打包)", id: "series-2", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.wantPayPackageCount.forEach(function (el, index) {
                                 if (index < 7) self.wantPaySeries[2].data.push(el);
                                 self.wantPayData[index].d= el;
                             });
 
-                            self.paySeries.push({name: "付费次数", id: "series-0", data: []});
+                            self.paySeries.push({name: "付费次数", id: "series-0", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.payCount.forEach(function (el, index) {
                                 if (index < 7) self.paySeries[0].data.push(el);
                                 self.payData[index].b = el;
                             });
-                            self.paySeries.push({name: "付费次数(单次)", id: "series-1", data: []});
+                            self.paySeries.push({name: "付费次数(单次)", id: "series-1", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.paySingleCount.forEach(function (el, index) {
                                 if (index < 7) self.paySeries[1].data.push(el);
                                 self.payData[index].c = el;
                             });
-                            self.paySeries.push({name: "付费次数(打包)", id: "series-2", data: []});
+                            self.paySeries.push({name: "付费次数(打包)", id: "series-2", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.payPackageCount.forEach(function (el, index) {
                                 if (index < 7) self.paySeries[2].data.push(el);
                                 self.payData[index].d = el;
@@ -1004,17 +1004,17 @@
                                 self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.charts.series.push({name: "总收益", data: []});
+                            self.charts.series.push({name: "总收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.totalMovieRevenue.forEach(function (el, index) {
                                 if (index < 7) self.charts.series[0].data.push(el);
                                 self.dataSet[index].b = el;
                             });
-                            self.charts.series.push({name: "单次点播收益", data: []});
+                            self.charts.series.push({name: "单次点播收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.singleMovieRevenue.forEach(function (el, index) {
                                 if (index < 7) self.charts.series[1].data.push(el);
                                 self.dataSet[index].c = el;
                             });
-                            self.charts.series.push({name: "打包点播收益", data: []});
+                            self.charts.series.push({name: "打包点播收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.packageMovieRevenue.forEach(function (el, index) {
                                 if (index < 7) self.charts.series[2].data.push(el);
                                 self.dataSet[index].d = el;
@@ -1077,7 +1077,7 @@
                                     self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                                 });
 
-                                self.charts.series.push({name: "活跃时长", data: []});
+                                self.charts.series.push({name: "活跃时长", data: [], tooltip: {valueSuffix: ' 小时'}});
                                 data.totalActiveTime.forEach(function (el, index) {
                                     if (index < 7) self.charts.series[0].data.push(Number((el / 3600).toFixed(2)));
 
