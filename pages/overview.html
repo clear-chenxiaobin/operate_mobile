@@ -17,28 +17,32 @@
     <!--筛选条件-->
     <div class="body-top">
         <ul>
-            <li class="col-xs-2 specific-sift-menu" ng-class="{activedClass:0 == overview.activerow}" ng-click="overview.isCurrent(0); active = 0">
+            <li class="col-xs-2 specific-sift-menu" ng-class="{activedClass:0 == overview.activerow}"
+                ng-click="overview.isCurrent(0)">
                 <span>
                     <a class="specific-sift-menu-btn">
                         开机率
                     </a>
                 </span>
             </li>
-            <li class="col-xs-2 specific-sift-menu" ng-class="{activedClass:1 == overview.activerow}" ng-click="overview.isCurrent(1); active = 1">
+            <li class="col-xs-2 specific-sift-menu" ng-class="{activedClass:1 == overview.activerow}"
+                ng-click="overview.isCurrent(1)">
                 <span>
                     <a class="specific-sift-menu-btn">
                         活跃率
                     </a>
                 </span>
             </li>
-            <li class="col-xs-4 specific-sift-menu" ng-class="{activedClass:2 == overview.activerow}" ng-click="overview.isCurrent(2); active = 2">
+            <li class="col-xs-4 specific-sift-menu" ng-class="{activedClass:2 == overview.activerow}"
+                ng-click="overview.isCurrent(2)">
                 <span>
                     <a class="specific-sift-menu-btn">
                         付费终端转化率
                     </a>
                 </span>
             </li>
-            <li class="col-xs-4 specific-sift-menu" ng-class="{activedClass:3 == overview.activerow}" ng-click="overview.isCurrent(3); active = 3">
+            <li class="col-xs-4 specific-sift-menu" ng-class="{activedClass:3 == overview.activerow}"
+                ng-click="overview.isCurrent(3)">
                 <span>
                     <a class="specific-sift-menu-btn">
                         平均每终端营收
@@ -50,249 +54,59 @@
     <!--筛选条件-->
 
     <div class="page-body">
-        <uib-tabset active="active">
-            <!--开机率 开始-->
-            <uib-tab index="0">
-                <div class="charts-content">
-                    <div class="col-xs-12">
-                        <div class="dropdown col-xs-8">
-                            <a class="dropdown-toggle" id="dropdownEnd0" role="button" data-toggle="dropdown" data-target="" href="">
-                                <div class="input-group date">
-                                    <input type="text" class="form-control" ng-model="overview.searchDate">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                </div>
-                            </a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate[0]"
-                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
-                                                data-on-set-time="endDateOnSetDatetime()"
-                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
-
-                                </datetimepicker>
-                                <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate[0]"
-                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                                                data-on-set-time="endDateOnSetTime()"
-                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
-
-                                </datetimepicker>
-                            </ul>
-
+        <div class="charts-content">
+            <div class="col-xs-12">
+                <div class="dropdown col-xs-8">
+                    <a class="dropdown-toggle" id="dropdownEnd0" role="button" data-toggle="dropdown" data-target=""
+                       href="">
+                        <div class="input-group date">
+                            <input type="text" class="form-control" ng-model="overview.searchDate">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
                         </div>
-                        <div class="col-xs-2">
-                            <select class="select-charts-time" ng-model="overview.selectDur0" ng-change="overview.loadChart()"
-                                    ng-options="x for x in durationList">
-                            </select>
-                        </div>
-                        <div class="col-xs-2">
-                            <select class="select-charts-time" ng-model="overview.selectGra0" ng-change="overview.changeGra(overview.selectGra0, 0)"
-                                    ng-options="x.id as x.name for x in granularity">
-                            </select>
-                        </div>
-                    </div>
+                    </a>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                        <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate"
+                                        data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
+                                        data-on-set-time="endDateOnSetDatetime()"
+                                        data-before-render="endDateBeforeRender($dates)"
+                                        ng-change="overview.loadChart()">
 
-                    <div fusioncharts width="100%" height="346" type="msarea"
-                         chart="{{overview.attrs0}}" categories="{{overview.categories0}}"
-                         dataset="{{overview.dataset0}}"></div>
+                        </datetimepicker>
+                        <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate"
+                                        data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                        data-on-set-time="endDateOnSetTime()"
+                                        data-before-render="endDateBeforeRender($dates)"
+                                        ng-change="overview.loadChart()">
+
+                        </datetimepicker>
+                    </ul>
+
                 </div>
-                <div class="specific-table">
-                    <!--online table 开始-->
-                    <table class="table">
-                        <th><a ng-click="overview.changeOrderby('datetime')">日期</a></th>
-                        <!--<th><a ng-click="overview.changeOrderby('addUpCount')">累计终端</a></th>-->
-                        <!--<th><a ng-click="overview.changeOrderby('onlineCount')">上线终端</a></th>-->
-                        <th><a ng-click="overview.changeOrderby('onlineRate')">开机率</a></th>
-                        <tr ng-repeat="n in overview.dataSet0 | orderBy: overview.orderby.sort : overview.orderby.desc">
-                            <td>{{n.datetime}}</td>
-                            <!--<td>{{n.addUpCount}}</td>-->
-                            <!--<td>{{n.onlineCount}}</td>-->
-                            <td>{{n.onlineRate}}</td>
-                        </tr>
-                    </table>
-                    <!--online table 结束-->
+                <div class="col-xs-2">
+                    <select class="select-charts-time" ng-model="overview.selectDur" ng-change="overview.loadChart()"
+                            ng-options="x for x in durationList">
+                    </select>
                 </div>
-            </uib-tab>
-            <!--开机率 结束-->
-
-            <!--活跃率 开始-->
-            <uib-tab index="1">
-                <div class="charts-content">
-                    <div class="col-xs-12">
-                        <div class="dropdown col-xs-8">
-                            <a class="dropdown-toggle" id="dropdownEnd1" role="button" data-toggle="dropdown" data-target="" href="">
-                                <div class="input-group date">
-                                    <input type="text" class="form-control" ng-model="overview.searchDate">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                </div>
-                            </a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate[1]"
-                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
-                                                data-on-set-time="endDateOnSetDatetime()"
-                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
-
-                                </datetimepicker>
-                                <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate[1]"
-                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                                                data-on-set-time="endDateOnSetTime()"
-                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
-
-                                </datetimepicker>
-                            </ul>
-
-                        </div>
-                        <div class="col-xs-2">
-                            <select class="select-charts-time" ng-model="overview.selectDur1" ng-change="overview.loadChart()"
-                                    ng-options="x for x in durationList">
-                            </select>
-                        </div>
-                        <div class="col-xs-2">
-                            <select class="select-charts-time" ng-model="overview.selectGra1" ng-change="overview.changeGra(overview.selectGra1, 1)"
-                                    ng-options="x.id as x.name for x in granularity">
-                            </select>
-                        </div>
-                    </div>
-
-                    <div fusioncharts width="100%" height="346" type="msarea"
-                         chart="{{overview.attrs1}}" categories="{{overview.categories1}}"
-                         dataset="{{overview.dataset1}}"></div>
+                <div class="col-xs-2">
+                    <select class="select-charts-time" ng-model="overview.selectGra"
+                            ng-change="overview.changeGra(overview.selectGra)"
+                            ng-options="x.id as x.name for x in granularity">
+                    </select>
                 </div>
-                <div class="specific-table">
-                    <!--online table 开始-->
-                    <table class="table">
-                        <th><a ng-click="overview.changeOrderby('datetime')">日期</a></th>
-                        <!--<th><a ng-click="overview.changeOrderby('cumulative')">上线终端</a></th>-->
-                        <!--<th><a ng-click="overview.changeOrderby('online')">活跃终端</a></th>-->
-                        <th><a ng-click="overview.changeOrderby('activeRate')">活跃率</a></th>
-                        <tr ng-repeat="n in overview.dataSet1 | orderBy: overview.term.sort : overview.term.desc">
-                            <td>{{n.datetime}}</td>
-                            <!--<td>{{n.cumulative}}</td>-->
-                            <!--<td>{{n.online}}</td>-->
-                            <td>{{n.activeRate}}</td>
-                        </tr>
-                    </table>
-                    <!--online table 结束-->
-                </div>
-            </uib-tab>
-            <!--活跃率 结束-->
+            </div>
 
-            <!--转化率 开始-->
-            <uib-tab index="2">
-                <div class="charts-content">
-                    <div class="col-xs-12">
-                        <div class="dropdown col-xs-8">
-                            <a class="dropdown-toggle" id="dropdownEnd2" role="button" data-toggle="dropdown" data-target="" href="">
-                                <div class="input-group date">
-                                    <input type="text" class="form-control" ng-model="overview.searchDate">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                </div>
-                            </a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate[2]"
-                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
-                                                data-on-set-time="endDateOnSetDatetime()"
-                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
-
-                                </datetimepicker>
-                                <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate[2]"
-                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                                                data-on-set-time="endDateOnSetTime()"
-                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
-
-                                </datetimepicker>
-                            </ul>
-
-                        </div>
-                        <div class="col-xs-2">
-                            <select class="select-charts-time" ng-model="overview.selectDur2" ng-change="overview.loadChart()"
-                                    ng-options="x for x in durationList">
-                            </select>
-                        </div>
-                        <div class="col-xs-2">
-                            <select class="select-charts-time" ng-model="overview.selectGra2" ng-change="overview.changeGra(overview.selectGra2, 2)"
-                                    ng-options="x.id as x.name for x in granularity">
-                            </select>
-                        </div>
-                    </div>
-                    <div fusioncharts width="100%" height="346" type="msarea"
-                         chart="{{overview.attrs2}}" categories="{{overview.categories2}}"
-                         dataset="{{overview.dataset2}}"></div>
-                </div>
-                <div class="specific-table">
-                    <!--online table 开始-->
-                    <table class="table">
-                        <th><a ng-click="overview.changeOrderby('datetime')">日期</a></th>
-                        <!--<th><a ng-click="overview.changeOrderby('cumulative')">活跃终端</a></th>-->
-                        <!--<th><a ng-click="overview.changeOrderby('online')">付费终端</a></th>-->
-                        <th><a ng-click="overview.changeOrderby('payRate')">转化率</a></th>
-                        <tr ng-repeat="n in overview.dataSet2 | orderBy: overview.term.sort : overview.term.desc">
-                            <td>{{n.datetime}}</td>
-                            <!--<td>{{n.cumulative}}</td>-->
-                            <!--<td>{{n.online}}</td>-->
-                            <td>{{n.payRate}}</td>
-                        </tr>
-                    </table>
-                    <!--online table 结束-->
-                </div>
-            </uib-tab>
-            <!--转化率 结束-->
-
-            <!--平均营收 开始-->
-            <uib-tab index="3">
-                <div class="charts-content">
-                    <div class="col-xs-12">
-                        <div class="dropdown col-xs-8">
-                            <a class="dropdown-toggle" id="dropdownEnd3" role="button" data-toggle="dropdown" data-target="" href="">
-                                <div class="input-group date">
-                                    <input type="text" class="form-control" ng-model="overview.searchDate">
-                                    <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
-                                </div>
-                            </a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                <datetimepicker ng-model="overview.searchDate" ng-if="!overview.isDate[3]"
-                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
-                                                data-on-set-time="endDateOnSetDatetime()"
-                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
-
-                                </datetimepicker>
-                                <datetimepicker ng-model="overview.searchDate" ng-if="overview.isDate[3]"
-                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                                                data-on-set-time="endDateOnSetTime()"
-                                                data-before-render="endDateBeforeRender($dates)" ng-change="overview.loadChart()">
-
-                                </datetimepicker>
-                            </ul>
-
-                        </div>
-                        <div class="col-xs-2">
-                            <select class="select-charts-time" ng-model="overview.selectDur3" ng-change="overview.loadChart()"
-                                    ng-options="x for x in durationList">
-                            </select>
-                        </div>
-                        <div class="col-xs-2">
-                            <select class="select-charts-time" ng-model="overview.selectGra3" ng-change="overview.changeGra(overview.selectGra3, 3)"
-                                    ng-options="x.id as x.name for x in granularity">
-                            </select>
-                        </div>
-                    </div>
-                    <div fusioncharts width="100%" height="346" type="msarea"
-                         chart="{{overview.attrs3}}" categories="{{overview.categories3}}"
-                         dataset="{{overview.dataset3}}"></div>
-                </div>
-                <div class="specific-table">
-                    <!--online table 开始-->
-                    <table class="table">
-                        <th><a ng-click="overview.changeOrderby('datetime')">日期</a></th>
-                        <th><a ng-click="overview.changeOrderby('revenue')">平均每终端营收</a></th>
-                        <tr ng-repeat="n in overview.dataSet3 | orderBy: overview.term.sort : overview.term.desc">
-                            <td>{{n.datetime}}</td>
-                            <td>{{n.revenue}}</td>
-                        </tr>
-                    </table>
-                    <!--online table 结束-->
-                </div>
-            </uib-tab>
-            <!--平均营收 结束-->
-        </uib-tabset>
-
+            <highchart class="chart-container-big" config="overview.charts"
+                       style="width: 100%; height: 346px"></highchart>
+        </div>
+        <div class="specific-table">
+            <!-- table 开始-->
+            <table class="table">
+                <th ng-repeat="n in overview.th"><a ng-click="overview.changeOrderby('datetime')">{{n}}</a></th>
+                <tr ng-repeat="n in overview.dataSet | orderBy: overview.orderby.sort : overview.orderby.desc">
+                    <td ng-repeat="(key, value) in n">{{value}}</td>
+                </tr>
+            </table>
+            <!-- table 结束-->
+        </div>
     </div>
 </div>

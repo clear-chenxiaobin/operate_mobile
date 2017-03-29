@@ -80,7 +80,7 @@
                     {id: 4, name: "年"}
                 ]
 
-                $scope.durationList = [3, 4, 5, 6, 7, 8, 8, 10, 11, 12, 24];
+                $scope.durationList = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24];
             }
 
             // 添加 删除 弹窗，增加一个样式的class
@@ -202,18 +202,11 @@
 
                 $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
                 self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
-                self.selectGra0 = 1;
-                self.selectGra1 = 1;
-                self.selectGra2 = 1;
-                self.selectGra3 = 1;
-                self.isDate = [true, true, true, true];
+                self.selectGra = 1;
+                self.isDate = true;
 
-                self.selectDur0 = 7;
-                self.selectDur1 = 7;
-                self.selectDur2 = 7;
-                self.selectDur3 = 7;
+                self.selectDur = 7;
 
-                self.initCharts();
                 self.loadChart();
             }
 
@@ -231,12 +224,12 @@
             /**
              * 修改粒度
              */
-            self.changeGra = function (value, index) {
+            self.changeGra = function (value) {
                 if (value == 0) {
-                    self.isDate[index] = false;
+                    self.isDate = false;
                     if (self.searchDate.length == 10) self.searchDate += " 00:00";
                 } else {
-                    self.isDate[index] = true;
+                    self.isDate = true;
                     if (self.searchDate.length == 16) self.searchDate = self.searchDate.substring(0, 10);
                 }
                 self.loadChart();
@@ -251,209 +244,44 @@
                 self.loadChart();
             }
 
-            /**
-             * 初始化图表
-             */
-            self.initCharts = function () {
-                self.attrs0 = {
-                    "caption": "",
-                    "xAxisname": "时间",
-                    "yAxisName": "开机率",
-                    "numberPrefix": "",                      //前缀
-                    "numberSuffix": "%",                     //后缀
-                    "plotFillAlpha" : "60",
-
-                    //Cosmetics
-                    "paletteColors" : "#0075c2,#1aaf5d",
-                    "baseFontColor" : "#333333",
-                    "baseFont" : "Helvetica Neue,Arial",
-                    "captionFontSize" : "14",
-                    "subcaptionFontSize" : "14",
-                    "subcaptionFontBold" : "0",
-                    "showBorder" : "0",
-                    "bgColor" : "#ffffff",
-                    "showShadow" : "0",
-                    "showValues": "0",
-                    "canvasBgColor" : "#ffffff",
-                    "canvasBorderAlpha" : "0",
-                    "divlineAlpha" : "100",
-                    "divlineColor" : "#999999",
-                    "divlineThickness" : "1",
-                    "divLineIsDashed" : "1",
-                    "divLineDashLen" : "1",
-                    "divLineGapLen" : "1",
-                    "usePlotGradientColor" : "0",
-                    "showplotborder" : "0",
-                    "valueFontColor" : "#000000",
-                    "placeValuesInside" : "1",
-                    "showHoverEffect" : "1",
-                    "rotateValues" : "0",
-                    "showXAxisLine" : "1",
-                    "xAxisLineThickness" : "1",
-                    "xAxisLineColor" : "#999999",
-                    "showAlternateHGridColor" : "0",
-                    "legendBgAlpha" : "0",
-                    "legendBorderAlpha" : "0",
-                    "legendShadow" : "0",
-                    "legendItemFontSize" : "10",
-                    "legendItemFontColor" : "#666666"
-                };
-                self.categories0 = [
-                    {
-                        "category": []
+            self.charts = {
+                chart: {
+                    type: 'areaspline'
+                },
+                title: {
+                    text: ''
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'left',
+                    verticalAlign: 'top',
+                    x: 150,
+                    y: 100,
+                    floating: true,
+                    borderWidth: 1,
+                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+                },
+                xAxis: {
+                    categories: [],
+                },
+                yAxis: {
+                    title: {
+                        text: ''      //y轴
                     }
-                ];
-                self.dataset0 = [];
-
-                self.attrs1 = {
-                    "caption": "",
-                    "xAxisname": "时间",
-                    "yAxisName": "活跃率",
-                    "numberPrefix": "",                      //前缀
-                    "numberSuffix": "%",                   //后缀
-                    "plotFillAlpha" : "60",
-
-                    //Cosmetics
-                    "paletteColors" : "#0075c2,#1aaf5d",
-                    "baseFontColor" : "#333333",
-                    "baseFont" : "Helvetica Neue,Arial",
-                    "captionFontSize" : "14",
-                    "subcaptionFontSize" : "14",
-                    "subcaptionFontBold" : "0",
-                    "showBorder" : "0",
-                    "bgColor" : "#ffffff",
-                    "showShadow" : "0",
-                    "showValues": "0",
-                    "canvasBgColor" : "#ffffff",
-                    "canvasBorderAlpha" : "0",
-                    "divlineAlpha" : "100",
-                    "divlineColor" : "#999999",
-                    "divlineThickness" : "1",
-                    "divLineIsDashed" : "1",
-                    "divLineDashLen" : "1",
-                    "divLineGapLen" : "1",
-                    "usePlotGradientColor" : "0",
-                    "showplotborder" : "0",
-                    "valueFontColor" : "#000000",
-                    "placeValuesInside" : "1",
-                    "showHoverEffect" : "1",
-                    "rotateValues" : "0",
-                    "showXAxisLine" : "1",
-                    "xAxisLineThickness" : "1",
-                    "xAxisLineColor" : "#999999",
-                    "showAlternateHGridColor" : "0",
-                    "legendBgAlpha" : "0",
-                    "legendBorderAlpha" : "0",
-                    "legendShadow" : "0",
-                    "legendItemFontSize" : "10",
-                    "legendItemFontColor" : "#666666"
-                };
-                self.categories1 = [
-                    {
-                        "category": []
+                },
+                tooltip: {
+                    shared: true,
+                    valueSuffix: ''   //后缀
+                },
+                credits: {
+                    enabled: false
+                },
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.5
                     }
-                ];
-                self.dataset1 = [];
-
-                self.attrs2 = {
-                    "caption": "",
-                    "xAxisname": "时间",
-                    "yAxisName": "付费转化率",
-                    "numberPrefix": "",                     //前缀
-                    "numberSuffix": "%",                   //后缀
-                    "plotFillAlpha" : "60",
-
-                    //Cosmetics
-                    "paletteColors" : "#0075c2,#1aaf5d",
-                    "baseFontColor" : "#333333",
-                    "baseFont" : "Helvetica Neue,Arial",
-                    "captionFontSize" : "14",
-                    "subcaptionFontSize" : "14",
-                    "subcaptionFontBold" : "0",
-                    "showBorder" : "0",
-                    "bgColor" : "#ffffff",
-                    "showShadow" : "0",
-                    "showValues": "0",
-                    "canvasBgColor" : "#ffffff",
-                    "canvasBorderAlpha" : "0",
-                    "divlineAlpha" : "100",
-                    "divlineColor" : "#999999",
-                    "divlineThickness" : "1",
-                    "divLineIsDashed" : "1",
-                    "divLineDashLen" : "1",
-                    "divLineGapLen" : "1",
-                    "usePlotGradientColor" : "0",
-                    "showplotborder" : "0",
-                    "valueFontColor" : "#000000",
-                    "placeValuesInside" : "1",
-                    "showHoverEffect" : "1",
-                    "rotateValues" : "0",
-                    "showXAxisLine" : "1",
-                    "xAxisLineThickness" : "1",
-                    "xAxisLineColor" : "#999999",
-                    "showAlternateHGridColor" : "0",
-                    "legendBgAlpha" : "0",
-                    "legendBorderAlpha" : "0",
-                    "legendShadow" : "0",
-                    "legendItemFontSize" : "10",
-                    "legendItemFontColor" : "#666666"
-                };
-                self.categories2 = [
-                    {
-                        "category": []
-                    }
-                ];
-                self.dataset2 = [];
-
-                self.attrs3 = {
-                    "caption": "",
-                    "xAxisname": "时间",
-                    "yAxisName": "平均每终端营收",
-                    "numberPrefix": "",                 //前缀
-                    "numberSuffix": "元",                   //后缀
-                    "plotFillAlpha" : "60",
-
-                    //Cosmetics
-                    "paletteColors" : "#0075c2,#1aaf5d",
-                    "baseFontColor" : "#333333",
-                    "baseFont" : "Helvetica Neue,Arial",
-                    "captionFontSize" : "14",
-                    "subcaptionFontSize" : "14",
-                    "subcaptionFontBold" : "0",
-                    "showBorder" : "0",
-                    "bgColor" : "#ffffff",
-                    "showShadow" : "0",
-                    "showValues": "0",
-                    "canvasBgColor" : "#ffffff",
-                    "canvasBorderAlpha" : "0",
-                    "divlineAlpha" : "100",
-                    "divlineColor" : "#999999",
-                    "divlineThickness" : "1",
-                    "divLineIsDashed" : "1",
-                    "divLineDashLen" : "1",
-                    "divLineGapLen" : "1",
-                    "usePlotGradientColor" : "0",
-                    "showplotborder" : "0",
-                    "valueFontColor" : "#000000",
-                    "placeValuesInside" : "1",
-                    "showHoverEffect" : "1",
-                    "rotateValues" : "0",
-                    "showXAxisLine" : "1",
-                    "xAxisLineThickness" : "1",
-                    "xAxisLineColor" : "#999999",
-                    "showAlternateHGridColor" : "0",
-                    "legendBgAlpha" : "0",
-                    "legendBorderAlpha" : "0",
-                    "legendShadow" : "0",
-                    "legendItemFontSize" : "10",
-                    "legendItemFontColor" : "#666666"
-                };
-                self.categories3 = [
-                    {
-                        "category": []
-                    }
-                ];
-                self.dataset3 = [];
+                },
+                series: []
             }
 
             self.loadChart = function () {
@@ -476,13 +304,15 @@
 
                 //获取开机率
                 function loadOnlineRate() {
+                    self.charts.yAxis.title.text = "开机率 %";
+                    self.charts.tooltip.valueSuffix = " %";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermOnlineRateInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur0,
-                        type: self.selectGra0
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart0 = true;
 
@@ -493,19 +323,20 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.dataset0 = [];
-                            self.dataSet0 = [];
-                            self.categories0[0].category = [];
+                            self.th = ["日期", "开机率"];
+                            self.dataSet = [];
+                            self.charts.xAxis.categories = [];
+                            self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.categories0[0].category.push({label: $scope.dtSubstr(el, self.selectGra0)});
-                                self.dataSet0.push({datetime: $scope.dtSubstr(el, self.selectGra0)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.dataset0.push({seriesname: "开机率", data: []});
+                            self.charts.series.push({name: "开机率", data: [], tooltip: {valueSuffix: '%'}});
                             data.onlineRate.forEach(function (el, index) {
-                                if (index < 7) self.dataset0[0].data.push({value: el * 100});
-                                self.dataSet0[index].onlineRate = el * 100 + '%';
+                                if (index < 7) self.charts.series[0].data.push(el * 100);
+                                self.dataSet[index].b = el * 100 + '%';
                             });
 
                             deferred.resolve();
@@ -522,56 +353,17 @@
                     });
                 }
 
-
-                //获取累计终端和上线终端
-                // var data = JSON.stringify({
-                //     token: util.getParams("token"),
-                //     action: 'getTermStatisticsInfo',
-                //     endTime: $filter('date')((new Date().getTime()), 'yyyy-MM-dd HH:mm:ss'),
-                //     project: ["all"],
-                //     timespans: 7,
-                //     type: 2
-                // })
-                // self.loadingChart0 = true;
-                //
-                // $http({
-                //     method: 'POST',
-                //     url: util.getApiUrl('v2/statistics', '', 'server'),
-                //     data: data
-                // }).then(function successCallback(response) {
-                //     var data = response.data;
-                //     if (data.rescode == '200') {
-                //         data.addUpCount.forEach(function (el, index) {
-                //             self.dataSet[index].addUpCount = el;
-                //         });
-                //
-                //         data.onlineCount.forEach(function (el, index) {
-                //             self.dataSet[index].onlineCount = el;
-                //         });
-                //
-                //         deferred.resolve();
-                //     }
-                //     else {
-                //         alert(data.errInfo);
-                //         deferred.reject();
-                //     }
-                // }, function errorCallback(response) {
-                //     alert('连接服务器出错');
-                //     deferred.reject();
-                // }).finally(function (value) {
-                //     self.loadingChart0 = false;
-                // });
-                // return deferred.promise;
-
                 //获取活跃率
                 function loadActiveRate() {
+                    self.charts.yAxis.title.text = "活跃率 %";
+                    self.charts.tooltip.valueSuffix = " %";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermActiveRateInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur1,
-                        type: self.selectGra1
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart1 = true;
 
@@ -582,18 +374,20 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.dataset1 = [];
-                            self.dataSet1 = [];
-                            self.categories1[0].category = [];
+                            self.th = ["日期", "活跃率"];
+                            self.dataSet = [];
+                            self.charts.xAxis.categories = [];
+                            self.charts.series = [];
+
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.categories1[0].category.push({label: $scope.dtSubstr(el, self.selectGra1)});
-                                self.dataSet1.push({datetime: $scope.dtSubstr(el, self.selectGra1)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.dataset1.push({seriesname: "活跃率", data: []});
+                            self.charts.series.push({name: "活跃率", data: [], tooltip: {valueSuffix: '%'}});
                             data.activeRate.forEach(function (el, index) {
-                                if (index < 7) self.dataset1[0].data.push({value: el * 100});
-                                self.dataSet1[index].activeRate = el * 100 + '%';
+                                if (index < 7) self.charts.series[0].data.push(el * 100);
+                                self.dataSet[index].b = el * 100 + '%';
                             });
 
                             deferred.resolve();
@@ -613,13 +407,15 @@
 
                 //付费转化率
                 function loadPayRate() {
+                    self.charts.yAxis.title.text = "付费转化率 %";
+                    self.charts.tooltip.valueSuffix = " %";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermPayRateInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur2,
-                        type: self.selectGra2
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart2 = true;
 
@@ -630,18 +426,20 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.dataset2 = [];
-                            self.dataSet2 = [];
-                            self.categories2[0].category = [];
+                            self.th = ["日期", "付费转化率"];
+                            self.dataSet = [];
+                            self.charts.xAxis.categories = [];
+                            self.charts.series = [];
+
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.categories2[0].category.push({label: $scope.dtSubstr(el, self.selectGra2)});
-                                self.dataSet2.push({datetime: $scope.dtSubstr(el, self.selectGra2)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.dataset2.push({seriesname: "付费转化率", data: []});
+                            self.charts.series.push({name: "付费转化率", data: [], tooltip: {valueSuffix: '%'}});
                             data.payRate.forEach(function (el, index) {
-                                if (index < 7) self.dataset2[0].data.push({value: el * 100});
-                                self.dataSet2[index].payRate = el * 100 + '%';
+                                if (index < 7) self.charts.series[0].data.push(el * 100);
+                                self.dataSet[index].b = el * 100 + '%';
                             });
 
                             deferred.resolve();
@@ -660,13 +458,15 @@
 
                 //每终端营收
                 function loadRevenue() {
+                    self.charts.yAxis.title.text = "平均每终端营收 元";
+                    self.charts.tooltip.valueSuffix = " 元";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPerTermRevenueInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur3,
-                        type: self.selectGra3
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart3 = true;
 
@@ -677,18 +477,20 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.dataset3 = [];
-                            self.dataSet3 = [];
-                            self.categories3[0].category = [];
+                            self.th = ["日期", "平均每终端营收"];
+                            self.dataSet = [];
+                            self.charts.xAxis.categories = [];
+                            self.charts.series = [];
+
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.categories3[0].category.push({label: $scope.dtSubstr(el, self.selectGra3)});
-                                self.dataSet3.push({datetime: $scope.dtSubstr(el, self.selectGra3)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.dataset3.push({seriesname: "付费转化率", data: []});
+                            self.charts.series.push({name: "平均每终端营收", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.revenue.forEach(function (el, index) {
-                                if (index < 7) self.dataset3[0].data.push({value: el});
-                                self.dataSet3[index].revenue = el;
+                                if (index < 7) self.charts.series[0].data.push(el);
+                                self.dataSet[index].b = el;
                             });
 
                             deferred.resolve();
@@ -760,8 +562,9 @@
                     {name: '新增终端', show: false, sort: '', desc: false}
                 ];
                 self.countStatistics = [
-                    {name: '准付费次数', show: false, sort: '', desc: false},
                     {name: '付 费 次 数', show: true, sort: '', desc: false},
+                    {name: '准付费次数', show: false, sort: '', desc: false},
+
                 ];
                 self.selectCount = 3;
                 self.other = [
@@ -769,20 +572,12 @@
                     {name: '西塘票务', show: false, sort: '', desc: false},
                 ];
 
-                self.initCharts();
-
                 $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
                 self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
-                self.selectGra0 = 1;
-                self.selectGra1 = 1;
-                self.selectGra2 = 1;
-                self.selectGra3 = 1;
-                self.isDate = [true, true, true, true];
+                self.selectGra = 1;
+                self.isDate = true;
 
-                self.selectDur0 = 7;
-                self.selectDur1 = 7;
-                self.selectDur2 = 7;
-                self.selectDur3 = 5;
+                self.selectDur = 7;
 
                 self.loadChart();
                 self.orderby = {};
@@ -812,12 +607,12 @@
             /**
              * 修改粒度
              */
-            self.changeGra = function (value, index) {
+            self.changeGra = function (value) {
                 if (value == 0) {
-                    self.isDate[index] = false;
+                    self.isDate = false;
                     if (self.searchDate.length == 10) self.searchDate += " 00:00";
                 } else {
-                    self.isDate[index] = true;
+                    self.isDate = true;
                     if (self.searchDate.length == 16) self.searchDate = self.searchDate.substring(0, 10);
                 }
                 self.loadChart();
@@ -842,13 +637,38 @@
                 }
                 self.term[$index].show = !self.term[$index].show;
 
-                self.series0 = [];
+                self.th = ["日期"];
+                self.charts.series = [];
+                var num = 0;
                 self.term.forEach(function (el, index) {
                     if (el.show == true) {
-                        self.series0.push(self.termDate[index])
+                        self.th.push(el.name);
+                        self.termSeries[index].id = 'series-' + num;
+                        self.charts.series.push(self.termSeries[index]);
+                        num++;
                     }
                 })
-                self.dataset0 = self.series0;
+
+                self.dataSet = [];
+
+                self.termData.forEach(function (el, index) {
+                    self.dataSet.push({a: el.a});
+                    if (self.term[0].show == true) {
+                        self.dataSet[index].b = el.b;
+                    }
+                    if (self.term[1].show == true) {
+                        self.dataSet[index].c = el.c;
+                    }
+                    if (self.term[2].show == true) {
+                        self.dataSet[index].d = el.d;
+                    }
+                    if (self.term[3].show == true) {
+                        self.dataSet[index].e = el.e;
+                    }
+                    if (self.term[4].show == true) {
+                        self.dataSet[index].f = el.f;
+                    }
+                })
             }
 
             /**
@@ -860,15 +680,21 @@
                     if ($index == 0) {
                         self.countStatistics[0].show = true;
                         self.countStatistics[1].show = false;
-                        self.dataset1 = self.wantPaySeries;
-                        self.dataSet1 = self.wantPayData;
                     } else {
                         self.countStatistics[0].show = false;
                         self.countStatistics[1].show = true;
-                        self.dataset1 = self.paySeries;
-                        self.dataSet1 = self.payData;
                     }
 
+                }
+
+                if (self.countStatistics[0].show == true) {
+                    self.th = ["日期", "付费次数", "付费次数(单次)", "付费次数(打包)"];
+                    self.charts.series = self.paySeries;
+                    self.dataSet = self.payData;
+                } else if (self.countStatistics[1].show == true) {
+                    self.th = ["日期", "准付费次数", "准付费次数(单次)", "准付费次数(打包)"];
+                    self.charts.series = self.wantPaySeries;
+                    self.dataSet = self.wantPayData;
                 }
             }
 
@@ -883,211 +709,44 @@
                 self.other[$index].show = true;
             }
 
-            /**
-             * 初始化图表
-             */
-            self.initCharts = function () {
-                self.attrs0 = {
-                    "caption": "",
-                    "xAxisname": "时间",
-                    "yAxisName": "终端",
-                    "numberPrefix": "",                      //前缀
-                    "numberSuffix": " 个",                   //后缀
-                    "plotFillAlpha" : "60",
-
-                    //Cosmetics
-                    "paletteColors" : "#0075c2,#1aaf5d",
-                    "baseFontColor" : "#333333",
-                    "baseFont" : "Helvetica Neue,Arial",
-                    "captionFontSize" : "14",
-                    "subcaptionFontSize" : "14",
-                    "subcaptionFontBold" : "0",
-                    "showBorder" : "0",
-                    "bgColor" : "#ffffff",
-                    "showShadow" : "0",
-                    "showValues": "0",
-                    "canvasBgColor" : "#ffffff",
-                    "canvasBorderAlpha" : "0",
-                    "divlineAlpha" : "100",
-                    "divlineColor" : "#999999",
-                    "divlineThickness" : "1",
-                    "divLineIsDashed" : "1",
-                    "divLineDashLen" : "1",
-                    "divLineGapLen" : "1",
-                    "usePlotGradientColor" : "0",
-                    "showplotborder" : "0",
-                    "valueFontColor" : "#000000",
-                    "placeValuesInside" : "1",
-                    "showHoverEffect" : "1",
-                    "rotateValues" : "0",
-                    "showXAxisLine" : "1",
-                    "xAxisLineThickness" : "1",
-                    "xAxisLineColor" : "#999999",
-                    "showAlternateHGridColor" : "0",
-                    "legendBgAlpha" : "0",
-                    "legendBorderAlpha" : "0",
-                    "legendShadow" : "0",
-                    "legendItemFontSize" : "10",
-                    "legendItemFontColor" : "#666666"
-                };
-                self.categories0 = [
-                    {
-                        "category": []
+            self.charts = {
+                chart: {
+                    type: 'areaspline'
+                },
+                title: {
+                    text: ''
+                },
+                legend: {
+                    layout: 'vertical',
+                    align: 'left',
+                    verticalAlign: 'top',
+                    x: 150,
+                    y: 100,
+                    floating: true,
+                    borderWidth: 1,
+                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
+                },
+                xAxis: {
+                    categories: [],
+                },
+                yAxis: {
+                    title: {
+                        text: ''      //y轴
                     }
-                ];
-                self.dataset0 = [];
-
-                self.attrs1 = {
-                    "caption": "",
-                    "xAxisname": "时间",
-                    "yAxisName": "次数",
-                    "numberPrefix": "",                      //前缀
-                    "numberSuffix": " 次",                   //后缀
-                    "plotFillAlpha" : "60",
-
-                    //Cosmetics
-                    "paletteColors" : "#0075c2,#1aaf5d",
-                    "baseFontColor" : "#333333",
-                    "baseFont" : "Helvetica Neue,Arial",
-                    "captionFontSize" : "14",
-                    "subcaptionFontSize" : "14",
-                    "subcaptionFontBold" : "0",
-                    "showBorder" : "0",
-                    "bgColor" : "#ffffff",
-                    "showShadow" : "0",
-                    "showValues": "0",
-                    "canvasBgColor" : "#ffffff",
-                    "canvasBorderAlpha" : "0",
-                    "divlineAlpha" : "100",
-                    "divlineColor" : "#999999",
-                    "divlineThickness" : "1",
-                    "divLineIsDashed" : "1",
-                    "divLineDashLen" : "1",
-                    "divLineGapLen" : "1",
-                    "usePlotGradientColor" : "0",
-                    "showplotborder" : "0",
-                    "valueFontColor" : "#000000",
-                    "placeValuesInside" : "1",
-                    "showHoverEffect" : "1",
-                    "rotateValues" : "0",
-                    "showXAxisLine" : "1",
-                    "xAxisLineThickness" : "1",
-                    "xAxisLineColor" : "#999999",
-                    "showAlternateHGridColor" : "0",
-                    "legendBgAlpha" : "0",
-                    "legendBorderAlpha" : "0",
-                    "legendShadow" : "0",
-                    "legendItemFontSize" : "10",
-                    "legendItemFontColor" : "#666666"
-                };
-                self.categories1 = [
-                    {
-                        "category": []
+                },
+                tooltip: {
+                    shared: true,
+                    valueSuffix: ''   //后缀
+                },
+                credits: {
+                    enabled: false
+                },
+                plotOptions: {
+                    areaspline: {
+                        fillOpacity: 0.5
                     }
-                ];
-                self.dataset1 = [];
-
-                self.attrs2 = {
-                    "caption": "",
-                    "xAxisname": "时间",
-                    "yAxisName": "金额",
-                    "numberPrefix": "¥ ",                 //前缀
-                    "numberSuffix": "",                   //后缀
-                    "plotFillAlpha" : "60",
-
-                    //Cosmetics
-                    "paletteColors" : "#0075c2,#1aaf5d",
-                    "baseFontColor" : "#333333",
-                    "baseFont" : "Helvetica Neue,Arial",
-                    "captionFontSize" : "14",
-                    "subcaptionFontSize" : "14",
-                    "subcaptionFontBold" : "0",
-                    "showBorder" : "0",
-                    "bgColor" : "#ffffff",
-                    "showShadow" : "0",
-                    "showValues": "0",
-                    "canvasBgColor" : "#ffffff",
-                    "canvasBorderAlpha" : "0",
-                    "divlineAlpha" : "100",
-                    "divlineColor" : "#999999",
-                    "divlineThickness" : "1",
-                    "divLineIsDashed" : "1",
-                    "divLineDashLen" : "1",
-                    "divLineGapLen" : "1",
-                    "usePlotGradientColor" : "0",
-                    "showplotborder" : "0",
-                    "valueFontColor" : "#000000",
-                    "placeValuesInside" : "1",
-                    "showHoverEffect" : "1",
-                    "rotateValues" : "0",
-                    "showXAxisLine" : "1",
-                    "xAxisLineThickness" : "1",
-                    "xAxisLineColor" : "#999999",
-                    "showAlternateHGridColor" : "0",
-                    "legendBgAlpha" : "0",
-                    "legendBorderAlpha" : "0",
-                    "legendShadow" : "0",
-                    "legendItemFontSize" : "10",
-                    "legendItemFontColor" : "#666666"
-                };
-                self.categories2 = [
-                    {
-                        "category": []
-                    }
-                ];
-                self.dataset2 = [];
-
-                self.attrs3 = {
-                    "caption": "",
-                    "xAxisname": "时间",
-                    "pYAxisName": "活跃时长",
-                    "sYAxisName": "活跃终端数",
-                    "numberPrefix": "",                   //前缀
-                    "numberSuffix": "小时",
-                    "sNumberSuffix": "个",
-                    "plotFillAlpha" : "60",
-
-                    //Cosmetics
-                    "paletteColors" : "#0075c2,#1aaf5d",
-                    "baseFontColor" : "#333333",
-                    "baseFont" : "Helvetica Neue,Arial",
-                    "captionFontSize" : "14",
-                    "subcaptionFontSize" : "14",
-                    "subcaptionFontBold" : "0",
-                    "showBorder" : "0",
-                    "bgColor" : "#ffffff",
-                    "showShadow" : "0",
-                    "showValues": "0",
-                    "canvasBgColor" : "#ffffff",
-                    "canvasBorderAlpha" : "0",
-                    "divlineAlpha" : "100",
-                    "divlineColor" : "#999999",
-                    "divlineThickness" : "1",
-                    "divLineIsDashed" : "1",
-                    "divLineDashLen" : "1",
-                    "divLineGapLen" : "1",
-                    "usePlotGradientColor" : "0",
-                    "showplotborder" : "0",
-                    "valueFontColor" : "#000000",
-                    "placeValuesInside" : "1",
-                    "showHoverEffect" : "1",
-                    "rotateValues" : "0",
-                    "showXAxisLine" : "1",
-                    "xAxisLineThickness" : "1",
-                    "xAxisLineColor" : "#999999",
-                    "showAlternateHGridColor" : "0",
-                    "legendBgAlpha" : "0",
-                    "legendBorderAlpha" : "0",
-                    "legendShadow" : "0",
-                    "legendItemFontSize" : "10",
-                    "legendItemFontColor" : "#666666"
-                };
-                self.categories3 = [
-                    {
-                        "category": []
-                    }
-                ];
-                self.dataset3 = [];
+                },
+                series: []
             }
 
             /**
@@ -1116,13 +775,15 @@
                  * 获取终端指标
                  */
                 function loadTerm() {
+                    self.charts.yAxis.title.text = "终端数 个";
+                    self.charts.tooltip.valueSuffix = " 个";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermStatisticsInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur0,
-                        type: self.selectGra0
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart0 = true;
 
@@ -1133,54 +794,76 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.dataset0 = [];
-                            self.dataSet0 = [];
-                            self.termDate = [];
-                            self.series0 = [];
-                            self.categories0[0].category = [];
-                            self.dataSet0 = [];
+                            self.dataSet = [];
+                            self.charts.xAxis.categories = [];
+                            self.charts.series = [];
+                            self.termSeries = [];
+                            self.termData = [];
+
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.categories0[0].category.push({label: $scope.dtSubstr(el, self.selectGra0)});
-                                self.dataSet0.push({datetime: $scope.dtSubstr(el, self.selectGra0)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.termData.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.dataset0.push({seriesname: "累计终端", data: []});
+                            self.termSeries.push({name: "累计终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.addUpCount.forEach(function (el, index) {
-                                if (index < 7) self.dataset0[0].data.push({value: el});
-                                self.dataSet0[index].addUpCount = el;
+                                if (index < 7) self.termSeries[0].data.push(el);
+                                self.termData[index].b = el;
                             });
 
-                            self.dataset0.push({seriesname: "在线终端", data: []});
+                            self.termSeries.push({name: "上线终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.onlineCount.forEach(function (el, index) {
-                                if (index < 7) self.dataset0[1].data.push({value: el});
-                                self.dataSet0[index].onlineCount = el;
+                                if (index < 7) self.termSeries[1].data.push(el);
+                                self.termData[index].c = el;
                             });
 
-                            self.dataset0.push({seriesname: "活跃终端", data: []});
+                            self.termSeries.push({name: "活跃终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.activeCount.forEach(function (el, index) {
-                                if (index < 7) self.dataset0[2].data.push({value: el});
-                                self.dataSet0[index].activeCount = el;
+                                if (index < 7) self.termSeries[2].data.push(el);
+                                self.termData[index].d = el;
                             });
 
-                            self.dataset0.push({seriesname: "付费终端", data: []});
+                            self.termSeries.push({name: "付费终端", data: []});
                             data.payCount.forEach(function (el, index) {
-                                if (index < 7) self.dataset0[3].data.push({value: el});
-                                self.dataSet0[index].payCount = el;
+                                if (index < 7) self.termSeries[3].data.push(el);
+                                self.termData[index].e = el;
                             });
 
-                            self.dataset0.push({seriesname: "新增终端", data: []});
+                            self.termSeries.push({name: "新增终端", data: []});
                             data.newAddCount.forEach(function (el, index) {
-                                self.dataset0[4].data.push({value: el});
-                                self.dataSet0[index].newAddCount = el;
+                                if (index < 7) self.termSeries[4].data.push(el);
+                                self.termData[index].f = el;
                             });
 
-                            self.termDate = self.dataset0;
+                            self.th = ["日期"];
+                            var num = 0;
                             self.term.forEach(function (el, index) {
                                 if (el.show == true) {
-                                    self.series0.push(self.dataset0[index])
+                                    self.th.push(el.name);
+                                    self.termSeries[index].id = 'series-' + num;
+                                    self.charts.series.push(self.termSeries[index]);
+                                    num++;
                                 }
                             })
-                            self.dataset0 = self.series0;
+
+                            self.termData.forEach(function (el, index) {
+                                self.dataSet.push({a: el.a});
+                                if (self.term[0].show == true) {
+                                    self.dataSet[index].b = el.b;
+                                }
+                                if (self.term[1].show == true) {
+                                    self.dataSet[index].c = el.c;
+                                }
+                                if (self.term[2].show == true) {
+                                    self.dataSet[index].d = el.d;
+                                }
+                                if (self.term[3].show == true) {
+                                    self.dataSet[index].e = el.e;
+                                }
+                                if (self.term[4].show == true) {
+                                    self.dataSet[index].f = el.f;
+                                }
+                            })
 
                             deferred.resolve();
                         }
@@ -1201,17 +884,15 @@
                  * 获取次数统计
                  */
                 function loadCount() {
-                    // self.categories1 = [];
-
-
-
+                    self.charts.yAxis.title.text = "次数 次";
+                    self.charts.tooltip.valueSuffix = " 次";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPayCountStatisticsInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur1,
-                        type: self.selectGra1
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart1 = true;
 
@@ -1226,52 +907,58 @@
                             self.wantPayData = [];
                             self.paySeries = [];
                             self.payData = [];
-                            self.dataset1 = [];
-                            self.dataSet1 = [];
-                            self.categories1[0].category = [];
-                            self.series = [];
+
+                            self.dataSet = [];
+                            self.charts.xAxis.categories = [];
+                            self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.categories1[0].category.push({label: $scope.dtSubstr(el, self.selectGra1)});
-                                self.wantPayData.push({datetime: $scope.dtSubstr(el, self.selectGra1)});
-                                self.payData.push({datetime: el.substring(5, 16)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.wantPayData.push({a: $scope.dtSubstr(el, self.selectGra)});
+                                self.payData.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.wantPaySeries.push({seriesname: "准付费次数", data: []});
+                            self.wantPaySeries.push({name: "准付费次数", id: "series-0", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.wantPayCount.forEach(function (el, index) {
-                                if (index < 7) self.wantPaySeries[0].data.push({value: el});
-                                self.wantPayData[index].payCount = el;
+                                if (index < 7) self.wantPaySeries[0].data.push(el);
+                                self.wantPayData[index].b = el;
                             });
-                            self.wantPaySeries.push({seriesname: "准付费次数（单次）", data: []});
+                            self.wantPaySeries.push({name: "准付费次数(单次)", id: "series-1", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.wantPaySingleCount.forEach(function (el, index) {
-                                if (index < 7) self.wantPaySeries[1].data.push({value: el});
-                                self.wantPayData[index].paySingleCount = el;
+                                if (index < 7) self.wantPaySeries[1].data.push(el);
+                                self.wantPayData[index].c= el;
                             });
-                            self.wantPaySeries.push({seriesname: "准付费次数（打包）", data: []});
+                            self.wantPaySeries.push({name: "准付费次数(打包)", id: "series-2", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.wantPayPackageCount.forEach(function (el, index) {
-                                if (index < 7) self.wantPaySeries[2].data.push({value: el});
-                                self.wantPayData[index].payPackageCount = el;
+                                if (index < 7) self.wantPaySeries[2].data.push(el);
+                                self.wantPayData[index].d= el;
                             });
 
-                            self.paySeries.push({seriesname: "付费次数", data: []});
+                            self.paySeries.push({name: "付费次数", id: "series-0", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.payCount.forEach(function (el, index) {
-                                if (index < 7) self.paySeries[0].data.push({value: el});
-                                self.payData[index].payCount = el;
+                                if (index < 7) self.paySeries[0].data.push(el);
+                                self.payData[index].b = el;
                             });
-                            self.paySeries.push({seriesname: "付费次数（单次）", data: []});
+                            self.paySeries.push({name: "付费次数(单次)", id: "series-1", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.paySingleCount.forEach(function (el, index) {
-                                if (index < 7) self.paySeries[1].data.push({value: el});
-                                self.payData[index].paySingleCount = el;
+                                if (index < 7) self.paySeries[1].data.push(el);
+                                self.payData[index].c = el;
                             });
-                            self.paySeries.push({seriesname: "付费次数（打包）", data: []});
+                            self.paySeries.push({name: "付费次数(打包)", id: "series-2", data: [], tooltip: {valueSuffix: ' 次'}});
                             data.payPackageCount.forEach(function (el, index) {
-                                if (index < 7) self.paySeries[2].data.push({value: el});
-                                self.payData[index].payPackageCount = el;
+                                if (index < 7) self.paySeries[2].data.push(el);
+                                self.payData[index].d = el;
                             });
 
-                            // self.charts.series = self.paySeries;
-                            self.dataset1 = self.paySeries;
-                            self.dataSet1 = self.payData;
+                            if (self.countStatistics[0].show == true) {
+                                self.th = ["日期", "付费次数", "付费次数(单次)", "付费次数(打包)"];
+                                self.charts.series = self.paySeries;
+                                self.dataSet = self.payData;
+                            } else if (self.countStatistics[1].show == true) {
+                                self.th = ["日期", "准付费次数", "准付费次数(单次)", "准付费次数(打包)"];
+                                self.charts.series = self.wantPaySeries;
+                                self.dataSet = self.wantPayData;
+                            }
                             deferred.resolve();
                         }
                         else {
@@ -1288,13 +975,15 @@
                 }
                 
                 function loadRevenue() {
+                    self.charts.yAxis.title.text = "营收 元";
+                    self.charts.tooltip.valueSuffix = " 元";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getRevenueStatisticsInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur2,
-                        type: self.selectGra2
+                        timespans: self.selectDur,
+                        type: self.selectGra
                     })
                     self.loadingChart2 = true;
 
@@ -1305,28 +994,30 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.categories2[0].category = [];
-                            self.dataset2 = [];
-                            self.revenueData = [];
+                            self.th = ["日期", "总收益", "单次点播收益", "打包点播收益"];
+                            self.dataSet = [];
+                            self.charts.xAxis.categories = [];
+                            self.charts.series = [];
+
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.categories2[0].category.push({label: $scope.dtSubstr(el, self.selectGra2)});
-                                self.revenueData.push({datetime: $scope.dtSubstr(el, self.selectGra2)});
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.dataset2.push({seriesname: "总收益", data: []});
+                            self.charts.series.push({name: "总收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.totalMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.dataset2[0].data.push({value: el / 100});
-                                self.revenueData[index].totalMovieRevenue = el / 100;
+                                if (index < 7) self.charts.series[0].data.push(el);
+                                self.dataSet[index].b = el;
                             });
-                            self.dataset2.push({seriesname: "单次点播收益", data: []});
+                            self.charts.series.push({name: "单次点播收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.singleMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.dataset2[1].data.push({value: el / 100});
-                                self.revenueData[index].singleMovieRevenue = el / 100;
+                                if (index < 7) self.charts.series[1].data.push(el);
+                                self.dataSet[index].c = el;
                             });
-                            self.dataset2.push({seriesname: "打包点播收益", data: []});
+                            self.charts.series.push({name: "打包点播收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.packageMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.dataset2[2].data.push({value: el / 100});
-                                self.revenueData[index].packageMovieRevenue = el / 100;
+                                if (index < 7) self.charts.series[2].data.push(el);
+                                self.dataSet[index].d = el;
                             });
                             deferred.resolve();
                         }
@@ -1353,9 +1044,9 @@
                         case 0:
                             loadActiveTime();
                             break;
-                        case 1:
-                            LoadXitang();
-                            break;
+                        // case 1:
+                        //     LoadXitang();
+                        //     break;
                     }
 
                     function loadActiveTime() {
@@ -1364,8 +1055,8 @@
                             action: 'getActiveStatisticsInfo',
                             endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                             project: [util.getParams("project")],
-                            timespans: self.selectDur3,
-                            type: self.selectGra3
+                            timespans: self.selectDur,
+                            type: self.selectGra
                         })
                         self.loadingChart3 = true;
 
@@ -1376,23 +1067,25 @@
                         }).then(function successCallback(response) {
                             var data = response.data;
                             if (data.rescode == '200') {
-                                self.categories3[0].category = [];
-                                self.dataset3 = [];
-                                self.dataSet3 = [];
+                                self.th = ["日期", "活跃时长", "活跃终端数"];
+                                self.dataSet = [];
+                                self.charts.xAxis.categories = [];
+                                self.charts.series = [];
+
                                 data.timeList.forEach(function (el, index) {
-                                    if (index < 5) self.categories3[0].category.push({label: $scope.dtSubstr(el, self.selectGra3)});
-                                    self.dataSet3.push({datetime: $scope.dtSubstr(el, self.selectGra3)});
+                                    if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                    self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                                 });
 
-                                self.dataset3.push({seriesname: "活跃时长", data: []});
+                                self.charts.series.push({name: "活跃时长", data: [], tooltip: {valueSuffix: ' 小时'}});
                                 data.totalActiveTime.forEach(function (el, index) {
-                                    if (index < 5) self.dataset3[0].data.push({value: (el / 3600).toFixed(2)});
+                                    if (index < 7) self.charts.series[0].data.push(Number((el / 3600).toFixed(2)));
 
                                     var h = Math.floor(el / 3600);
                                     var m = Math.floor((el - h * 3600) / 60);
                                     var s = el - h * 3600 - m * 60;
 
-                                    self.dataSet3[index].totalActiveTime = h + ":" + zeroFill(m) + ":" + zeroFill(s);
+                                    self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
                                     function zeroFill(data) {
                                         if (data < 10) {
                                             data += "0";
@@ -1400,10 +1093,10 @@
                                         return data;
                                     }
                                 });
-                                self.dataset3.push({seriesname: "活跃终端数", renderAs: "line", parentYAxis: "S", showValues: "0", data: []});
+                                // self.charts.series.push({name: "活跃终端数", type: 'spline', data: [], tooltip: {valueSuffix: ' 个'}});
                                 data.activeCount.forEach(function (el, index) {
-                                    if (index < 5) self.dataset3[1].data.push({value: el});
-                                    self.dataSet3[index].activeCount = el;
+                                    // if (index < 5)self.charts.series[1].data.push(el);
+                                    self.dataSet[index].c = el;
                                 });
 
                                 deferred.resolve();
@@ -1421,61 +1114,61 @@
                         return deferred.promise;
                     }
 
-                    function LoadXitang() {
-                        var data = JSON.stringify({
-                            token: util.getParams("token"),
-                            action: 'getXiTangTicketStatisticsInfo',
-                            endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
-                            project: [util.getParams("project")],
-                            timespans: 7,
-                            type: 2
-                        })
-                        self.loadingChart2 = true;
-
-                        $http({
-                            method: 'POST',
-                            url: util.getApiUrl('v2/statistics', '', 'server'),
-                            data: data
-                        }).then(function successCallback(response) {
-                            var data = response.data;
-                            if (data.rescode == '200') {
-                                self.categories3[0].category = [];
-                                self.dataset3 = [];
-                                self.revenueData = [];
-                                data.timeList.forEach(function (el, index) {
-                                    self.categories3[0].category.push({label: el.substring(5, 16)});
-                                    self.revenueData.push({datetime: el.substring(5, 16)});
-                                });
-
-                                self.dataset3.push({seriesname: "总收益", data: []});
-                                data.totalMovieRevenue.forEach(function (el, index) {
-                                    self.dataset3[0].data.push({value: el / 100});
-                                    self.revenueData[index].totalMovieRevenue = el / 100;
-                                });
-                                self.dataset3.push({seriesname: "单次点播收益", data: []});
-                                data.singleMovieRevenue.forEach(function (el, index) {
-                                    self.dataset3[1].data.push({value: el / 100});
-                                    self.revenueData[index].singleMovieRevenue = el / 100;
-                                });
-                                self.dataset3.push({seriesname: "打包点播收益", data: []});
-                                data.packageMovieRevenue.forEach(function (el, index) {
-                                    self.dataset3[2].data.push({value: el / 100});
-                                    self.revenueData[index].packageMovieRevenue = el / 100;
-                                });
-                                deferred.resolve();
-                            }
-                            else {
-                                alert(data.errInfo);
-                                deferred.reject();
-                            }
-                        }, function errorCallback(response) {
-                            alert('连接服务器出错');
-                            deferred.reject();
-                        }).finally(function (value) {
-                            self.loadingChart2 = false;
-                        });
-                        return deferred.promise;
-                    }
+                    // function LoadXitang() {
+                    //     var data = JSON.stringify({
+                    //         token: util.getParams("token"),
+                    //         action: 'getXiTangTicketStatisticsInfo',
+                    //         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                    //         project: [util.getParams("project")],
+                    //         timespans: 7,
+                    //         type: 2
+                    //     })
+                    //     self.loadingChart2 = true;
+                    //
+                    //     $http({
+                    //         method: 'POST',
+                    //         url: util.getApiUrl('v2/statistics', '', 'server'),
+                    //         data: data
+                    //     }).then(function successCallback(response) {
+                    //         var data = response.data;
+                    //         if (data.rescode == '200') {
+                    //             self.categories3[0].category = [];
+                    //             self.dataset3 = [];
+                    //             self.revenueData = [];
+                    //             data.timeList.forEach(function (el, index) {
+                    //                 self.categories3[0].category.push({label: el.substring(5, 16)});
+                    //                 self.revenueData.push({datetime: el.substring(5, 16)});
+                    //             });
+                    //
+                    //             self.dataset3.push({seriesname: "总收益", data: []});
+                    //             data.totalMovieRevenue.forEach(function (el, index) {
+                    //                 self.dataset3[0].data.push({value: el / 100});
+                    //                 self.revenueData[index].totalMovieRevenue = el / 100;
+                    //             });
+                    //             self.dataset3.push({seriesname: "单次点播收益", data: []});
+                    //             data.singleMovieRevenue.forEach(function (el, index) {
+                    //                 self.dataset3[1].data.push({value: el / 100});
+                    //                 self.revenueData[index].singleMovieRevenue = el / 100;
+                    //             });
+                    //             self.dataset3.push({seriesname: "打包点播收益", data: []});
+                    //             data.packageMovieRevenue.forEach(function (el, index) {
+                    //                 self.dataset3[2].data.push({value: el / 100});
+                    //                 self.revenueData[index].packageMovieRevenue = el / 100;
+                    //             });
+                    //             deferred.resolve();
+                    //         }
+                    //         else {
+                    //             alert(data.errInfo);
+                    //             deferred.reject();
+                    //         }
+                    //     }, function errorCallback(response) {
+                    //         alert('连接服务器出错');
+                    //         deferred.reject();
+                    //     }).finally(function (value) {
+                    //         self.loadingChart2 = false;
+                    //     });
+                    //     return deferred.promise;
+                    // }
 
                 }
 
