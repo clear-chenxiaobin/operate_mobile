@@ -159,7 +159,7 @@
                     alert('连接服务器出错');
                     deferred.reject();
                 }).finally(function (value) {
-                    self.loadingChart0 = false;
+                    // self.loadingChart0 = false;
                 });
             }
         }
