@@ -137,8 +137,8 @@
         <div class="specific-table">
             <!-- table 开始-->
             <table class="table">
-                <th ng-repeat="n in specific.th"><a ng-click="specific.changeOrderby('datetime')">{{n}}</a></th>
-                <tr ng-repeat="n in specific.dataSet | orderBy: specific.orderby.sort : specific.orderby.desc">
+                <th ng-repeat="n in specific.th"><a ng-click="specific.changeOrderby()">{{n}}</a></th>
+                <tr ng-repeat="n in specific.dataSet | orderBy: 'a' : specific.desc">
                     <td ng-repeat="(key, value) in n">{{value}}</td>
                 </tr>
             </table>

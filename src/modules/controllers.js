@@ -193,11 +193,6 @@
             }
 
             self.init = function() {
-                self.term = [
-                    {name: '累计终端', value: true, sort: '', desc: false},
-                    {name: '上线终端', value: true, sort: '', desc: false},
-                    {name: '活跃终端', value: true, sort: '', desc: false},
-                ];
                 self.activerow = 0;
 
                 $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
@@ -515,8 +510,7 @@
              * @param orderby
              */
             self.changeOrderby = function (orderby) {
-                self.term.sort = orderby;
-                self.term.desc = !self.term.desc;
+                self.desc = !self.desc;
             }
         }
 
@@ -1113,63 +1107,6 @@
                         });
                         return deferred.promise;
                     }
-
-                    // function LoadXitang() {
-                    //     var data = JSON.stringify({
-                    //         token: util.getParams("token"),
-                    //         action: 'getXiTangTicketStatisticsInfo',
-                    //         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
-                    //         project: [util.getParams("project")],
-                    //         timespans: 7,
-                    //         type: 2
-                    //     })
-                    //     self.loadingChart2 = true;
-                    //
-                    //     $http({
-                    //         method: 'POST',
-                    //         url: util.getApiUrl('v2/statistics', '', 'server'),
-                    //         data: data
-                    //     }).then(function successCallback(response) {
-                    //         var data = response.data;
-                    //         if (data.rescode == '200') {
-                    //             self.categories3[0].category = [];
-                    //             self.dataset3 = [];
-                    //             self.revenueData = [];
-                    //             data.timeList.forEach(function (el, index) {
-                    //                 self.categories3[0].category.push({label: el.substring(5, 16)});
-                    //                 self.revenueData.push({datetime: el.substring(5, 16)});
-                    //             });
-                    //
-                    //             self.dataset3.push({seriesname: "总收益", data: []});
-                    //             data.totalMovieRevenue.forEach(function (el, index) {
-                    //                 self.dataset3[0].data.push({value: el / 100});
-                    //                 self.revenueData[index].totalMovieRevenue = el / 100;
-                    //             });
-                    //             self.dataset3.push({seriesname: "单次点播收益", data: []});
-                    //             data.singleMovieRevenue.forEach(function (el, index) {
-                    //                 self.dataset3[1].data.push({value: el / 100});
-                    //                 self.revenueData[index].singleMovieRevenue = el / 100;
-                    //             });
-                    //             self.dataset3.push({seriesname: "打包点播收益", data: []});
-                    //             data.packageMovieRevenue.forEach(function (el, index) {
-                    //                 self.dataset3[2].data.push({value: el / 100});
-                    //                 self.revenueData[index].packageMovieRevenue = el / 100;
-                    //             });
-                    //             deferred.resolve();
-                    //         }
-                    //         else {
-                    //             alert(data.errInfo);
-                    //             deferred.reject();
-                    //         }
-                    //     }, function errorCallback(response) {
-                    //         alert('连接服务器出错');
-                    //         deferred.reject();
-                    //     }).finally(function (value) {
-                    //         self.loadingChart2 = false;
-                    //     });
-                    //     return deferred.promise;
-                    // }
-
                 }
 
 
@@ -1180,8 +1117,8 @@
              * @param orderby
              */
             self.changeOrderby = function (orderby) {
-                self.orderby.sort = orderby;
-                self.orderby.desc = !self.orderby.desc;
+                // self.orderby.sort = orderby;
+                self.desc = !self.desc;
             }
         }
 

@@ -101,8 +101,8 @@
         <div class="specific-table">
             <!-- table 开始-->
             <table class="table">
-                <th ng-repeat="n in overview.th"><a ng-click="overview.changeOrderby('datetime')">{{n}}</a></th>
-                <tr ng-repeat="n in overview.dataSet | orderBy: overview.orderby.sort : overview.orderby.desc">
+                <th ng-repeat="n in overview.th"><a ng-click="overview.changeOrderby()">{{n}}</a></th>
+                <tr ng-repeat="n in overview.dataSet | orderBy: 'a' : overview.desc">
                     <td ng-repeat="(key, value) in n">{{value}}</td>
                 </tr>
             </table>
