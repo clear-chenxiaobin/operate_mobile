@@ -535,7 +535,7 @@
 
                                 var h = Math.floor(el / 3600);
                                 var m = Math.floor((el - h * 3600) / 60);
-                                var s = el - h * 3600 - m * 60;
+                                var s = (el - h * 3600 - m * 60).toFixed(2);
 
                                 self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
                                 function zeroFill(data) {
