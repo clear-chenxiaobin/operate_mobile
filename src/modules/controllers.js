@@ -116,7 +116,7 @@
 
                 var data = JSON.stringify({
                     token: util.getParams("token"),
-                    action: 'projectNameList',
+                    action: 'realProjectNameList',
                 })
 
                 $http({
