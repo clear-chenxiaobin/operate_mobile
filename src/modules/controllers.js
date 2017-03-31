@@ -79,7 +79,7 @@
                     {id: 3, name: "月"},
                     {id: 4, name: "年"}
                 ]
-
+                $scope.getProject();
                 $scope.durationList = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24];
             }
 
@@ -199,10 +199,9 @@
             }
 
             self.init = function() {
-                $scope.getProject();
                 self.activerow = 0;
 
-                $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
+                $scope.dateRangeEnd = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
                 self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
                 self.selectGra = 1;
                 self.isDate = true;
@@ -608,8 +607,6 @@
             }
 
             self.init = function() {
-                $scope.getProject();
-
                 self.activerow = 0;
                 self.term = [
                     {name: '累计终端', show: true, sort: '', desc: false},
@@ -629,7 +626,7 @@
                     {name: '西塘票务', show: false, sort: '', desc: false},
                 ];
 
-                $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
+                $scope.dateRangeEnd = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
                 self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
                 self.selectGra = 1;
                 self.isDate = true;
