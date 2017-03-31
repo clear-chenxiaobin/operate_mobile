@@ -63,8 +63,8 @@
     ])
 
 
-    .controller('appController', ['$http', '$scope', '$state', '$stateParams', 'util', 'CONFIG',
-        function($http, $scope, $state, $stateParams, util, CONFIG) {
+    .controller('appController', ['$http', '$scope', '$state', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state, $stateParams, $q, util, CONFIG) {
             var self = this;
             self.init = function() {
 
@@ -109,23 +109,9 @@
                         return datetime.substring(0, 4);
                 }
             }
-        }
-    ])
 
-    //HOME
-    .controller('homeController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
-        function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
-            var self = this;
-            self.init = function() {
-                self.getProject();
-            }
-
-            self.logout = function() {
-                util.setParams('token', '');
-                $state.go('login');
-            }
-
-            self.getProject = function () {
+            //获取项目列表
+            $scope.getProject = function () {
                 var deferred = $q.defer();
 
                 var data = JSON.stringify({
@@ -163,6 +149,26 @@
                 });
             }
         }
+    ])
+
+    //HOME
+    .controller('homeController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
+            var self = this;
+            self.init = function() {
+                self.projectList = [
+                    {projectName: "OpenVoD", projectNameCHZ: "OpenVoD"},
+                ]
+                self.selectProject = "OpenVoD";
+            }
+
+            self.logout = function() {
+                util.setParams('token', '');
+                $state.go('login');
+            }
+
+
+        }
 
     ])
 
@@ -193,6 +199,7 @@
             }
 
             self.init = function() {
+                $scope.getProject();
                 self.activerow = 0;
 
                 $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
@@ -601,10 +608,8 @@
             }
 
             self.init = function() {
-                self.project = [
-                    {name: 'opennVoD'},
-                    {name: '西塘'}
-                    ];
+                $scope.getProject();
+
                 self.activerow = 0;
                 self.term = [
                     {name: '累计终端', show: true, sort: '', desc: false},

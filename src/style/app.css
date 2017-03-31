@@ -387,6 +387,10 @@ footer ul li {
     margin: 0;
 }
 
+.style-color {
+    color: #9B9B9B !important;
+}
+
 @media screen and (max-width: 768px) {
     /*page-top*/
     .page-top {

@@ -3,14 +3,10 @@
         <a class="page-top-back" ui-sref="app.home"><img src="dist/img/返回.png"></a>
         <div class="page-top-title text-center"><img src="dist/img/具体白.png">&nbsp;具体</div>
         <div uib-dropdown class="project-dropdown">
-            <!--<a class="page-top-project"><img src="dist/img/小抽屉.png"></a>-->
-            <!--<select ng-model="app.selectProject">-->
-                <!--<option ng-repeat="item in app.projectList" value="{{item.projectName}}">{{item.projectNameCHZ}}</option>-->
-            <!--</select>-->
             <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/小抽屉.png"></a>
             <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="project-dropdown">
                 <li ng-repeat="item in app.projectList">
-                    <a href ng-click="specific.changeProject(item.projectName)">
+                    <a href ng-click="specific.changeProject(item.projectName)" class="style-color">
                         {{item.projectNameCHZ}}
                     </a>
                 </li>
@@ -25,16 +21,16 @@
                 ng-click="specific.isCurrent(0)">
                 <!--Simple dropdown -->
                 <span uib-dropdown>
-                    <a href uib-dropdown-toggle class="specific-sift-menu-btn">
+                    <a href uib-dropdown-toggle class="specific-sift-menu-btn ">
                         终端指标
                         <i class="glyphicon glyphicon-chevron-down"></i>
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="term-dropdown">
                         <li ng-repeat="item in specific.term">
-                            <a href ng-click="specific.selectTerm($index)">
+                            <a href ng-click="specific.selectTerm($index)" class="style-color">
                                 {{item.name}}&nbsp;
-                                <i class="glyphicon glyphicon-check" ng-show="item.show"></i>
-                                <i class="glyphicon glyphicon-unchecked" ng-hide="item.show"></i>
+                                <i class="glyphicon glyphicon-check style-color" ng-show="item.show"></i>
+                                <i class="glyphicon glyphicon-unchecked style-color" ng-hide="item.show"></i>
                             </a>
                         </li>
                     </ul>
@@ -49,10 +45,10 @@
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="count-dropdown">
                         <li ng-repeat="item in specific.countStatistics">
-                            <a href ng-click="specific.selectCountStatistics($index)">
+                            <a href ng-click="specific.selectCountStatistics($index)" class="style-color">
                                 {{item.name}}&nbsp;
-                                <i class="glyphicon glyphicon-check" ng-show="item.show"></i>
-                                <i class="glyphicon glyphicon-unchecked" ng-hide="item.show"></i>
+                                <i class="glyphicon glyphicon-check style-color" ng-show="item.show"></i>
+                                <i class="glyphicon glyphicon-unchecked style-color" ng-hide="item.show"></i>
                             </a>
                         </li>
                     </ul>
@@ -89,15 +85,15 @@
     </div>
     <!--筛选条件-->
 
-    <div class="page-body">
+    <div class="">
         <div class="charts-content">
             <div class="col-xs-12">
                 <div class="dropdown col-xs-8">
                     <a class="dropdown-toggle" id="dropdownEnd0" role="button" data-toggle="dropdown" data-target=""
                        href="">
                         <div class="input-group date">
-                            <input type="text" class="form-control" ng-model="specific.searchDate">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            <input type="text" class="form-control style-color" ng-model="specific.searchDate">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar style-color"></i></span>
                         </div>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
