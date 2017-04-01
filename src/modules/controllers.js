@@ -254,10 +254,10 @@
                 },
                 legend: {
                     layout: 'vertical',
-                    align: 'left',
+                    align: 'right',
                     verticalAlign: 'top',
-                    x: 150,
-                    y: 100,
+                    x: 0,
+                    y: 0,
                     floating: true,
                     borderWidth: 1,
                     backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
@@ -336,8 +336,8 @@
 
                             self.charts.series.push({name: "开机率", id: "series-0", data: [], tooltip: {valueSuffix: '%'}});
                             data.onlineRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(el * 100);
-                                self.dataSet[index].b = el * 100 + '%';
+                                if (index < 7) self.charts.series[0].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].b = util.FloatMul(el, 100) + "%";
                             });
 
                             deferred.resolve();
@@ -378,8 +378,8 @@
                             self.th.push("活跃率");
                             self.charts.series.push({name: "活跃率", id: "series-1", data: [], tooltip: {valueSuffix: '%'}});
                             data.activeRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[1].data.push(el * 100);
-                                self.dataSet[index].c = el * 100 + '%';
+                                if (index < 7) self.charts.series[1].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].c = util.FloatMul(el, 100) + "%";
                             });
 
                             deferred.resolve();
@@ -430,14 +430,14 @@
 
                             self.charts.series.push({name: "付费终端转化率", data: [], tooltip: {valueSuffix: '%'}});
                             data.payRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(el * 100);
-                                self.dataSet[index].b = el * 100 + '%';
+                                if (index < 7) self.charts.series[0].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].b = util.FloatMul(el, 100) + '%';
                             });
 
                             self.charts.series.push({name: "付费次数转化率", data: [], tooltip: {valueSuffix: '%'}});
                             data.payCountRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[1].data.push(el * 100);
-                                self.dataSet[index].c = el * 100 + '%';
+                                if (index < 7) self.charts.series[1].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].c = util.FloatMul(el, 100) + '%';
                             });
 
                             deferred.resolve();
@@ -546,7 +546,7 @@
                                 self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
                                 function zeroFill(data) {
                                     if (data < 10) {
-                                        data += "0";
+                                        data = "0" + data;
                                     }
                                     return data;
                                 }
@@ -772,10 +772,10 @@
                 },
                 legend: {
                     layout: 'vertical',
-                    align: 'left',
+                    align: 'right',
                     verticalAlign: 'top',
-                    x: 150,
-                    y: 100,
+                    x: 0,
+                    y: 0,
                     floating: true,
                     borderWidth: 1,
                     backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
@@ -1060,18 +1060,18 @@
 
                             self.charts.series.push({name: "总收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.totalMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(el);
-                                self.dataSet[index].b = el;
+                                if (index < 7) self.charts.series[0].data.push(el / 100);
+                                self.dataSet[index].b = el / 100;
                             });
                             self.charts.series.push({name: "单次点播收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.singleMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[1].data.push(el);
-                                self.dataSet[index].c = el;
+                                if (index < 7) self.charts.series[1].data.push(el / 100);
+                                self.dataSet[index].c = el / 100;
                             });
                             self.charts.series.push({name: "打包点播收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.packageMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[2].data.push(el);
-                                self.dataSet[index].d = el;
+                                if (index < 7) self.charts.series[2].data.push(el / 100);
+                                self.dataSet[index].d = el / 100;
                             });
                             deferred.resolve();
                         }
@@ -1142,7 +1142,7 @@
                                     self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
                                     function zeroFill(data) {
                                         if (data < 10) {
-                                            data += "0";
+                                            data = "0" + data;
                                         }
                                         return data;
                                     }
