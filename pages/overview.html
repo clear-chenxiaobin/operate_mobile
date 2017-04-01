@@ -6,7 +6,7 @@
             <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/小抽屉.png"></a>
             <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="project-dropdown">
                 <li ng-repeat="item in app.projectList">
-                    <a href ng-click="overview.changeProject(item.projectName)">
+                    <a href ng-click="overview.changeProject(item.projectName)" class="style-color">
                         {{item.projectNameCHZ}}
                     </a>
                 </li>
@@ -17,35 +17,35 @@
     <!--筛选条件-->
     <div class="body-top">
         <ul>
-            <li class="col-xs-2 specific-sift-menu" ng-class="{activedClass:0 == overview.activerow}"
+            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:0 == overview.activerow}"
                 ng-click="overview.isCurrent(0)">
                 <span>
                     <a class="specific-sift-menu-btn">
-                        开机率
+                        终端情况
                     </a>
                 </span>
             </li>
-            <li class="col-xs-2 specific-sift-menu" ng-class="{activedClass:1 == overview.activerow}"
+            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:1 == overview.activerow}"
                 ng-click="overview.isCurrent(1)">
                 <span>
                     <a class="specific-sift-menu-btn">
-                        活跃率
+                        付费转化
                     </a>
                 </span>
             </li>
-            <li class="col-xs-4 specific-sift-menu" ng-class="{activedClass:2 == overview.activerow}"
+            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:2 == overview.activerow}"
                 ng-click="overview.isCurrent(2)">
                 <span>
                     <a class="specific-sift-menu-btn">
-                        付费终端转化率
+                        平均营收
                     </a>
                 </span>
             </li>
-            <li class="col-xs-4 specific-sift-menu" ng-class="{activedClass:3 == overview.activerow}"
+            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:3 == overview.activerow}"
                 ng-click="overview.isCurrent(3)">
                 <span>
                     <a class="specific-sift-menu-btn">
-                        平均每终端营收
+                        平均活跃
                     </a>
                 </span>
             </li>
@@ -53,15 +53,15 @@
     </div>
     <!--筛选条件-->
 
-    <div class="page-body">
+    <div class=>
         <div class="charts-content">
             <div class="col-xs-12">
                 <div class="dropdown col-xs-8">
                     <a class="dropdown-toggle" id="dropdownEnd0" role="button" data-toggle="dropdown" data-target=""
                        href="">
                         <div class="input-group date">
-                            <input type="text" class="form-control" ng-model="overview.searchDate">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar"></i></span>
+                            <input type="text" class="form-control style-color" ng-model="overview.searchDate">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar style-color"></i></span>
                         </div>
                     </a>
                     <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
@@ -101,8 +101,8 @@
         <div class="specific-table">
             <!-- table 开始-->
             <table class="table">
-                <th ng-repeat="n in overview.th"><a ng-click="overview.changeOrderby('datetime')">{{n}}</a></th>
-                <tr ng-repeat="n in overview.dataSet | orderBy: overview.orderby.sort : overview.orderby.desc">
+                <th ng-repeat="n in overview.th"><a ng-click="overview.changeOrderby()">{{n}}</a></th>
+                <tr ng-repeat="n in overview.dataSet | orderBy: 'a' : overview.desc">
                     <td ng-repeat="(key, value) in n">{{value}}</td>
                 </tr>
             </table>

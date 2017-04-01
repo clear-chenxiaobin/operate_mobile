@@ -63,8 +63,8 @@
     ])
 
 
-    .controller('appController', ['$http', '$scope', '$state', '$stateParams', 'util', 'CONFIG',
-        function($http, $scope, $state, $stateParams, util, CONFIG) {
+    .controller('appController', ['$http', '$scope', '$state', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state, $stateParams, $q, util, CONFIG) {
             var self = this;
             self.init = function() {
 
@@ -79,7 +79,7 @@
                     {id: 3, name: "月"},
                     {id: 4, name: "年"}
                 ]
-
+                $scope.getProject();
                 $scope.durationList = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24];
             }
 
@@ -109,28 +109,14 @@
                         return datetime.substring(0, 4);
                 }
             }
-        }
-    ])
 
-    //HOME
-    .controller('homeController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
-        function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
-            var self = this;
-            self.init = function() {
-                self.getProject();
-            }
-
-            self.logout = function() {
-                util.setParams('token', '');
-                $state.go('login');
-            }
-
-            self.getProject = function () {
+            //获取项目列表
+            $scope.getProject = function () {
                 var deferred = $q.defer();
 
                 var data = JSON.stringify({
                     token: util.getParams("token"),
-                    action: 'projectList',
+                    action: 'realProjectNameList',
                 })
 
                 $http({
@@ -163,6 +149,26 @@
                 });
             }
         }
+    ])
+
+    //HOME
+    .controller('homeController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+        function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
+            var self = this;
+            self.init = function() {
+                self.projectList = [
+                    {projectName: "OpenVoD", projectNameCHZ: "OpenVoD"},
+                ]
+                self.selectProject = "OpenVoD";
+            }
+
+            self.logout = function() {
+                util.setParams('token', '');
+                $state.go('login');
+            }
+
+
+        }
 
     ])
 
@@ -193,14 +199,9 @@
             }
 
             self.init = function() {
-                self.term = [
-                    {name: '累计终端', value: true, sort: '', desc: false},
-                    {name: '上线终端', value: true, sort: '', desc: false},
-                    {name: '活跃终端', value: true, sort: '', desc: false},
-                ];
                 self.activerow = 0;
 
-                $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
+                $scope.dateRangeEnd = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
                 self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
                 self.selectGra = 1;
                 self.isDate = true;
@@ -253,10 +254,10 @@
                 },
                 legend: {
                     layout: 'vertical',
-                    align: 'left',
+                    align: 'right',
                     verticalAlign: 'top',
-                    x: 150,
-                    y: 100,
+                    x: 0,
+                    y: 0,
                     floating: true,
                     borderWidth: 1,
                     backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
@@ -290,22 +291,22 @@
                 switch (self.activerow) {
                     case 0:
                         loadOnlineRate();
+                        // loadActiveRate();
                         break;
                     case 1:
-                        loadActiveRate();
-                        break;
-                    case 2:
                         loadPayRate();
                         break;
-                    case 3:
+                    case 2:
                         loadRevenue();
+                        break;
+                    case 3:
+                        loadActiveDur();
                         break;
                 }
 
                 //获取开机率
                 function loadOnlineRate() {
-                    self.charts.yAxis.title.text = "开机率 %";
-                    self.charts.tooltip.valueSuffix = " %";
+                    self.charts.yAxis.title.text = "百分比 %";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermOnlineRateInfo',
@@ -333,10 +334,52 @@
                                 self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.charts.series.push({name: "开机率", data: [], tooltip: {valueSuffix: '%'}});
+                            self.charts.series.push({name: "开机率", id: "series-0", data: [], tooltip: {valueSuffix: '%'}});
                             data.onlineRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(el * 100);
-                                self.dataSet[index].b = el * 100 + '%';
+                                if (index < 7) self.charts.series[0].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].b = util.FloatMul(el, 100) + "%";
+                            });
+
+                            deferred.resolve();
+                        }
+                        else {
+                            alert(data.errInfo);
+                            deferred.reject();
+                        }
+                        return deferred.promise;
+                    }, function errorCallback(response) {
+                        alert('连接服务器出错');
+                        deferred.reject();
+                    }).finally(function (value) {
+                        // self.loadingChart0 = false;
+                        loadActiveRate()
+                    });
+                }
+
+                //获取活跃率
+                function loadActiveRate() {
+                    var data = JSON.stringify({
+                        token: util.getParams("token"),
+                        action: 'getTermActiveRateInfo',
+                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                        project: [util.getParams("project")],
+                        timespans: self.selectDur,
+                        type: self.selectGra
+                    })
+                    // self.loadingChart0 = true;
+
+                    $http({
+                        method: 'POST',
+                        url: util.getApiUrl('v2/statistics', '', 'server'),
+                        data: data
+                    }).then(function successCallback(response) {
+                        var data = response.data;
+                        if (data.rescode == '200') {
+                            self.th.push("活跃率");
+                            self.charts.series.push({name: "活跃率", id: "series-1", data: [], tooltip: {valueSuffix: '%'}});
+                            data.activeRate.forEach(function (el, index) {
+                                if (index < 7) self.charts.series[1].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].c = util.FloatMul(el, 100) + "%";
                             });
 
                             deferred.resolve();
@@ -353,13 +396,14 @@
                     });
                 }
 
-                //获取活跃率
-                function loadActiveRate() {
-                    self.charts.yAxis.title.text = "活跃率 %";
+
+                //付费转化率
+                function loadPayRate() {
+                    self.charts.yAxis.title.text = "付费转化率 %";
                     self.charts.tooltip.valueSuffix = " %";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermActiveRateInfo',
+                        action: 'getPayRateInfo',
                         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
                         project: [util.getParams("project")],
                         timespans: self.selectDur,
@@ -374,7 +418,7 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "活跃率"];
+                            self.th = ["日期", "付费终端转化率", "付费次数转化率"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
@@ -384,10 +428,16 @@
                                 self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.charts.series.push({name: "活跃率", data: [], tooltip: {valueSuffix: '%'}});
-                            data.activeRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(el * 100);
-                                self.dataSet[index].b = el * 100 + '%';
+                            self.charts.series.push({name: "付费终端转化率", data: [], tooltip: {valueSuffix: '%'}});
+                            data.payRate.forEach(function (el, index) {
+                                if (index < 7) self.charts.series[0].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].b = util.FloatMul(el, 100) + '%';
+                            });
+
+                            self.charts.series.push({name: "付费次数转化率", data: [], tooltip: {valueSuffix: '%'}});
+                            data.payCountRate.forEach(function (el, index) {
+                                if (index < 7) self.charts.series[1].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].c = util.FloatMul(el, 100) + '%';
                             });
 
                             deferred.resolve();
@@ -404,58 +454,6 @@
                     });
                 }
 
-
-                //付费转化率
-                function loadPayRate() {
-                    self.charts.yAxis.title.text = "付费转化率 %";
-                    self.charts.tooltip.valueSuffix = " %";
-                    var data = JSON.stringify({
-                        token: util.getParams("token"),
-                        action: 'getTermPayRateInfo',
-                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
-                        project: [util.getParams("project")],
-                        timespans: self.selectDur,
-                        type: self.selectGra
-                    })
-                    self.loadingChart2 = true;
-
-                    $http({
-                        method: 'POST',
-                        url: util.getApiUrl('v2/statistics', '', 'server'),
-                        data: data
-                    }).then(function successCallback(response) {
-                        var data = response.data;
-                        if (data.rescode == '200') {
-                            self.th = ["日期", "付费转化率"];
-                            self.dataSet = [];
-                            self.charts.xAxis.categories = [];
-                            self.charts.series = [];
-
-                            data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
-                            });
-
-                            self.charts.series.push({name: "付费转化率", data: [], tooltip: {valueSuffix: '%'}});
-                            data.payRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(el * 100);
-                                self.dataSet[index].b = el * 100 + '%';
-                            });
-
-                            deferred.resolve();
-                        }
-                        else {
-                            alert(data.errInfo);
-                            deferred.reject();
-                        }
-                    }, function errorCallback(response) {
-                        alert('连接服务器出错');
-                        deferred.reject();
-                    }).finally(function (value) {
-                        self.loadingChart2 = false;
-                    });
-                }
-
                 //每终端营收
                 function loadRevenue() {
                     self.charts.yAxis.title.text = "平均每终端营收 元";
@@ -468,7 +466,7 @@
                         timespans: self.selectDur,
                         type: self.selectGra
                     })
-                    self.loadingChart3 = true;
+                    self.loadingChart2 = true;
 
                     $http({
                         method: 'POST',
@@ -503,6 +501,67 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        self.loadingChart2 = false;
+                    });
+                }
+
+                //获取平均活跃时长
+                function loadActiveDur() {
+                    self.charts.yAxis.title.text = "平均活跃时长 小时";
+                    var data = JSON.stringify({
+                        token: util.getParams("token"),
+                        action: 'getPerTermActiveTimeInfo',
+                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                        project: [util.getParams("project")],
+                        timespans: self.selectDur,
+                        type: self.selectGra
+                    })
+                    self.loadingChart3 = true;
+
+                    $http({
+                        method: 'POST',
+                        url: util.getApiUrl('v2/statistics', '', 'server'),
+                        data: data
+                    }).then(function successCallback(response) {
+                        var data = response.data;
+                        if (data.rescode == '200') {
+                            self.th = ["日期", "平均活跃时长"];
+                            self.dataSet = [];
+                            self.charts.xAxis.categories = [];
+                            self.charts.series = [];
+
+                            data.timeList.forEach(function (el, index) {
+                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
+                            });
+
+                            self.charts.series.push({name: "平均活跃时长", data: [], tooltip: {valueSuffix: ' 小时'}});
+                            data.perActiveTime.forEach(function (el, index) {
+                                if (index < 7) self.charts.series[0].data.push(Number((el / 3600).toFixed(2)));
+
+                                var h = Math.floor(el / 3600);
+                                var m = Math.floor((el - h * 3600) / 60);
+                                var s = (el - h * 3600 - m * 60).toFixed(2);
+
+                                self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
+                                function zeroFill(data) {
+                                    if (data < 10) {
+                                        data = "0" + data;
+                                    }
+                                    return data;
+                                }
+                            });
+
+                            deferred.resolve();
+                        }
+                        else {
+                            alert(data.errInfo);
+                            deferred.reject();
+                        }
+                    }, function errorCallback(response) {
+                        alert('连接服务器出错');
+                        deferred.reject();
+                    }).finally(function (value) {
                         self.loadingChart3 = false;
                     });
                 }
@@ -515,8 +574,7 @@
              * @param orderby
              */
             self.changeOrderby = function (orderby) {
-                self.term.sort = orderby;
-                self.term.desc = !self.term.desc;
+                self.desc = !self.desc;
             }
         }
 
@@ -549,10 +607,6 @@
             }
 
             self.init = function() {
-                self.project = [
-                    {name: 'opennVoD'},
-                    {name: '西塘'}
-                    ];
                 self.activerow = 0;
                 self.term = [
                     {name: '累计终端', show: true, sort: '', desc: false},
@@ -572,7 +626,7 @@
                     {name: '西塘票务', show: false, sort: '', desc: false},
                 ];
 
-                $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
+                $scope.dateRangeEnd = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
                 self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
                 self.selectGra = 1;
                 self.isDate = true;
@@ -718,10 +772,10 @@
                 },
                 legend: {
                     layout: 'vertical',
-                    align: 'left',
+                    align: 'right',
                     verticalAlign: 'top',
-                    x: 150,
-                    y: 100,
+                    x: 0,
+                    y: 0,
                     floating: true,
                     borderWidth: 1,
                     backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
@@ -1006,18 +1060,18 @@
 
                             self.charts.series.push({name: "总收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.totalMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(el);
-                                self.dataSet[index].b = el;
+                                if (index < 7) self.charts.series[0].data.push(el / 100);
+                                self.dataSet[index].b = el / 100;
                             });
                             self.charts.series.push({name: "单次点播收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.singleMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[1].data.push(el);
-                                self.dataSet[index].c = el;
+                                if (index < 7) self.charts.series[1].data.push(el / 100);
+                                self.dataSet[index].c = el / 100;
                             });
                             self.charts.series.push({name: "打包点播收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.packageMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[2].data.push(el);
-                                self.dataSet[index].d = el;
+                                if (index < 7) self.charts.series[2].data.push(el / 100);
+                                self.dataSet[index].d = el / 100;
                             });
                             deferred.resolve();
                         }
@@ -1088,7 +1142,7 @@
                                     self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
                                     function zeroFill(data) {
                                         if (data < 10) {
-                                            data += "0";
+                                            data = "0" + data;
                                         }
                                         return data;
                                     }
@@ -1113,63 +1167,6 @@
                         });
                         return deferred.promise;
                     }
-
-                    // function LoadXitang() {
-                    //     var data = JSON.stringify({
-                    //         token: util.getParams("token"),
-                    //         action: 'getXiTangTicketStatisticsInfo',
-                    //         endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
-                    //         project: [util.getParams("project")],
-                    //         timespans: 7,
-                    //         type: 2
-                    //     })
-                    //     self.loadingChart2 = true;
-                    //
-                    //     $http({
-                    //         method: 'POST',
-                    //         url: util.getApiUrl('v2/statistics', '', 'server'),
-                    //         data: data
-                    //     }).then(function successCallback(response) {
-                    //         var data = response.data;
-                    //         if (data.rescode == '200') {
-                    //             self.categories3[0].category = [];
-                    //             self.dataset3 = [];
-                    //             self.revenueData = [];
-                    //             data.timeList.forEach(function (el, index) {
-                    //                 self.categories3[0].category.push({label: el.substring(5, 16)});
-                    //                 self.revenueData.push({datetime: el.substring(5, 16)});
-                    //             });
-                    //
-                    //             self.dataset3.push({seriesname: "总收益", data: []});
-                    //             data.totalMovieRevenue.forEach(function (el, index) {
-                    //                 self.dataset3[0].data.push({value: el / 100});
-                    //                 self.revenueData[index].totalMovieRevenue = el / 100;
-                    //             });
-                    //             self.dataset3.push({seriesname: "单次点播收益", data: []});
-                    //             data.singleMovieRevenue.forEach(function (el, index) {
-                    //                 self.dataset3[1].data.push({value: el / 100});
-                    //                 self.revenueData[index].singleMovieRevenue = el / 100;
-                    //             });
-                    //             self.dataset3.push({seriesname: "打包点播收益", data: []});
-                    //             data.packageMovieRevenue.forEach(function (el, index) {
-                    //                 self.dataset3[2].data.push({value: el / 100});
-                    //                 self.revenueData[index].packageMovieRevenue = el / 100;
-                    //             });
-                    //             deferred.resolve();
-                    //         }
-                    //         else {
-                    //             alert(data.errInfo);
-                    //             deferred.reject();
-                    //         }
-                    //     }, function errorCallback(response) {
-                    //         alert('连接服务器出错');
-                    //         deferred.reject();
-                    //     }).finally(function (value) {
-                    //         self.loadingChart2 = false;
-                    //     });
-                    //     return deferred.promise;
-                    // }
-
                 }
 
 
@@ -1180,8 +1177,8 @@
              * @param orderby
              */
             self.changeOrderby = function (orderby) {
-                self.orderby.sort = orderby;
-                self.orderby.desc = !self.orderby.desc;
+                // self.orderby.sort = orderby;
+                self.desc = !self.desc;
             }
         }
 
