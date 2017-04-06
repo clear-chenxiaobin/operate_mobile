@@ -308,7 +308,6 @@
 
                 //获取开机率
                 function loadOnlineRate() {
-                    self.charts.yAxis.title.text = "百分比 %";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermOnlineRateInfo',
@@ -401,8 +400,6 @@
 
                 //付费转化率
                 function loadPayRate() {
-                    self.charts.yAxis.title.text = "付费转化率 %";
-                    self.charts.tooltip.valueSuffix = " %";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPayRateInfo',
@@ -458,8 +455,6 @@
 
                 //每终端营收
                 function loadRevenue() {
-                    self.charts.yAxis.title.text = "平均每终端营收 元";
-                    self.charts.tooltip.valueSuffix = " 元";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPerTermRevenueInfo',
@@ -509,7 +504,6 @@
 
                 //获取平均活跃时长
                 function loadActiveDur() {
-                    self.charts.yAxis.title.text = "平均活跃时长 小时";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPerTermActiveTimeInfo',
@@ -831,8 +825,6 @@
                  * 获取终端指标
                  */
                 function loadTerm() {
-                    self.charts.yAxis.title.text = "终端数 个";
-                    self.charts.tooltip.valueSuffix = " 个";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermStatisticsInfo',
@@ -940,8 +932,6 @@
                  * 获取次数统计
                  */
                 function loadCount() {
-                    self.charts.yAxis.title.text = "次数 次";
-                    self.charts.tooltip.valueSuffix = " 次";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPayCountStatisticsInfo',
@@ -1031,8 +1021,6 @@
                 }
                 
                 function loadRevenue() {
-                    self.charts.yAxis.title.text = "营收 元";
-                    self.charts.tooltip.valueSuffix = " 元";
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getRevenueStatisticsInfo',
