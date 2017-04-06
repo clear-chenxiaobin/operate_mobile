@@ -1,7 +1,21 @@
 <div ng-controller="homeController as home" ng-init="home.init()" class="home-page">
     <div class="panel-header">
-        <a class="home-logout" ng-click="home.logout()"><i class="glyphicon glyphicon-remove"></i></a>
+        <!--<a class="home-logout" ng-click="home.logout()"><i class="glyphicon glyphicon-remove"></i></a>-->
         <div class="home-title text-center">运营数据平台</div>
+        <div uib-dropdown class="user-dropdown">
+            <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/user_down.png"></a>
+            <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="project-dropdown">
+                <li class="user-header">
+                    <img src="dist/img/default_user.jpg" class="img-circle" alt="User Image">
+                    <p id="bar"></p>
+                    <span class="style-color">{{home.username}}</span>
+                    <!--<a id="repassword" class="index-header-user-option">修改密码 </a>-->
+                    <a id="logout" class="index-header-user-option " ng-click="home.logout()">
+                        <i class="glyphicon glyphicon-log-out"></i>&nbsp;退出
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
     <div class="panel-body">
         <div class="home-logo text-center">

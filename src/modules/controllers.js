@@ -33,6 +33,7 @@
                 }).then(function successCallback(response) {
                     var msg = response.data;
                     if (msg.rescode == '200') {
+                        util.setParams('userName', self.userName);
                         util.setParams('token', msg.token);
                         self.getEditLangs();
                     }
@@ -160,6 +161,7 @@
                     {projectName: "OpenVoD", projectNameCHZ: "OpenVoD"},
                 ]
                 self.selectProject = "OpenVoD";
+                self.username = util.getParams('userName');
             }
 
             self.logout = function() {

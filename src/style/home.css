@@ -23,6 +23,34 @@
         font-weight: 100;
     }
 
+    .user-dropdown {
+        float: right;
+        color: white;
+        position: absolute;
+        top: 0px;
+        right: 0px;
+        width: 40px;
+        height: 40px;
+        /*padding: 17px;*/
+        z-index: 999;
+    }
+
+    .user-dropdown > .dropdown-menu {
+        left: auto;
+        right: 0px;
+    }
+
+    .user-dropdown > .dropdown-menu > li.user-header {
+        height: 150px;
+        padding: 10px;
+        text-align: center;
+
+    }
+
+    .user-header > .img-circle {
+        width: 70px;
+    }
+
     .home-title {
         font-size: 18px;
         color: white;
