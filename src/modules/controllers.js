@@ -64,8 +64,8 @@
     ])
 
 
-    .controller('appController', ['$http', '$scope', '$state', '$stateParams', '$q', 'util', 'CONFIG',
-        function($http, $scope, $state, $stateParams, $q, util, CONFIG) {
+    .controller('appController', ['$http', '$scope', '$state', '$stateParams', '$q', '$filter', 'util', 'CONFIG',
+        function($http, $scope, $state, $stateParams, $q, $filter, util, CONFIG) {
             var self = this;
             self.init = function() {
 
@@ -74,14 +74,17 @@
                 self.maskParams = {};
 
                 $scope.granularity = [
-                    {id: 0, name: "小时"},
                     {id: 1, name: "日"},
                     {id: 2, name: "周"},
                     {id: 3, name: "月"},
                     {id: 4, name: "年"}
                 ]
                 $scope.getProject();
-                $scope.durationList = [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 24];
+
+                $scope.dateRangeStart = $filter('date')(new Date(), 'yyyy-MM-dd');
+                $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
+                $scope.timeType = 1;
+                $scope.showDate = false;
             }
 
             // 添加 删除 弹窗，增加一个样式的class
@@ -179,18 +182,31 @@
         function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
             var self = this;
 
-            moment.locale('zh-cn');
-            $scope.endDateBeforeRender = endDateBeforeRender;
-            $scope.endDateOnSetTime = endDateOnSetTime;
+            self.init = function() {
+                self.activerow = 0;
+                self.selectGra = 1;
+                self.selectDur = 7;
 
-            function endDateOnSetTime () {
-                $scope.$broadcast('end-date-changed');
                 self.loadChart();
             }
 
-            function endDateBeforeRender ($dates) {
+            moment.locale('zh-cn');
+            $scope.endDateBeforeRender = endDateBeforeRender
+            $scope.endDateOnSetTime = endDateOnSetTime
+            $scope.startDateBeforeRender = startDateBeforeRender
+            $scope.startDateOnSetTime = startDateOnSetTime
+
+            function startDateOnSetTime () {
+                $scope.$broadcast('start-date-changed');
+            }
+
+            function endDateOnSetTime () {
+                $scope.$broadcast('end-date-changed');
+            }
+
+            function startDateBeforeRender ($view, $dates) {
                 if ($scope.dateRangeEnd) {
-                    var activeDate = moment($scope.dateRangeEnd);
+                    var activeDate = moment($scope.dateRangeEnd).subtract(0, $view).add(1, 'minute');
 
                     $dates.filter(function (date) {
                         return date.localDateValue() >= activeDate.valueOf()
@@ -200,17 +216,17 @@
                 }
             }
 
-            self.init = function() {
-                self.activerow = 0;
+            function endDateBeforeRender ($view, $dates) {
+                if ($scope.dateRangeStart) {
+                    var activeDate = moment($scope.dateRangeStart).subtract(1, $view).add(1, 'minute');
+                    var nowDate = new Date().getTime();
 
-                $scope.dateRangeEnd = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
-                self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
-                self.selectGra = 1;
-                self.isDate = true;
-
-                self.selectDur = 7;
-
-                self.loadChart();
+                    $dates.filter(function (date) {
+                        return date.localDateValue() <= activeDate.valueOf() || date.localDateValue() >= nowDate.valueOf()
+                    }).forEach(function (date) {
+                        date.selectable = false;
+                    })
+                }
             }
 
             /**
@@ -220,7 +236,18 @@
             self.isCurrent = function(index){
                 if (self.activerow != index) {
                     self.activerow = index;
-                    self.loadChart();
+                    self.loadData();
+                }
+            }
+
+            /**
+             * 快捷日期和自定义日期修改
+             */
+            self.timeTypeChange = function () {
+                if ($scope.timeType == 0) {
+                    $scope.showDate = true;
+                } else {
+                    $scope.showDate = false;
                 }
             }
 
@@ -229,13 +256,9 @@
              */
             self.changeGra = function (value) {
                 if (value == 0) {
-                    self.isDate = false;
-                    if (self.searchDate.length == 10) self.searchDate += " 00:00";
                 } else {
-                    self.isDate = true;
-                    if (self.searchDate.length == 16) self.searchDate = self.searchDate.substring(0, 10);
                 }
-                self.loadChart();
+                self.loadData();
             }
 
             /**
@@ -266,15 +289,16 @@
                 },
                 xAxis: {
                     categories: [],
+                    tickInterval: 1
                 },
                 yAxis: {
                     title: {
-                        text: ''      //y轴
+                        text: ''
                     }
                 },
                 tooltip: {
                     shared: true,
-                    valueSuffix: ''   //后缀
+                    valueSuffix: ''
                 },
                 credits: {
                     enabled: false
@@ -290,33 +314,75 @@
             self.loadChart = function () {
                 var deferred = $q.defer();
 
+                var data = JSON.stringify({
+                    token: util.getParams("token"),
+                    action: 'getTermStatisticsInfo',
+                    endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
+                    project: [util.getParams("project")],
+                    timespans: self.selectDur,
+                    type: self.selectGra
+                })
+                self.loadingChart = true;
+
+                $http({
+                    method: 'POST',
+                    url: util.getApiUrl('v2/statistics', '', 'server'),
+                    data: data
+                }).then(function successCallback(response) {
+                    var data = response.data;
+                    if (data.rescode == '200') {
+                        self.termDate = data;
+
+                        deferred.resolve();
+                    }
+                    else {
+                        alert(data.errInfo);
+                        deferred.reject();
+                    }
+                    return deferred.promise;
+                }, function errorCallback(response) {
+                    alert('连接服务器出错');
+                    deferred.reject();
+                }).finally(function (value) {
+                    self.loadingChart = false;
+                    self.loadData();
+                });
+
+
+
+                return deferred.promise;
+            }
+
+            self.loadData = function () {
+                var deferred = $q.defer();
                 switch (self.activerow) {
                     case 0:
                         loadOnlineRate();
-                        // loadActiveRate();
                         break;
                     case 1:
-                        loadPayRate();
+                        loadActiveRate();
                         break;
                     case 2:
-                        loadRevenue();
+                        loadPayRate();
                         break;
                     case 3:
+                        loadRevenue();
+                        break;
+                    case 4:
                         loadActiveDur();
                         break;
                 }
-
                 //获取开机率
                 function loadOnlineRate() {
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermOnlineRateInfo',
-                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
                         project: [util.getParams("project")],
                         timespans: self.selectDur,
                         type: self.selectGra
                     })
-                    self.loadingChart0 = true;
+                    self.loadingChart = true;
 
                     $http({
                         method: 'POST',
@@ -325,20 +391,28 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "开机率"];
+                            self.th = ["日期", "累计终端", "上线终端", "开机率"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
                                 self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
+                            });
+
+                            self.termDate.addUpCount.forEach(function (el, index) {
+                                self.dataSet[index].b = el;
+                            });
+
+                            self.termDate.onlineCount.forEach(function (el, index) {
+                                self.dataSet[index].c = el;
                             });
 
                             self.charts.series.push({name: "开机率", id: "series-0", data: [], tooltip: {valueSuffix: '%'}});
                             data.onlineRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                self.dataSet[index].b = util.FloatMul(el, 100) + "%";
+                                self.charts.series[0].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].d = util.FloatMul(el, 100) + "%";
                             });
 
                             deferred.resolve();
@@ -352,8 +426,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        // self.loadingChart0 = false;
-                        loadActiveRate()
+                        self.loadingChart = false;
                     });
                 }
 
@@ -362,12 +435,12 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermActiveRateInfo',
-                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
                         project: [util.getParams("project")],
                         timespans: self.selectDur,
                         type: self.selectGra
                     })
-                    // self.loadingChart0 = true;
+                    self.loadingChart = true;
 
                     $http({
                         method: 'POST',
@@ -376,11 +449,28 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th.push("活跃率");
-                            self.charts.series.push({name: "活跃率", id: "series-1", data: [], tooltip: {valueSuffix: '%'}});
+                            self.th = ["日期", "上线终端", "活跃终端", "活跃率"];
+                            self.dataSet = [];
+                            self.charts.xAxis.categories = [];
+                            self.charts.series = [];
+
+                            data.timeList.forEach(function (el, index) {
+                                self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
+                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
+                            });
+
+                            self.termDate.onlineCount.forEach(function (el, index) {
+                                self.dataSet[index].b = el;
+                            });
+
+                            self.termDate.activeCount.forEach(function (el, index) {
+                                self.dataSet[index].c = el;
+                            });
+
+                            self.charts.series.push({name: "活跃率", id: "series-0", data: [], tooltip: {valueSuffix: '%'}});
                             data.activeRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[1].data.push(util.FloatMul(el, 100));
-                                self.dataSet[index].c = util.FloatMul(el, 100) + "%";
+                                self.charts.series[0].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].d = util.FloatMul(el, 100) + "%";
                             });
 
                             deferred.resolve();
@@ -393,7 +483,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart0 = false;
+                        self.loadingChart = false;
                     });
                 }
 
@@ -403,12 +493,12 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPayRateInfo',
-                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
                         project: [util.getParams("project")],
                         timespans: self.selectDur,
                         type: self.selectGra
                     })
-                    self.loadingChart1 = true;
+                    self.loadingChart = true;
 
                     $http({
                         method: 'POST',
@@ -417,7 +507,7 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "付费终端转化率", "付费次数转化率"];
+                            self.th = ["日期", "活跃终端", "付费终端", "付费终端转化率"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
@@ -427,16 +517,18 @@
                                 self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
                             });
 
-                            self.charts.series.push({name: "付费终端转化率", data: [], tooltip: {valueSuffix: '%'}});
-                            data.payRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                self.dataSet[index].b = util.FloatMul(el, 100) + '%';
+                            self.termDate.activeCount.forEach(function (el, index) {
+                                self.dataSet[index].b = el;
                             });
 
-                            self.charts.series.push({name: "付费次数转化率", data: [], tooltip: {valueSuffix: '%'}});
-                            data.payCountRate.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[1].data.push(util.FloatMul(el, 100));
-                                self.dataSet[index].c = util.FloatMul(el, 100) + '%';
+                            self.termDate.payCount.forEach(function (el, index) {
+                                self.dataSet[index].c = el;
+                            });
+
+                            self.charts.series.push({name: "付费终端转化率", data: [], tooltip: {valueSuffix: '%'}});
+                            data.payRate.forEach(function (el, index) {
+                                self.charts.series[0].data.push(util.FloatMul(el, 100));
+                                self.dataSet[index].d = util.FloatMul(el, 100) + '%';
                             });
 
                             deferred.resolve();
@@ -449,7 +541,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart1 = false;
+                        self.loadingChart = false;
                     });
                 }
 
@@ -458,12 +550,12 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPerTermRevenueInfo',
-                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
                         project: [util.getParams("project")],
                         timespans: self.selectDur,
                         type: self.selectGra
                     })
-                    self.loadingChart2 = true;
+                    self.loadingChart = true;
 
                     $http({
                         method: 'POST',
@@ -498,7 +590,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart2 = false;
+                        self.loadingChart = false;
                     });
                 }
 
@@ -507,12 +599,12 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPerTermActiveTimeInfo',
-                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
                         project: [util.getParams("project")],
                         timespans: self.selectDur,
                         type: self.selectGra
                     })
-                    self.loadingChart3 = true;
+                    self.loadingChart = true;
 
                     $http({
                         method: 'POST',
@@ -558,7 +650,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart3 = false;
+                        self.loadingChart = false;
                     });
                 }
 
@@ -581,27 +673,6 @@
         function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
             var self = this;
 
-            moment.locale('zh-cn');
-            $scope.endDateBeforeRender = endDateBeforeRender;
-            $scope.endDateOnSetTime = endDateOnSetTime;
-
-            function endDateOnSetTime () {
-                $scope.$broadcast('end-date-changed');
-                self.loadChart();
-            }
-
-            function endDateBeforeRender ($dates) {
-                if ($scope.dateRangeEnd) {
-                    var activeDate = moment($scope.dateRangeEnd);
-
-                    $dates.filter(function (date) {
-                        return date.localDateValue() >= activeDate.valueOf()
-                    }).forEach(function (date) {
-                        date.selectable = false;
-                    })
-                }
-            }
-
             self.init = function() {
                 self.activerow = 0;
                 self.term = [
@@ -622,16 +693,51 @@
                     {name: '西塘票务', show: false, sort: '', desc: false},
                 ];
 
-                $scope.dateRangeEnd = $filter('date')(new Date() + 1*24*60*60*1000, 'yyyy-MM-dd');
-                self.searchDate = $filter('date')((new Date().getTime()), 'yyyy-MM-dd');
                 self.selectGra = 1;
-                self.isDate = true;
-
                 self.selectDur = 7;
 
                 self.loadChart();
                 self.orderby = {};
                 self.orderby.desc = false;
+            }
+
+            moment.locale('zh-cn');
+            $scope.endDateBeforeRender = endDateBeforeRender
+            $scope.endDateOnSetTime = endDateOnSetTime
+            $scope.startDateBeforeRender = startDateBeforeRender
+            $scope.startDateOnSetTime = startDateOnSetTime
+
+            function startDateOnSetTime () {
+                $scope.$broadcast('start-date-changed');
+            }
+
+            function endDateOnSetTime () {
+                $scope.$broadcast('end-date-changed');
+            }
+
+            function startDateBeforeRender ($view, $dates) {
+                if ($scope.dateRangeEnd) {
+                    var activeDate = moment($scope.dateRangeEnd).subtract(0, $view).add(1, 'minute');
+
+                    $dates.filter(function (date) {
+                        return date.localDateValue() >= activeDate.valueOf()
+                    }).forEach(function (date) {
+                        date.selectable = false;
+                    })
+                }
+            }
+
+            function endDateBeforeRender ($view, $dates) {
+                if ($scope.dateRangeStart) {
+                    var activeDate = moment($scope.dateRangeStart).subtract(1, $view).add(1, 'minute');
+                    var nowDate = new Date().getTime();
+
+                    $dates.filter(function (date) {
+                        return date.localDateValue() <= activeDate.valueOf() || date.localDateValue() >= nowDate.valueOf()
+                    }).forEach(function (date) {
+                        date.selectable = false;
+                    })
+                }
             }
 
             /**
@@ -655,15 +761,22 @@
             }
 
             /**
+             * 快捷日期和自定义日期修改
+             */
+            self.timeTypeChange = function () {
+                if ($scope.timeType == 0) {
+                    $scope.showDate = true;
+                } else {
+                    $scope.showDate = false;
+                }
+            }
+
+            /**
              * 修改粒度
              */
             self.changeGra = function (value) {
                 if (value == 0) {
-                    self.isDate = false;
-                    if (self.searchDate.length == 10) self.searchDate += " 00:00";
                 } else {
-                    self.isDate = true;
-                    if (self.searchDate.length == 16) self.searchDate = self.searchDate.substring(0, 10);
                 }
                 self.loadChart();
             }
@@ -828,12 +941,12 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermStatisticsInfo',
-                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
                         project: [util.getParams("project")],
                         timespans: self.selectDur,
                         type: self.selectGra
                     })
-                    self.loadingChart0 = true;
+                    self.loadingChart = true;
 
                     $http({
                         method: 'POST',
@@ -923,7 +1036,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart0 = false;
+                        self.loadingChart = false;
                     });
                     return deferred.promise;
                 }
@@ -935,12 +1048,12 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPayCountStatisticsInfo',
-                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
                         project: [util.getParams("project")],
                         timespans: self.selectDur,
                         type: self.selectGra
                     })
-                    self.loadingChart1 = true;
+                    self.loadingChart = true;
 
                     $http({
                         method: 'POST',
@@ -1015,7 +1128,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart1 = false;
+                        self.loadingChart = false;
                     });
                     return deferred.promise;
                 }
@@ -1024,12 +1137,12 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getRevenueStatisticsInfo',
-                        endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
                         project: [util.getParams("project")],
                         timespans: self.selectDur,
                         type: self.selectGra
                     })
-                    self.loadingChart2 = true;
+                    self.loadingChart = true;
 
                     $http({
                         method: 'POST',
@@ -1073,7 +1186,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart2 = false;
+                        self.loadingChart = false;
                     });
                     return deferred.promise;
                 }
@@ -1097,12 +1210,12 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getActiveStatisticsInfo',
-                            endTime: self.searchDate.length == 10 ? self.searchDate + " 00:00:00" : self.searchDate + ":00",
+                            endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
                             project: [util.getParams("project")],
                             timespans: self.selectDur,
                             type: self.selectGra
                         })
-                        self.loadingChart3 = true;
+                        self.loadingChart = true;
 
                         $http({
                             method: 'POST',
@@ -1153,7 +1266,7 @@
                             alert('连接服务器出错');
                             deferred.reject();
                         }).finally(function (value) {
-                            self.loadingChart3 = false;
+                            self.loadingChart = false;
                         });
                         return deferred.promise;
                     }

@@ -17,13 +17,13 @@
     <!--筛选条件-->
     <div class="body-top">
         <ul>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:0 == specific.activerow}"
+            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:0 == specific.activerow}"
                 ng-click="specific.isCurrent(0)">
                 <!--Simple dropdown -->
                 <span uib-dropdown>
                     <a href uib-dropdown-toggle class="specific-sift-menu-btn ">
                         终端指标
-                        <i class="glyphicon glyphicon-chevron-down"></i>
+                        <!--<i class="glyphicon glyphicon-chevron-down"></i>-->
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="term-dropdown">
                         <li ng-repeat="item in specific.term">
@@ -36,12 +36,12 @@
                     </ul>
                 </span>
             </li>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:1 == specific.activerow}"
+            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:1 == specific.activerow}"
                 ng-click="specific.isCurrent(1)">
                 <span uib-dropdown>
                     <a href uib-dropdown-toggle class="specific-sift-menu-btn">
-                        次数统计
-                        <i class="glyphicon glyphicon-chevron-down"></i>
+                        订单统计
+                        <!--<i class="glyphicon glyphicon-chevron-down"></i>-->
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="count-dropdown">
                         <li ng-repeat="item in specific.countStatistics">
@@ -54,7 +54,7 @@
                     </ul>
                 </span>
             </li>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:2 == specific.activerow}"
+            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:2 == specific.activerow}"
                 ng-click="specific.isCurrent(2)">
                 <span>
                     <a class="specific-sift-menu-btn">
@@ -62,12 +62,12 @@
                     </a>
                 </span>
             </li>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:3 == specific.activerow}"
+            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:3 == specific.activerow}"
                 ng-click="specific.isCurrent(3)">
                 <!--Simple dropdown -->
                 <span uib-dropdown>
                     <a href uib-dropdown-toggle class="specific-sift-menu-btn">
-                        活跃时长
+                        活跃指标
                         <!--<i class="glyphicon glyphicon-chevron-down"></i>-->
                     </a>
                     <!--<ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">-->
@@ -81,49 +81,91 @@
                     <!--</ul>-->
                 </span>
             </li>
+            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:4 == specific.activerow}"
+                ng-click="specific.isCurrent(4)">
+                <!--Simple dropdown -->
+                <span uib-dropdown>
+                    <a href uib-dropdown-toggle class="specific-sift-menu-btn">
+                        点播统计
+                        <!--<i class="glyphicon glyphicon-chevron-down"></i>-->
+                    </a>
+                    <!--<ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">-->
+                    <!--<li ng-repeat="item in specific.other">-->
+                    <!--<a href ng-click="specific.selectOther($index)">-->
+                    <!--{{item.name}}&nbsp;-->
+                    <!--<i class="glyphicon glyphicon-check" ng-show="item.show"></i>-->
+                    <!--<i class="glyphicon glyphicon-unchecked" ng-hide="item.show"></i>-->
+                    <!--</a>-->
+                    <!--</li>-->
+                    <!--</ul>-->
+                </span>
+            </li>
         </ul>
     </div>
     <!--筛选条件-->
 
     <div class="">
         <div class="charts-content">
-            <div class="col-xs-12">
-                <div class="dropdown col-xs-8">
-                    <a class="dropdown-toggle" id="dropdownEnd0" role="button" data-toggle="dropdown" data-target=""
-                       href="">
-                        <div class="input-group date">
-                            <input type="text" class="form-control style-color" ng-model="specific.searchDate">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar style-color"></i></span>
+            <div class="row">
+                <div class="btn-group col-xs-12 charts-content-datepicker">
+                    <div class="btn-group-sm" ng-class="{'col-xs-12': !showDate, 'col-xs-9': showDate}">
+                        <label class="btn btn-default col-xs-2 style-color" ng-model="timeType" uib-btn-radio="1"
+                               ng-click="specific.timeTypeChange()">日</label>
+                        <label class="btn btn-default col-xs-2 style-color" ng-model="timeType" uib-btn-radio="2"
+                               ng-click="specific.timeTypeChange()">周</label>
+                        <label class="btn btn-default col-xs-2 style-color" ng-model="timeType" uib-btn-radio="3"
+                               ng-click="specific.timeTypeChange()">月</label>
+                        <label class="btn btn-default col-xs-2 style-color" ng-model="timeType" uib-btn-radio="4"
+                               ng-click="specific.timeTypeChange()">年</label>
+                        <label class="btn btn-default col-xs-4 style-color" ng-model="timeType" uib-btn-radio="0"
+                               ng-click="specific.timeTypeChange()">自定义</label>
+                    </div>
+                    <div class="btn-group-sm padding-0-1" ng-class="{'col-xs-0': !showDate, 'col-xs-3': showDate}">
+                        <select class="select-charts-time" ng-class="{'active': showDate}" ng-model="specific.selectGra"
+                                ng-options="x.id as x.name for x in granularity">
+                        </select>
+                    </div>
+                    <div class="btn-group-sm col-xs-12 select-date-box" ng-show="showDate">
+                        <div class="form-group-sm dropdown col-xs-5 padding-0-1">
+                            <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="" href="">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control style-color" ng-model="dateRangeStart">
+                                    <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar style-color"></i>
+                                    </span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                                <datetimepicker ng-model="dateRangeStart"
+                                                data-datetimepicker-config="{dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                                data-on-set-time="startDateOnSetTime()"
+                                                data-before-render="startDateBeforeRender($view, $dates)"
+                                                ng-change="specific.loadChart()">
+                                </datetimepicker>
+                            </ul>
                         </div>
-                    </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <datetimepicker ng-model="specific.searchDate" ng-if="!specific.isDate"
-                                        data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
-                                        data-on-set-time="endDateOnSetDatetime()"
-                                        data-before-render="endDateBeforeRender($dates)"
-                                        ng-change="specific.loadChart()">
+                        <div class="form-group-sm col-xs-2 padding-0-1 text-center style-color"><span style="line-height: 30px">-</span></div>
+                        <div class="form-group-sm dropdown col-xs-5 padding-0-1">
+                            <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="" href="">
+                                <div class="input-group date">
+                                    <input type="text" class="form-control style-color" ng-model="dateRangeEnd">
+                                    <span class="input-group-addon">
+                                        <i class="glyphicon glyphicon-calendar style-color"></i>
+                                    </span>
+                                </div>
+                            </a>
+                            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+                                <datetimepicker ng-model="dateRangeEnd"
+                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                                data-on-set-time="endDateOnSetTime()"
+                                                data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"
+                                                ng-change="specific.loadChart()">
+                                </datetimepicker>
+                            </ul>
 
-                        </datetimepicker>
-                        <datetimepicker ng-model="specific.searchDate" ng-if="specific.isDate"
-                                        data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                                        data-on-set-time="endDateOnSetTime()"
-                                        data-before-render="endDateBeforeRender($dates)"
-                                        ng-change="specific.loadChart()">
+                        </div>
 
-                        </datetimepicker>
-                    </ul>
-
-                </div>
-                <div class="col-xs-2">
-                    <select class="select-charts-time" ng-model="specific.selectDur" ng-change="specific.loadChart()"
-                            ng-options="x for x in durationList">
-                    </select>
-                </div>
-                <div class="col-xs-2">
-                    <select class="select-charts-time" ng-model="specific.selectGra"
-                            ng-change="specific.changeGra(specific.selectGra)"
-                            ng-options="x.id as x.name for x in granularity">
-                    </select>
+                    </div>
                 </div>
             </div>
 

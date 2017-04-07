@@ -1,6 +1,7 @@
 body {
     font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", FontAwesome, sans-serif;
     font-size: 12px;
+    overflow-x: hidden;
 }
 
 html, body {
@@ -363,6 +364,16 @@ td {
     /*padding-right: 15px;*/
 /*}*/
 
+.col-xs-0 {
+    width: 0px;
+    float: left;
+    /*display: none !important;*/
+    transition: all 0.5s;
+    -moz-transition: all 0.5s; /* Firefox 4 */
+    -webkit-transition: all 0.5s; /* Safari 和 Chrome */
+    -o-transition: all 0.5s; /* Opera */
+}
+
 .col-xs-5ths, .col-sm-5ths, .col-md-5ths, .col-lg-5ths {
     position: relative;
     min-height: 1px;
@@ -410,6 +421,19 @@ footer {
 
 footer ul li {
     list-style: none;
+}
+
+.charts-content .charts-content-datepicker {
+    height: 70px;
+}
+
+.charts-content .charts-content-datepicker .btn-group-sm {
+    display: inline-block;
+    margin-bottom: 5px;
+    transition: all 0.5s;
+    -moz-transition: all 0.5s; /* Firefox 4 */
+    -webkit-transition: all 0.5s; /* Safari 和 Chrome */
+    -o-transition: all 0.5s; /* Opera */
 }
 
 .datetimepicker {
@@ -478,12 +502,29 @@ footer ul li {
         float: right;
     }
 
+    /* 日期选择器 */
+    .select-date-box > .padding-0-1{
+        padding: 0 1px;
+    }
+
+    .select-date-box input {
+        font-size: 12px;
+        border-radius: 3px;
+    }
+
+    .select-date-box .input-group-addon {
+        padding: 5px 6px;
+    }
+
     .select-charts-time {
         color: #9B9B9B;
+        height: 30px;
+        width: 100%;
+    }
+
+    .select-charts-time.active {
         border: 1px solid #9B9B9B;
         background: white;
-        height: 34px;
-        /*width: 100%;*/
     }
 
     /* charts */
@@ -491,7 +532,7 @@ footer ul li {
         margin: 10px 0px;
         padding: 10px 0px;
         width: 100%;
-        height: 400px;
+        height: 425px;
         background: white;
     }
 
