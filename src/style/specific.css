@@ -4,7 +4,7 @@
     }
 
     .specific-page .dropdown-menu {
-        min-width: 50px;
+        min-width: 80px;
         font-size: 12px;
     }
 
@@ -21,11 +21,6 @@
     .body-top {
         background: white;
         height: 45px;
-    }
-
-    .body-top i {
-        position: relative;
-        top: 3px;
     }
 
     .specific-sift-menu {

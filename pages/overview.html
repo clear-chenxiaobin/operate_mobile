@@ -66,19 +66,19 @@
             <div class="row">
                 <div class="btn-group col-xs-12 charts-content-datepicker">
                     <div class="btn-group-sm" ng-class="{'col-xs-12': !showDate, 'col-xs-9': showDate}">
-                        <label class="btn btn-default col-xs-2 style-color" ng-model="timeType" uib-btn-radio="1"
-                               ng-click="overview.timeTypeChange()">日</label>
-                        <label class="btn btn-default col-xs-2 style-color" ng-model="timeType" uib-btn-radio="2"
-                               ng-click="overview.timeTypeChange()">周</label>
-                        <label class="btn btn-default col-xs-2 style-color" ng-model="timeType" uib-btn-radio="3"
-                               ng-click="overview.timeTypeChange()">月</label>
-                        <label class="btn btn-default col-xs-2 style-color" ng-model="timeType" uib-btn-radio="4"
-                               ng-click="overview.timeTypeChange()">年</label>
-                        <label class="btn btn-default col-xs-4 style-color" ng-model="timeType" uib-btn-radio="0"
-                               ng-click="overview.timeTypeChange()">自定义</label>
+                        <label class="btn btn-default col-xs-2 style-color" ng-model="category" uib-btn-radio="0"
+                               ng-click="overview.categoryChange()">日</label>
+                        <label class="btn btn-default col-xs-2 style-color" ng-model="category" uib-btn-radio="1"
+                               ng-click="overview.categoryChange()">周</label>
+                        <label class="btn btn-default col-xs-2 style-color" ng-model="category" uib-btn-radio="2"
+                               ng-click="overview.categoryChange()">月</label>
+                        <label class="btn btn-default col-xs-2 style-color" ng-model="category" uib-btn-radio="3"
+                               ng-click="overview.categoryChange()">年</label>
+                        <label class="btn btn-default col-xs-4 style-color" ng-model="category" uib-btn-radio="4"
+                               ng-click="overview.categoryChange()">自定义</label>
                     </div>
                     <div class="btn-group-sm padding-0-1" ng-class="{'col-xs-0': !showDate, 'col-xs-3': showDate}">
-                        <select class="select-charts-time" ng-class="{'active': showDate}" ng-model="overview.selectGra"
+                        <select class="select-charts-time" ng-class="{'active': showDate}" ng-model="dateType"
                                 ng-options="x.id as x.name for x in granularity">
                         </select>
                     </div>
