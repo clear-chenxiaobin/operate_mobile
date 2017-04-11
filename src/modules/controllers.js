@@ -74,17 +74,18 @@
                 self.maskParams = {};
 
                 $scope.granularity = [
-                    {id: 1, name: "日"},
-                    {id: 2, name: "周"},
-                    {id: 3, name: "月"},
-                    {id: 4, name: "年"}
+                    {id: 0, name: "日"},
+                    {id: 1, name: "周"},
+                    {id: 2, name: "月"},
+                    {id: 3, name: "年"}
                 ]
-                $scope.getProject();
+                // $scope.getProject();
 
                 $scope.dateRangeStart = $filter('date')(new Date(), 'yyyy-MM-dd');
                 $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
-                $scope.timeType = 1;
                 $scope.showDate = false;
+                $scope.category = 0;
+                $scope.dateType = 0;
             }
 
             // 添加 删除 弹窗，增加一个样式的class
@@ -96,21 +97,6 @@
                 } else {
                     $scope.app.maskUrl = '';
                     $scope.app.showMaskClass = false;
-                }
-            }
-
-            $scope.dtSubstr = function(datetime, num) {
-                switch (num) {
-                    case 0:
-                        return datetime.substring(5, 16);
-                    case 1:
-                        return datetime.substring(5, 10);
-                    case 2:
-                        return datetime.substring(5, 10);
-                    case 3:
-                        return datetime.substring(0, 7);
-                    case 4:
-                        return datetime.substring(0, 4);
                 }
             }
 
@@ -187,7 +173,7 @@
                 self.selectGra = 1;
                 self.selectDur = 7;
 
-                self.loadChart();
+                self.loadData();
             }
 
             moment.locale('zh-cn');
@@ -243,12 +229,13 @@
             /**
              * 快捷日期和自定义日期修改
              */
-            self.timeTypeChange = function () {
-                if ($scope.timeType == 0) {
+            self.categoryChange = function () {
+                if ($scope.category == 4) {
                     $scope.showDate = true;
                 } else {
                     $scope.showDate = false;
                 }
+                self.loadData();
             }
 
             /**
@@ -311,48 +298,6 @@
                 series: []
             }
 
-            self.loadChart = function () {
-                var deferred = $q.defer();
-
-                var data = JSON.stringify({
-                    token: util.getParams("token"),
-                    action: 'getTermStatisticsInfo',
-                    endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
-                    project: [util.getParams("project")],
-                    timespans: self.selectDur,
-                    type: self.selectGra
-                })
-                self.loadingChart = true;
-
-                $http({
-                    method: 'POST',
-                    url: util.getApiUrl('v2/statistics', '', 'server'),
-                    data: data
-                }).then(function successCallback(response) {
-                    var data = response.data;
-                    if (data.rescode == '200') {
-                        self.termDate = data;
-
-                        deferred.resolve();
-                    }
-                    else {
-                        alert(data.errInfo);
-                        deferred.reject();
-                    }
-                    return deferred.promise;
-                }, function errorCallback(response) {
-                    alert('连接服务器出错');
-                    deferred.reject();
-                }).finally(function (value) {
-                    self.loadingChart = false;
-                    self.loadData();
-                });
-
-
-
-                return deferred.promise;
-            }
-
             self.loadData = function () {
                 var deferred = $q.defer();
                 switch (self.activerow) {
@@ -377,10 +322,11 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermOnlineRateInfo',
-                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
+                        StartTime: $scope.dateRangeStart + " 00:00:00",
+                        EndTime: $scope.dateRangeEnd + " 00:00:00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur,
-                        type: self.selectGra
+                        type: $scope.showDate == false ? 0 : 1,
+                        category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
                     self.loadingChart = true;
 
@@ -391,21 +337,21 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "累计终端", "上线终端", "开机率"];
+                            self.th = ["日期", "上线终端", "累计终端", "开机率"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
+                                self.charts.xAxis.categories.push(self.dtSubstr(el));
+                                self.dataSet.push({a: self.dtSubstr(el)});
                             });
 
-                            self.termDate.addUpCount.forEach(function (el, index) {
+                            data.onlineCount.forEach(function (el, index) {
                                 self.dataSet[index].b = el;
                             });
 
-                            self.termDate.onlineCount.forEach(function (el, index) {
+                            data.totalCount.forEach(function (el, index) {
                                 self.dataSet[index].c = el;
                             });
 
@@ -435,10 +381,11 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermActiveRateInfo',
-                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
+                        StartTime: $scope.dateRangeStart + " 00:00:00",
+                        EndTime: $scope.dateRangeEnd + " 00:00:00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur,
-                        type: self.selectGra
+                        type: $scope.showDate == false ? 0 : 1,
+                        category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
                     self.loadingChart = true;
 
@@ -449,21 +396,21 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "上线终端", "活跃终端", "活跃率"];
+                            self.th = ["日期", "活跃终端", "上线终端", "活跃率"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
+                                self.charts.xAxis.categories.push(self.dtSubstr(el));
+                                self.dataSet.push({a: self.dtSubstr(el)});
                             });
 
-                            self.termDate.onlineCount.forEach(function (el, index) {
+                            data.activeCount.forEach(function (el, index) {
                                 self.dataSet[index].b = el;
                             });
 
-                            self.termDate.activeCount.forEach(function (el, index) {
+                            data.onlineCount.forEach(function (el, index) {
                                 self.dataSet[index].c = el;
                             });
 
@@ -492,11 +439,12 @@
                 function loadPayRate() {
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getPayRateInfo',
-                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
+                        action: 'getTermPayRateInfo',
+                        StartTime: $scope.dateRangeStart + " 00:00:00",
+                        EndTime: $scope.dateRangeEnd + " 00:00:00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur,
-                        type: self.selectGra
+                        type: $scope.showDate == false ? 0 : 1,
+                        category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
                     self.loadingChart = true;
 
@@ -513,19 +461,19 @@
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
+                                self.charts.xAxis.categories.push(self.dtSubstr(el));
+                                self.dataSet.push({a: self.dtSubstr(el)});
                             });
 
-                            self.termDate.activeCount.forEach(function (el, index) {
+                            data.payCount.forEach(function (el, index) {
                                 self.dataSet[index].b = el;
                             });
 
-                            self.termDate.payCount.forEach(function (el, index) {
+                            data.activeCount.forEach(function (el, index) {
                                 self.dataSet[index].c = el;
                             });
 
-                            self.charts.series.push({name: "付费终端转化率", data: [], tooltip: {valueSuffix: '%'}});
+                            self.charts.series.push({name: "终端付费转化率", data: [], tooltip: {valueSuffix: '%'}});
                             data.payRate.forEach(function (el, index) {
                                 self.charts.series[0].data.push(util.FloatMul(el, 100));
                                 self.dataSet[index].d = util.FloatMul(el, 100) + '%';
@@ -550,10 +498,11 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPerTermRevenueInfo',
-                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
+                        StartTime: $scope.dateRangeStart + " 00:00:00",
+                        EndTime: $scope.dateRangeEnd + " 00:00:00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur,
-                        type: self.selectGra
+                        type: $scope.showDate == false ? 0 : 1,
+                        category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
                     self.loadingChart = true;
 
@@ -564,20 +513,28 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "平均每终端营收"];
+                            self.th = ["日期", "总营收", "总终端数", "平均营收"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
+                                self.charts.xAxis.categories.push(self.dtSubstr(el));
+                                self.dataSet.push({a: self.dtSubstr(el)});
+                            });
+
+                            data.totalMoney.forEach(function (el, index) {
+                                self.dataSet[index].b = el;
+                            });
+
+                            data.totalCount.forEach(function (el, index) {
+                                self.dataSet[index].c = el;
                             });
 
                             self.charts.series.push({name: "平均每终端营收", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.revenue.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(el);
-                                self.dataSet[index].b = el;
+                                self.charts.series[0].data.push(el);
+                                self.dataSet[index].d = el;
                             });
 
                             deferred.resolve();
@@ -599,10 +556,11 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPerTermActiveTimeInfo',
-                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
+                        StartTime: $scope.dateRangeStart + " 00:00:00",
+                        EndTime: $scope.dateRangeEnd + " 00:00:00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur,
-                        type: self.selectGra
+                        type: $scope.showDate == false ? 0 : 1,
+                        category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
                     self.loadingChart = true;
 
@@ -613,25 +571,33 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "平均活跃时长"];
+                            self.th = ["日期", "总活跃时长", "总终端数", "平均活跃时长"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
+                                self.charts.xAxis.categories.push(self.dtSubstr(el));
+                                self.dataSet.push({a: self.dtSubstr(el)});
+                            });
+
+                            data.activeTime.forEach(function (el, index) {
+                                self.dataSet[index].b = el;
+                            });
+
+                            data.activeCount.forEach(function (el, index) {
+                                self.dataSet[index].c = el;
                             });
 
                             self.charts.series.push({name: "平均活跃时长", data: [], tooltip: {valueSuffix: ' 小时'}});
                             data.perActiveTime.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(Number((el / 3600).toFixed(2)));
+                                self.charts.series[0].data.push(Number((el / 3600).toFixed(2)));
 
                                 var h = Math.floor(el / 3600);
                                 var m = Math.floor((el - h * 3600) / 60);
                                 var s = (el - h * 3600 - m * 60).toFixed(2);
 
-                                self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
+                                self.dataSet[index].d = h + ":" + zeroFill(m) + ":" + zeroFill(s);
                                 function zeroFill(data) {
                                     if (data < 10) {
                                         data = "0" + data;
@@ -664,6 +630,37 @@
             self.changeOrderby = function (orderby) {
                 self.desc = !self.desc;
             }
+
+            /**
+             * 根据时间类型返回时间
+             * @param datetime
+             * @returns {string}
+             */
+            self.dtSubstr = function(datetime) {
+                if ($scope.showDate == false) {
+                    switch ($scope.category) {
+                        case 0:
+                            return datetime.substring(5, 16);
+                        case 1:
+                            return datetime.substring(5, 10);
+                        case 2:
+                            return datetime.substring(5, 10);
+                        case 3:
+                            return datetime.substring(0, 7);
+                    }
+                } else {
+                    switch ($scope.dateType) {
+                        case 0:
+                            return datetime.substring(5, 10);
+                        case 1:
+                            return datetime.substring(5, 10);
+                        case 2:
+                            return datetime.substring(5, 7);
+                        case 3:
+                            return datetime.substring(0, 4);
+                    }
+                }
+            }
         }
 
     ])
@@ -679,24 +676,23 @@
                     {name: '累计终端', show: true, sort: '', desc: false},
                     {name: '上线终端', show: true, sort: '', desc: false},
                     {name: '活跃终端', show: true, sort: '', desc: false},
-                    {name: '付费终端', show: false, sort: '', desc: false},
+                    {name: '付费终端', show: true, sort: '', desc: false},
                     {name: '新增终端', show: false, sort: '', desc: false}
                 ];
                 self.countStatistics = [
-                    {name: '付 费 次 数', show: true, sort: '', desc: false},
-                    {name: '准付费次数', show: false, sort: '', desc: false},
+                    {name: '总', show: true, sort: '', desc: false},
+                    {name: '单次', show: false, sort: '', desc: false},
+                    {name: '打包', show: false, sort: '', desc: false}
 
                 ];
                 self.selectCount = 3;
-                self.other = [
+                self.active = [
                     {name: '活跃时长', show: true, sort: '', desc: false},
-                    {name: '西塘票务', show: false, sort: '', desc: false},
+                    {name: '活跃终端', show: false, sort: '', desc: false},
+                    {name: '营 收 额', show: false, sort: '', desc: false}
                 ];
 
-                self.selectGra = 1;
-                self.selectDur = 7;
-
-                self.loadChart();
+                self.loadData();
                 self.orderby = {};
                 self.orderby.desc = false;
             }
@@ -747,7 +743,7 @@
             self.isCurrent = function(index){
                 if (self.activerow != index) {
                     self.activerow = index;
-                    self.loadChart();
+                    self.loadData();
                 }
             }
 
@@ -757,18 +753,19 @@
              */
             self.changeProject = function (projectName) {
                 util.setParams('project', projectName);
-                self.loadChart();
+                self.loadData();
             }
 
             /**
              * 快捷日期和自定义日期修改
              */
-            self.timeTypeChange = function () {
-                if ($scope.timeType == 0) {
+            self.categoryChange = function () {
+                if ($scope.category == 4) {
                     $scope.showDate = true;
                 } else {
                     $scope.showDate = false;
                 }
+                self.loadData();
             }
 
             /**
@@ -778,7 +775,7 @@
                 if (value == 0) {
                 } else {
                 }
-                self.loadChart();
+                self.loadData();
             }
 
             /**
@@ -792,10 +789,10 @@
                 } else if (self.term[$index].show == true && self.selectCount < 2) {
                     alert('最少选择1组数据！');
                     return false;
-                } else if (self.term[$index].show == false && self.selectCount < 3) {
+                } else if (self.term[$index].show == false && self.selectCount < 4) {
                     self.selectCount++;
                 } else {
-                    alert('最多只能选择3组显示！');
+                    alert('最多只能选择4组显示！');
                     return false;
                 }
                 self.term[$index].show = !self.term[$index].show;
@@ -840,36 +837,40 @@
              */
             self.selectCountStatistics = function ($index) {
                 if (self.countStatistics[$index].show == false) {
-                    if ($index == 0) {
-                        self.countStatistics[0].show = true;
-                        self.countStatistics[1].show = false;
-                    } else {
-                        self.countStatistics[0].show = false;
-                        self.countStatistics[1].show = true;
-                    }
-
+                    self.countStatistics.forEach(function (el, index) {
+                        if (index == $index) {
+                            el.show = true;
+                        } else {
+                            el.show = false;
+                        }
+                    })
                 }
 
                 if (self.countStatistics[0].show == true) {
-                    self.th = ["日期", "付费次数", "付费次数(单次)", "付费次数(打包)"];
-                    self.charts.series = self.paySeries;
-                    self.dataSet = self.payData;
+                    self.th = ["日期", "总下单数", "总支付数"];
+                    self.charts.series = self.PaySeries0;
+                    self.dataSet = self.PayData0;
                 } else if (self.countStatistics[1].show == true) {
-                    self.th = ["日期", "准付费次数", "准付费次数(单次)", "准付费次数(打包)"];
-                    self.charts.series = self.wantPaySeries;
-                    self.dataSet = self.wantPayData;
+                    self.th = ["日期", "单次下单数", "单次支付数"];
+                    self.charts.series = self.PaySeries1;
+                    self.dataSet = self.PayData1;
+                } else if (self.countStatistics[2].show == true) {
+                    self.th = ["日期", "打包下单数", "打包支付数"];
+                    self.charts.series = self.PaySeries2;
+                    self.dataSet = self.PayData2;
                 }
             }
 
             /**
-             * 选择其他指标
+             * 选择活跃指标
              * @param $index
              */
-            self.selectOther = function ($index) {
-                self.other.forEach(function (el) {
+            self.selectActive = function ($index) {
+                self.active.forEach(function (el) {
                     el.show = false;
                 })
-                self.other[$index].show = true;
+                self.active[$index].show = true;
+                self.loadData();
             }
 
             self.charts = {
@@ -916,7 +917,7 @@
              * 加载数据
              * @returns {jQuery.promise|IPromise<T>|promise|((target?:any)=>JQueryPromise<T>)|((type?:string, target?:Object)=>JQueryPromise<any>)|*}
              */
-            self.loadChart = function () {
+            self.loadData = function () {
                 var deferred = $q.defer();
 
                 switch (self.activerow) {
@@ -930,7 +931,7 @@
                         loadRevenue();
                         break;
                     case 3:
-                        loadOther();
+                        loadActive();
                         break;
                 }
 
@@ -941,10 +942,11 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getTermStatisticsInfo',
-                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
+                        StartTime: $scope.dateRangeStart + " 00:00:00",
+                        EndTime: $scope.dateRangeEnd + " 00:00:00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur,
-                        type: self.selectGra
+                        type: $scope.showDate == false ? 0 : 1,
+                        category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
                     self.loadingChart = true;
 
@@ -962,37 +964,37 @@
                             self.termData = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
-                                self.termData.push({a: $scope.dtSubstr(el, self.selectGra)});
+                                self.charts.xAxis.categories.push(self.dtSubstr(el));
+                                self.termData.push({a: self.dtSubstr(el)});
                             });
 
                             self.termSeries.push({name: "累计终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.addUpCount.forEach(function (el, index) {
-                                if (index < 7) self.termSeries[0].data.push(el);
+                                self.termSeries[0].data.push(el);
                                 self.termData[index].b = el;
                             });
 
                             self.termSeries.push({name: "上线终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.onlineCount.forEach(function (el, index) {
-                                if (index < 7) self.termSeries[1].data.push(el);
+                                self.termSeries[1].data.push(el);
                                 self.termData[index].c = el;
                             });
 
                             self.termSeries.push({name: "活跃终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.activeCount.forEach(function (el, index) {
-                                if (index < 7) self.termSeries[2].data.push(el);
+                                self.termSeries[2].data.push(el);
                                 self.termData[index].d = el;
                             });
 
-                            self.termSeries.push({name: "付费终端", data: []});
+                            self.termSeries.push({name: "付费终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.payCount.forEach(function (el, index) {
-                                if (index < 7) self.termSeries[3].data.push(el);
+                                self.termSeries[3].data.push(el);
                                 self.termData[index].e = el;
                             });
 
-                            self.termSeries.push({name: "新增终端", data: []});
+                            self.termSeries.push({name: "新增终端", data: [], tooltip: {valueSuffix: ' 个'}});
                             data.newAddCount.forEach(function (el, index) {
-                                if (index < 7) self.termSeries[4].data.push(el);
+                                self.termSeries[4].data.push(el);
                                 self.termData[index].f = el;
                             });
 
@@ -1048,10 +1050,11 @@
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getPayCountStatisticsInfo',
-                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
+                        StartTime: $scope.dateRangeStart + " 00:00:00",
+                        EndTime: $scope.dateRangeEnd + " 00:00:00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur,
-                        type: self.selectGra
+                        type: $scope.showDate == false ? 0 : 1,
+                        category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
                     self.loadingChart = true;
 
@@ -1062,61 +1065,69 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.wantPaySeries = [];
-                            self.wantPayData = [];
-                            self.paySeries = [];
-                            self.payData = [];
+                            self.PaySeries0 = [];
+                            self.PaySeries1 = [];
+                            self.PaySeries2 = [];
+                            self.PayData0 = [];
+                            self.PayData1 = [];
+                            self.PayData2 = [];
 
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
-                                self.wantPayData.push({a: $scope.dtSubstr(el, self.selectGra)});
-                                self.payData.push({a: $scope.dtSubstr(el, self.selectGra)});
+                                self.charts.xAxis.categories.push(self.dtSubstr(el));
+                                self.PayData0.push({a: self.dtSubstr(el)});
+                                self.PayData1.push({a: self.dtSubstr(el)});
+                                self.PayData2.push({a: self.dtSubstr(el)});
                             });
 
-                            self.wantPaySeries.push({name: "准付费次数", id: "series-0", data: [], tooltip: {valueSuffix: ' 次'}});
+                            self.PaySeries0.push({name: "总下单数", id: "series-0", data: [], tooltip: {valueSuffix: ' 单'}});
                             data.wantPayCount.forEach(function (el, index) {
-                                if (index < 7) self.wantPaySeries[0].data.push(el);
-                                self.wantPayData[index].b = el;
+                                self.PaySeries0[0].data.push(el);
+                                self.PayData0[index].b = el;
                             });
-                            self.wantPaySeries.push({name: "准付费次数(单次)", id: "series-1", data: [], tooltip: {valueSuffix: ' 次'}});
-                            data.wantPaySingleCount.forEach(function (el, index) {
-                                if (index < 7) self.wantPaySeries[1].data.push(el);
-                                self.wantPayData[index].c= el;
-                            });
-                            self.wantPaySeries.push({name: "准付费次数(打包)", id: "series-2", data: [], tooltip: {valueSuffix: ' 次'}});
-                            data.wantPayPackageCount.forEach(function (el, index) {
-                                if (index < 7) self.wantPaySeries[2].data.push(el);
-                                self.wantPayData[index].d= el;
+                            self.PaySeries0.push({name: "总支付数", id: "series-1", data: [], tooltip: {valueSuffix: ' 单'}});
+                            data.payCount.forEach(function (el, index) {
+                                self.PaySeries0[1].data.push(el);
+                                self.PayData0[index].c = el;
                             });
 
-                            self.paySeries.push({name: "付费次数", id: "series-0", data: [], tooltip: {valueSuffix: ' 次'}});
-                            data.payCount.forEach(function (el, index) {
-                                if (index < 7) self.paySeries[0].data.push(el);
-                                self.payData[index].b = el;
+                            self.PaySeries1.push({name: "单次下单数", id: "series-0", data: [], tooltip: {valueSuffix: ' 单'}});
+                            data.wantPaySingleCount.forEach(function (el, index) {
+                                self.PaySeries1[0].data.push(el);
+                                self.PayData1[index].b= el;
                             });
-                            self.paySeries.push({name: "付费次数(单次)", id: "series-1", data: [], tooltip: {valueSuffix: ' 次'}});
+                            self.PaySeries1.push({name: "单次支付数", id: "series-1", data: [], tooltip: {valueSuffix: ' 单'}});
                             data.paySingleCount.forEach(function (el, index) {
-                                if (index < 7) self.paySeries[1].data.push(el);
-                                self.payData[index].c = el;
+                                self.PaySeries1[1].data.push(el);
+                                self.PayData1[index].c = el;
                             });
-                            self.paySeries.push({name: "付费次数(打包)", id: "series-2", data: [], tooltip: {valueSuffix: ' 次'}});
+
+                            self.PaySeries2.push({name: "打包下单数", id: "series-0", data: [], tooltip: {valueSuffix: ' 单'}});
+                            data.wantPayPackageCount.forEach(function (el, index) {
+                                self.PaySeries2[0].data.push(el);
+                                self.PayData2[index].b= el;
+                            });
+                            self.PaySeries2.push({name: "打包支付数", id: "series-1", data: [], tooltip: {valueSuffix: ' 单'}});
                             data.payPackageCount.forEach(function (el, index) {
-                                if (index < 7) self.paySeries[2].data.push(el);
-                                self.payData[index].d = el;
+                                self.PaySeries2[1].data.push(el);
+                                self.PayData2[index].c = el;
                             });
 
                             if (self.countStatistics[0].show == true) {
-                                self.th = ["日期", "付费次数", "付费次数(单次)", "付费次数(打包)"];
-                                self.charts.series = self.paySeries;
-                                self.dataSet = self.payData;
+                                self.th = ["日期", "总下单数", "总支付数"];
+                                self.charts.series = self.PaySeries0;
+                                self.dataSet = self.PayData0;
                             } else if (self.countStatistics[1].show == true) {
-                                self.th = ["日期", "准付费次数", "准付费次数(单次)", "准付费次数(打包)"];
-                                self.charts.series = self.wantPaySeries;
-                                self.dataSet = self.wantPayData;
+                                self.th = ["日期", "单次下单数", "单次支付数"];
+                                self.charts.series = self.PaySeries1;
+                                self.dataSet = self.PayData1;
+                            } else if (self.countStatistics[2].show == true) {
+                                self.th = ["日期", "打包下单数", "打包支付数"];
+                                self.charts.series = self.PaySeries2;
+                                self.dataSet = self.PayData2;
                             }
                             deferred.resolve();
                         }
@@ -1132,15 +1143,20 @@
                     });
                     return deferred.promise;
                 }
-                
+
+                /**
+                 * 获取营收
+                 * @returns {jQuery.promise|promise|IPromise<T>|((target?:any)=>JQueryPromise<T>)|((type?:string, target?:Object)=>JQueryPromise<any>)|Promise|*}
+                 */
                 function loadRevenue() {
                     var data = JSON.stringify({
                         token: util.getParams("token"),
                         action: 'getRevenueStatisticsInfo',
-                        endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
+                        StartTime: $scope.dateRangeStart + " 00:00:00",
+                        EndTime: $scope.dateRangeEnd + " 00:00:00",
                         project: [util.getParams("project")],
-                        timespans: self.selectDur,
-                        type: self.selectGra
+                        type: $scope.showDate == false ? 0 : 1,
+                        category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
                     self.loadingChart = true;
 
@@ -1157,23 +1173,23 @@
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
-                                if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
-                                self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
+                                self.charts.xAxis.categories.push(self.dtSubstr(el));
+                                self.dataSet.push({a: self.dtSubstr(el)});
                             });
 
                             self.charts.series.push({name: "总收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.totalMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[0].data.push(el / 100);
+                                self.charts.series[0].data.push(el / 100);
                                 self.dataSet[index].b = el / 100;
                             });
                             self.charts.series.push({name: "单次点播收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.singleMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[1].data.push(el / 100);
+                                self.charts.series[1].data.push(el / 100);
                                 self.dataSet[index].c = el / 100;
                             });
                             self.charts.series.push({name: "打包点播收益", data: [], tooltip: {valueSuffix: ' 元'}});
                             data.packageMovieRevenue.forEach(function (el, index) {
-                                if (index < 7) self.charts.series[2].data.push(el / 100);
+                                self.charts.series[2].data.push(el / 100);
                                 self.dataSet[index].d = el / 100;
                             });
                             deferred.resolve();
@@ -1191,88 +1207,85 @@
                     return deferred.promise;
                 }
 
-                function loadOther() {
-                    var select = 0;
-                    self.other.forEach(function (el, index) {
-                        if (el.show == true) select = index;
+                /**
+                 * 获取活跃指标
+                 */
+                function loadActive() {
+                    var data = JSON.stringify({
+                        token: util.getParams("token"),
+                        action: 'getActiveStatisticsInfo',
+                        StartTime: $scope.dateRangeStart + " 00:00:00",
+                        EndTime: $scope.dateRangeEnd + " 00:00:00",
+                        project: [util.getParams("project")],
+                        type: $scope.showDate == false ? 0 : 1,
+                        category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
+                    self.loadingChart = true;
 
-                    switch (select) {
-                        case 0:
-                            loadActiveTime();
-                            break;
-                        // case 1:
-                        //     LoadXitang();
-                        //     break;
-                    }
+                    $http({
+                        method: 'POST',
+                        url: util.getApiUrl('v2/statistics', '', 'server'),
+                        data: data
+                    }).then(function successCallback(response) {
+                        var data = response.data;
+                        if (data.rescode == '200') {
+                            self.activeSeries0 = [];
+                            self.activeSeries1 = [];
 
-                    function loadActiveTime() {
-                        var data = JSON.stringify({
-                            token: util.getParams("token"),
-                            action: 'getActiveStatisticsInfo',
-                            endTime: $scope.dateRangeEnd.length == 10 ? $scope.dateRangeEnd + " 00:00:00" : $scope.dateRangeEnd + ":00",
-                            project: [util.getParams("project")],
-                            timespans: self.selectDur,
-                            type: self.selectGra
-                        })
-                        self.loadingChart = true;
+                            self.th = ["日期", "活跃时长", "活跃终端数"];
+                            self.dataSet = [];
+                            self.charts.xAxis.categories = [];
+                            self.charts.series = [];
 
-                        $http({
-                            method: 'POST',
-                            url: util.getApiUrl('v2/statistics', '', 'server'),
-                            data: data
-                        }).then(function successCallback(response) {
-                            var data = response.data;
-                            if (data.rescode == '200') {
-                                self.th = ["日期", "活跃时长", "活跃终端数"];
-                                self.dataSet = [];
-                                self.charts.xAxis.categories = [];
-                                self.charts.series = [];
+                            data.timeList.forEach(function (el, index) {
+                                self.charts.xAxis.categories.push(self.dtSubstr(el));
+                                self.dataSet.push({a: self.dtSubstr(el)});
+                            });
 
-                                data.timeList.forEach(function (el, index) {
-                                    if (index < 7) self.charts.xAxis.categories.push($scope.dtSubstr(el, self.selectGra));
-                                    self.dataSet.push({a: $scope.dtSubstr(el, self.selectGra)});
-                                });
+                            self.activeSeries0.push({name: "活跃时长", id: "series-0", data: [], tooltip: {valueSuffix: ' 小时'}});
+                            data.totalActiveTime.forEach(function (el, index) {
+                                self.activeSeries0[0].data.push(Number((el / 3600).toFixed(2)));
 
-                                self.charts.series.push({name: "活跃时长", data: [], tooltip: {valueSuffix: ' 小时'}});
-                                data.totalActiveTime.forEach(function (el, index) {
-                                    if (index < 7) self.charts.series[0].data.push(Number((el / 3600).toFixed(2)));
+                                var h = Math.floor(el / 3600);
+                                var m = Math.floor((el - h * 3600) / 60);
+                                var s = el - h * 3600 - m * 60;
 
-                                    var h = Math.floor(el / 3600);
-                                    var m = Math.floor((el - h * 3600) / 60);
-                                    var s = el - h * 3600 - m * 60;
-
-                                    self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
-                                    function zeroFill(data) {
-                                        if (data < 10) {
-                                            data = "0" + data;
-                                        }
-                                        return data;
+                                self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
+                                function zeroFill(data) {
+                                    if (data < 10) {
+                                        data = "0" + data;
                                     }
-                                });
-                                // self.charts.series.push({name: "活跃终端数", type: 'spline', data: [], tooltip: {valueSuffix: ' 个'}});
-                                data.activeCount.forEach(function (el, index) {
-                                    // if (index < 5)self.charts.series[1].data.push(el);
-                                    self.dataSet[index].c = el;
-                                });
+                                    return data;
+                                }
+                            });
+                            self.activeSeries1.push({name: "活跃终端数", id: "series-0", data: [], tooltip: {valueSuffix: ' 个'}});
+                            data.activeCount.forEach(function (el, index) {
+                                self.activeSeries1[0].data.push(el);
+                                self.dataSet[index].c = el;
+                            });
 
-                                deferred.resolve();
+                            if (self.active[0].show == true) {
+                                self.charts.series = self.activeSeries0;
+                            } else if (self.active[1].show == true) {
+                                self.charts.series = self.activeSeries1;
                             }
-                            else {
-                                alert(data.errInfo);
-                                deferred.reject();
-                            }
-                        }, function errorCallback(response) {
-                            alert('连接服务器出错');
+                            // else if (self.active[2].show == true) {
+                            //     self.charts.series = self.activeSeries2;
+                            // }
+                            deferred.resolve();
+                        }
+                        else {
+                            alert(data.errInfo);
                             deferred.reject();
-                        }).finally(function (value) {
-                            self.loadingChart = false;
-                        });
-                        return deferred.promise;
-                    }
+                        }
+                    }, function errorCallback(response) {
+                        alert('连接服务器出错');
+                        deferred.reject();
+                    }).finally(function (value) {
+                        self.loadingChart = false;
+                    });
+                    return deferred.promise;
                 }
-
-
             }
 
             /**
@@ -1282,6 +1295,37 @@
             self.changeOrderby = function (orderby) {
                 // self.orderby.sort = orderby;
                 self.desc = !self.desc;
+            }
+
+            /**
+             * 根据时间类型返回时间
+             * @param datetime
+             * @returns {string}
+             */
+            self.dtSubstr = function(datetime) {
+                if ($scope.showDate == false) {
+                    switch ($scope.category) {
+                        case 0:
+                            return datetime.substring(5, 16);
+                        case 1:
+                            return datetime.substring(5, 10);
+                        case 2:
+                            return datetime.substring(5, 10);
+                        case 3:
+                            return datetime.substring(0, 7);
+                    }
+                } else {
+                    switch ($scope.dateType) {
+                        case 0:
+                            return datetime.substring(5, 10);
+                        case 1:
+                            return datetime.substring(5, 10);
+                        case 2:
+                            return datetime.substring(5, 7);
+                        case 3:
+                            return datetime.substring(0, 4);
+                    }
+                }
             }
         }
 
