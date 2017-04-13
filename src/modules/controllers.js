@@ -170,7 +170,7 @@
 
             self.ok = function () {
                 if (self.proIds.length == 0) {
-                    alert('请选择一个项目');
+                    alert('至少选择一个项目，请选择一个项目');
                     return false;
                 }
                 $sessionStorage.revenueProjects = util.clone(self.reProList);
@@ -202,6 +202,69 @@
                     })
                 }
             };
+
+            /**
+             * 付费项目全选
+             */
+            self.reCheckALL = function () {
+                self.proIds = [];
+                self.reProList.forEach(function (el) {
+                    el.active = true;
+                    self.proIds.push(el.ProjectName);
+                })
+
+                self.noProList.forEach(function (el) {
+                    if (el.active == true) {
+                        self.proIds.push(el.ProjectName);
+                    }
+                })
+            }
+            /**
+             * 付费项目全不选
+             */
+            self.reUnCheckALL = function () {
+                self.proIds = [];
+                self.reProList.forEach(function (el) {
+                    el.active = false;
+                })
+
+                self.noProList.forEach(function (el) {
+                    if (el.active == true) {
+                        self.proIds.push(el.ProjectName);
+                    }
+                })
+            }
+            /**
+             * 非付费项目全选
+             */
+            self.noCheckALL = function () {
+                self.proIds = [];
+                self.noProList.forEach(function (el) {
+                    el.active = true;
+                    self.proIds.push(el.ProjectName);
+                })
+
+                self.reProList.forEach(function (el) {
+                    if (el.active == true) {
+                        self.proIds.push(el.ProjectName);
+                    }
+                })
+            }
+            /**
+             * 非付费项目全不选
+             */
+            self.noUnCheckALL = function () {
+                self.proIds = [];
+                self.noProList.forEach(function (el) {
+                    el.active = false;
+                })
+
+                self.reProList.forEach(function (el) {
+                    if (el.active == true) {
+                        self.proIds.push(el.ProjectName);
+                    }
+                })
+            }
         }
     ])
 
