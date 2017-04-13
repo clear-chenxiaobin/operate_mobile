@@ -76,20 +76,20 @@
                 }).then(function successCallback(response) {
                     var data = response.data;
                     if (data.rescode == '200') {
-                        self.projectList = data.data;
-
-                        $sessionStorage.proIds = [];
+                        self.proIds = [];
                         $sessionStorage.revenueProjects = data.revenueProjects;
                         $sessionStorage.nonRevenueProjects = data.nonRevenueProjects;
                         data.revenueProjects.forEach(function (el, idx) {
-                            $sessionStorage.proIds.push(el.ProjectName);
+                            self.proIds.push(el.ProjectName);
                             el.active = true;
                         })
 
                         data.nonRevenueProjects.forEach(function (el) {
-                            $sessionStorage.proIds.push(el.ProjectName);
+                            self.proIds.push(el.ProjectName);
                             el.active = true;
                         })
+                        
+                        util.setProjectIds(self.proIds)
 
                         self.getEditLangs();
                         deferred.resolve();
@@ -132,11 +132,9 @@
                 $scope.category = 0;
                 $scope.dateType = 0;
 
-                if ($sessionStorage.proIds == undefined || $sessionStorage.proList == undefined) {
+                if (util.getProjectIds() == undefined || $sessionStorage.proList == undefined) {
                     alert('访问超时，请重新登录');
                     $location.path("pages/login.html");
-                } else {
-                    $scope.proIds = $sessionStorage.proIds;
                 }
             }
 
@@ -156,8 +154,6 @@
                 $scope.app.maskParams = {};
                 $scope.app.showHideMask(true,'pages/project.html');
             }
-
-
         }
     ])
 
@@ -167,19 +163,20 @@
             var self = this;
             self.init = function() {
                 self.oneAtATime = true;
-                self.proIds = util.clone($scope.proIds);
+                self.proIds = util.clone(util.getProjectIds());
                 self.reProList = util.clone($sessionStorage.revenueProjects);
                 self.noProList = util.clone($sessionStorage.nonRevenueProjects);
             }
 
             self.ok = function () {
-                if ($scope.proIds.length == 0) {
+                if (self.proIds.length == 0) {
                     alert('请选择一个项目');
                     return false;
                 }
-                $scope.proIds = self.proIds;
-                $sessionStorage.revenueProjects = self.reProList;
-                $sessionStorage.nonRevenueProjects = self.noProList;
+                $sessionStorage.revenueProjects = util.clone(self.reProList);
+                $sessionStorage.nonRevenueProjects = util.clone(self.noProList);
+
+                util.setProjectIds(self.proIds);
 
                 $scope.app.showHideMask(false);
                 $state.reload();
@@ -200,7 +197,7 @@
                 } else {
                     self.proIds.forEach(function (el, index) {
                         if (el == pid) {
-                            $scope.proIds.splice(index, 1);
+                            self.proIds.splice(index, 1);
                         }
                     })
                 }
@@ -224,8 +221,6 @@
                 util.setParams('token', '');
                 $state.go('login');
             }
-
-
         }
 
     ])
@@ -237,9 +232,6 @@
 
             self.init = function() {
                 self.activerow = 0;
-                self.selectGra = 1;
-                self.selectDur = 7;
-
                 self.loadData();
             }
 
@@ -315,15 +307,6 @@
                 self.loadData();
             }
 
-            /**
-             * 切换项目
-             * @param projectName
-             */
-            self.changeProject = function (projectName) {
-                util.setParams('project', projectName);
-                self.loadChart();
-            }
-
             self.charts = {
                 chart: {
                     type: 'areaspline'
@@ -391,7 +374,7 @@
                         action: 'getTermOnlineRateInfo',
                         StartTime: $scope.dateRangeStart + " 00:00:00",
                         EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: $scope.proIds,
+                        project: util.getProjectIds(),
                         type: $scope.showDate == false ? 0 : 1,
                         category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
@@ -452,7 +435,7 @@
                         action: 'getTermActiveRateInfo',
                         StartTime: $scope.dateRangeStart + " 00:00:00",
                         EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: $scope.proIds,
+                        project: util.getProjectIds(),
                         type: $scope.showDate == false ? 0 : 1,
                         category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
@@ -511,7 +494,7 @@
                         action: 'getTermPayRateInfo',
                         StartTime: $scope.dateRangeStart + " 00:00:00",
                         EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: $scope.proIds,
+                        project: util.getProjectIds(),
                         type: $scope.showDate == false ? 0 : 1,
                         category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
@@ -569,7 +552,7 @@
                         action: 'getPerTermRevenueInfo',
                         StartTime: $scope.dateRangeStart + " 00:00:00",
                         EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: $scope.proIds,
+                        project: util.getProjectIds(),
                         type: $scope.showDate == false ? 0 : 1,
                         category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
@@ -627,7 +610,7 @@
                         action: 'getPerTermActiveTimeInfo',
                         StartTime: $scope.dateRangeStart + " 00:00:00",
                         EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: $scope.proIds,
+                        project: util.getProjectIds(),
                         type: $scope.showDate == false ? 0 : 1,
                         category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
@@ -1017,7 +1000,7 @@
                         action: 'getTermStatisticsInfo',
                         StartTime: $scope.dateRangeStart + " 00:00:00",
                         EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: $scope.proIds,
+                        project: util.getProjectIds(),
                         type: $scope.showDate == false ? 0 : 1,
                         category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
@@ -1125,7 +1108,7 @@
                         action: 'getPayCountStatisticsInfo',
                         StartTime: $scope.dateRangeStart + " 00:00:00",
                         EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: $scope.proIds,
+                        project: util.getProjectIds(),
                         type: $scope.showDate == false ? 0 : 1,
                         category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
@@ -1257,7 +1240,7 @@
                         action: 'getRevenueStatisticsInfo',
                         StartTime: $scope.dateRangeStart + " 00:00:00",
                         EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: $scope.proIds,
+                        project: util.getProjectIds(),
                         type: $scope.showDate == false ? 0 : 1,
                         category: $scope.showDate == false ? $scope.category : $scope.dateType
                     })
@@ -1340,7 +1323,7 @@
                             action: 'getActiveStatisticsInfo',
                             StartTime: $scope.dateRangeStart + " 00:00:00",
                             EndTime: $scope.dateRangeEnd + " 00:00:00",
-                            project: $scope.proIds,
+                            project: util.getProjectIds(),
                             type: $scope.showDate == false ? 0 : 1,
                             category: $scope.showDate == false ? $scope.category : $scope.dateType
                         })
@@ -1425,7 +1408,7 @@
                                 action: 'getActiveStatisticsInfo',
                                 StartTime: $scope.dateRangeStart + " 00:00:00",
                                 EndTime: $scope.dateRangeEnd + " 00:00:00",
-                                project: $scope.proIds,
+                                project: util.getProjectIds(),
                                 type: $scope.showDate == false ? 0 : 1,
                                 category: $scope.showDate == false ? $scope.category : $scope.dateType
                             })
