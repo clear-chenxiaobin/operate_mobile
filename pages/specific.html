@@ -3,14 +3,7 @@
         <a class="page-top-back" ui-sref="app.home"><img src="dist/img/返回.png"></a>
         <div class="page-top-title text-center"><img src="dist/img/具体白.png">&nbsp;具体</div>
         <div uib-dropdown class="project-dropdown">
-            <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/小抽屉.png"></a>
-            <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="project-dropdown">
-                <li ng-repeat="item in app.projectList">
-                    <a href ng-click="specific.changeProject(item.projectName)" class="style-color">
-                        {{item.projectNameCHZ}}
-                    </a>
-                </li>
-            </ul>
+            <a class="page-top-project" href><img src="dist/img/小抽屉.png" ng-click="app.openProject()"></a>
         </div>
     </div>
 

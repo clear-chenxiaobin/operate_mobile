@@ -149,6 +149,31 @@
                     } catch (e) {
                     }
                     return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+                },
+
+                /**
+                 * 复制对象或数组（解决原数组被改动的问题）
+                 * @param jsonObj
+                 * @returns {*}
+                 */
+                'clone': function (jsonObj) {
+                    var　buf;
+                    if　(jsonObj　instanceof　Array) {
+                        buf = [];
+                        var　i = jsonObj.length;
+                        while　(i--) {
+                            buf[i] = this.clone(jsonObj[i]);
+                        }
+                        return　buf;
+                    }else　 if　(jsonObj　instanceof　Object){
+                        buf = {};
+                        for　( var　k　in　jsonObj) {
+                            buf[k] = this.clone(jsonObj[k]);
+                        }
+                        return　buf;
+                    }else {
+                        return　jsonObj;
+                    }
                 }
             }
         }])
