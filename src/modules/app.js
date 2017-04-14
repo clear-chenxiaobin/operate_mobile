@@ -2,6 +2,7 @@
 
 (function () {
     var app = angular.module('openvod', [
+        'ngAnimate',
         'ui.router',
         'pascalprecht.translate',
         'app.controllers',
@@ -11,7 +12,9 @@
         'angular-md5',
         'ngCookies',
         'ngTable',
+        'ngStorage',
         'ui.bootstrap',
+        'ui.checkbox',
         'ui.bootstrap.datetimepicker',
         'highcharts-ng'
     ])
