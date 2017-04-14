@@ -30,6 +30,7 @@ module.exports = function(grunt) {
                   'src/style/login.css',
                   'src/style/home.css',
                   'src/style/specific.css',
+                  'src/style/project.css',
               ]
             }
           }

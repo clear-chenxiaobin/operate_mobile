@@ -3,7 +3,7 @@
 (function () {
     var app = angular.module('app.services', [])
 
-        .factory('util', ['$cookies', '$sessionStorage', '$translate', 'CONFIG', function ($cookies, $sessionStorage, $translate, CONFIG) {
+        .factory('util', ['$cookies', '$translate', 'CONFIG', function ($cookies, $translate, CONFIG) {
 
 
 
@@ -149,47 +149,6 @@
                     } catch (e) {
                     }
                     return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
-                },
-
-                /**
-                 * 复制对象或数组（解决原数组被改动的问题）
-                 * @param jsonObj
-                 * @returns {*}
-                 */
-                'clone': function (jsonObj) {
-                    var buf;
-                    if (jsonObj instanceof Array) {
-                        buf = [];
-                        var i = jsonObj.length;
-                        while (i--) {
-                            buf[i] = this.clone(jsonObj[i]);
-                        }
-                        return buf;
-                    } else if (jsonObj instanceof Object){
-                        buf = {};
-                        for ( var k in jsonObj) {
-                            buf[k] = this.clone(jsonObj[k]);
-                        }
-                        return buf;
-                    } else {
-                        return jsonObj;
-                    }
-                },
-
-                /**
-                 * 设置选中的项目列表
-                 * @param ids [Array]
-                 */
-                'setProjectIds': function (ids) {
-                    $sessionStorage.ProjectIds = ids;
-                },
-
-                /**
-                 * 获取选中的项目列表
-                 * @returns {*}
-                 */
-                'getProjectIds': function () {
-                    return $sessionStorage.ProjectIds;
                 }
             }
         }])
