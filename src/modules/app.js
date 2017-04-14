@@ -68,9 +68,9 @@
 
 
     .constant('CONFIG', {
-        serverUrl: 'http://openvod.cleartv.cn/backend_clearmgt/',
+        // serverUrl: 'http://openvod.cleartv.cn/backend_clearmgt/',
         // serverUrl: 'http://192.168.30.100/backend_clearmgt/',
-        // serverUrl: 'http://172.16.1.21/backend_clearmgt/',
+        serverUrl: 'http://172.16.1.21/backend_clearmgt/',
         uploadImgUrl: 'http://mres.cleartv.cn/upload',
         uploadVideoUrl: 'http://movies.clearidc.com/upload',
         testUrl: 'test/',
