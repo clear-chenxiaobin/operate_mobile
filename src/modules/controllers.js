@@ -642,7 +642,7 @@
                                 self.dataSet[index].b = el;
                             });
 
-                            data.totalCount.forEach(function (el, index) {
+                            data.onlineCount.forEach(function (el, index) {
                                 self.dataSet[index].c = el;
                             });
 
@@ -1463,7 +1463,7 @@
                     }
                     return deferred.promise;
                 }
-                
+
                 function loadOD() {
                     var select = 0;
                     self.OD.forEach(function (el, index) {
