@@ -132,7 +132,7 @@
                 $scope.category = 0;
                 $scope.dateType = 0;
 
-                if (util.getProjectIds() == undefined || $sessionStorage.proList == undefined) {
+                if (util.getProjectIds() == undefined || $sessionStorage.revenueProjects == undefined) {
                     alert('访问超时，请重新登录');
                     $location.path("pages/login.html");
                 }
