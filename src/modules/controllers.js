@@ -807,6 +807,10 @@
                     {name: '营 收 额', show: false, sort: '', desc: false},
                     {name: '活跃区间', show: false, sort: '', desc: false}
                 ];
+                self.OD = [
+                    {name: '点播Top10', show: true, sort: '', desc: false},
+                    {name: '营收Top10', show: false, sort: '', desc: false}
+                ]
 
                 self.loadData();
                 self.orderby = {};
@@ -885,16 +889,6 @@
             }
 
             /**
-             * 修改粒度
-             */
-            self.changeGra = function (value) {
-                if (value == 0) {
-                } else {
-                }
-                self.loadData();
-            }
-
-            /**
              * 选择终端指标
              * @param $index
              * @returns {boolean}
@@ -951,41 +945,11 @@
              * 选择次数统计
              * @param $index
              */
-            self.selectCountStatistics = function ($index) {
-                if (self.countStatistics[$index].show == false) {
-                    self.countStatistics.forEach(function (el, index) {
-                        if (index == $index) {
-                            el.show = true;
-                        } else {
-                            el.show = false;
-                        }
-                    })
-                }
-
-                if (self.countStatistics[0].show == true) {
-                    self.th = ["日期", "总下单数", "总支付数"];
-                    self.charts.series = self.PaySeries0;
-                    self.dataSet = self.PayData0;
-                } else if (self.countStatistics[1].show == true) {
-                    self.th = ["日期", "单次下单数", "单次支付数"];
-                    self.charts.series = self.PaySeries1;
-                    self.dataSet = self.PayData1;
-                } else if (self.countStatistics[2].show == true) {
-                    self.th = ["日期", "打包下单数", "打包支付数"];
-                    self.charts.series = self.PaySeries2;
-                    self.dataSet = self.PayData2;
-                }
-            }
-
-            /**
-             * 选择活跃指标
-             * @param $index
-             */
-            self.selectActive = function ($index) {
-                self.active.forEach(function (el) {
+            self.selectMenu = function (Array, $index) {
+                Array.forEach(function (el) {
                     el.show = false;
                 })
-                self.active[$index].show = true;
+                Array[$index].show = true;
                 self.loadData();
             }
 
@@ -1041,7 +1005,7 @@
                         loadTerm();
                         break;
                     case 1:
-                        loadCount();
+                        loadOrder();
                         break;
                     case 2:
                         loadRevenue();
@@ -1050,7 +1014,7 @@
                         loadActive();
                         break;
                     case 4:
-                        loadActive();
+                        loadOD();
                         break;
                 }
 
@@ -1165,10 +1129,35 @@
                 /**
                  * 获取次数统计
                  */
-                function loadCount() {
+                function loadOrder() {
+                    var select = 0,
+                        action;
+                    self.countStatistics.forEach(function (el, index) {
+                        if (el.show == true) select = index;
+                    })
+
+                    switch (select) {
+                        case 0:
+                            action = "getAllOrderCountStatisticsInfo";
+                            self.th = ["日期", "总下单数", "总支付数", "转化率"];
+                            break;
+                        case 1:
+                            action = "getAllOrderCountStatisticsInfo";
+                            self.th = ["日期", "单次下单数", "单次支付数", "转化率"];
+                            break;
+                        case 2:
+                            action = "getAllOrderCountStatisticsInfo";
+                            self.th = ["日期", "打包下单数", "打包支付数", "转化率"];
+                            break;
+                        default:
+                            action = "getAllOrderCountStatisticsInfo";
+                            self.th = ["日期", "总下单数", "总支付数", "转化率"];
+                            break;
+                    }
+
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getPayCountStatisticsInfo',
+                        action: action,
                         StartTime: $scope.dateRangeStart + " 00:00:00",
                         EndTime: $scope.dateRangeEnd + " 00:00:00",
                         project: util.getProjectIds(),
@@ -1184,100 +1173,40 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.PaySeries0 = [];
-                            self.PaySeries1 = [];
-                            self.PaySeries2 = [];
-                            self.PayData0 = [];
-                            self.PayData1 = [];
-                            self.PayData2 = [];
-
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                self.PayData0.push({a: self.dtSubstr(el)});
-                                self.PayData1.push({a: self.dtSubstr(el)});
-                                self.PayData2.push({a: self.dtSubstr(el)});
+                                self.dataSet.push({a: self.dtSubstr(el)});
                             });
 
-                            self.PaySeries0.push({
-                                name: "总下单数",
+                            self.charts.series.push({
+                                name: self.th[1],
                                 id: "series-0",
                                 data: [],
                                 tooltip: {valueSuffix: ' 单'}
                             });
-                            data.wantPayCount.forEach(function (el, index) {
-                                self.PaySeries0[0].data.push(el);
-                                self.PayData0[index].b = el;
+                            data.orderCount.forEach(function (el, index) {
+                                self.charts.series[0].data.push(el);
+                                self.dataSet[index].b = el;
                             });
-                            self.PaySeries0.push({
-                                name: "总支付数",
+                            self.charts.series.push({
+                                name: self.th[2],
                                 id: "series-1",
                                 data: [],
                                 tooltip: {valueSuffix: ' 单'}
                             });
-                            data.payCount.forEach(function (el, index) {
-                                self.PaySeries0[1].data.push(el);
-                                self.PayData0[index].c = el;
+                            data.payedCount.forEach(function (el, index) {
+                                self.charts.series[1].data.push(el);
+                                self.dataSet[index].c = el;
                             });
 
-                            self.PaySeries1.push({
-                                name: "单次下单数",
-                                id: "series-0",
-                                data: [],
-                                tooltip: {valueSuffix: ' 单'}
-                            });
-                            data.wantPaySingleCount.forEach(function (el, index) {
-                                self.PaySeries1[0].data.push(el);
-                                self.PayData1[index].b = el;
-                            });
-                            self.PaySeries1.push({
-                                name: "单次支付数",
-                                id: "series-1",
-                                data: [],
-                                tooltip: {valueSuffix: ' 单'}
-                            });
-                            data.paySingleCount.forEach(function (el, index) {
-                                self.PaySeries1[1].data.push(el);
-                                self.PayData1[index].c = el;
+                            data.rate.forEach(function (el, index) {
+                                self.dataSet[index].d = el;
                             });
 
-                            self.PaySeries2.push({
-                                name: "打包下单数",
-                                id: "series-0",
-                                data: [],
-                                tooltip: {valueSuffix: ' 单'}
-                            });
-                            data.wantPayPackageCount.forEach(function (el, index) {
-                                self.PaySeries2[0].data.push(el);
-                                self.PayData2[index].b = el;
-                            });
-                            self.PaySeries2.push({
-                                name: "打包支付数",
-                                id: "series-1",
-                                data: [],
-                                tooltip: {valueSuffix: ' 单'}
-                            });
-                            data.payPackageCount.forEach(function (el, index) {
-                                self.PaySeries2[1].data.push(el);
-                                self.PayData2[index].c = el;
-                            });
-
-                            if (self.countStatistics[0].show == true) {
-                                self.th = ["日期", "总下单数", "总支付数"];
-                                self.charts.series = self.PaySeries0;
-                                self.dataSet = self.PayData0;
-                            } else if (self.countStatistics[1].show == true) {
-                                self.th = ["日期", "单次下单数", "单次支付数"];
-                                self.charts.series = self.PaySeries1;
-                                self.dataSet = self.PayData1;
-                            } else if (self.countStatistics[2].show == true) {
-                                self.th = ["日期", "打包下单数", "打包支付数"];
-                                self.charts.series = self.PaySeries2;
-                                self.dataSet = self.PayData2;
-                            }
                             deferred.resolve();
                         }
                         else {
@@ -1290,6 +1219,7 @@
                     }).finally(function (value) {
                         self.loadingChart = false;
                     });
+
                     return deferred.promise;
                 }
 
@@ -1364,15 +1294,6 @@
                     self.active.forEach(function (el, index) {
                         if (el.show == true) select = index;
                     })
-
-                    switch (select) {
-                        case 0:
-                            loadActiveTime();
-                            break;
-                        // case 1:
-                        //     LoadXitang();
-                        //     break;
-                    }
 
                     if (select == 0 || select == 1 || select == 2) {
                         loadActiveTime();
@@ -1464,87 +1385,201 @@
                         }).finally(function (value) {
                             self.loadingChart = false;
                         });
-
-                        function loadActiveTimeInterval() {
-                            var data = JSON.stringify({
-                                token: util.getParams("token"),
-                                action: 'getActiveStatisticsInfo',
-                                StartTime: $scope.dateRangeStart + " 00:00:00",
-                                EndTime: $scope.dateRangeEnd + " 00:00:00",
-                                project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
-                            })
-                            self.loadingChart = true;
-
-                            $http({
-                                method: 'POST',
-                                url: util.getApiUrl('v2/statistics', '', 'server'),
-                                data: data
-                            }).then(function successCallback(response) {
-                                var data = response.data;
-                                if (data.rescode == '200') {
-                                    self.activeSeries0 = [];
-                                    self.activeSeries1 = [];
-
-                                    self.th = ["日期", "时间区间活跃终端数"];
-                                    self.dataSet = [];
-                                    self.charts.xAxis.categories = [];
-                                    self.charts.series = [];
-
-                                    data.timeList.forEach(function (el, index) {
-                                        self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                        self.dataSet.push({a: self.dtSubstr(el)});
-                                    });
-
-                                    self.activeSeries0.push({
-                                        name: "活跃时长",
-                                        id: "series-0",
-                                        data: [],
-                                        tooltip: {valueSuffix: ' 小时'}
-                                    });
-                                    data.totalActiveTime.forEach(function (el, index) {
-                                        self.activeSeries0[0].data.push(Number((el / 3600).toFixed(2)));
-
-                                        var h = Math.floor(el / 3600);
-                                        var m = Math.floor((el - h * 3600) / 60);
-                                        var s = el - h * 3600 - m * 60;
-
-                                        self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
-                                        function zeroFill(data) {
-                                            if (data < 10) {
-                                                data = "0" + data;
-                                            }
-                                            return data;
-                                        }
-                                    });
-                                    self.activeSeries1.push({
-                                        name: "活跃终端数",
-                                        id: "series-0",
-                                        data: [],
-                                        tooltip: {valueSuffix: ' 个'}
-                                    });
-                                    data.activeCount.forEach(function (el, index) {
-                                        self.activeSeries1[0].data.push(el);
-                                        self.dataSet[index].c = el;
-                                    });
-
-                                    deferred.resolve();
-                                }
-                                else {
-                                    alert(data.errInfo);
-                                    deferred.reject();
-                                }
-                            }, function errorCallback(response) {
-                                alert('连接服务器出错');
-                                deferred.reject();
-                            }).finally(function (value) {
-                                self.loadingChart = false;
-                            });
-
-                            return deferred.promise;
-                        }
                     }
+
+                    function loadActiveTimeInterval() {
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTermCountBySpanActiveTime',
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                        self.loadingChart = true;
+
+                        $http({
+                            method: 'POST',
+                            url: util.getApiUrl('v2/statistics', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response) {
+                            var data = response.data;
+                            if (data.rescode == '200') {
+                                self.th = ["时间区间", "区间活跃终端数", "占比"];
+                                self.dataSet = [];
+                                self.charts.xAxis.categories = [];
+                                self.charts.series = [];
+
+                                data.timeList.forEach(function (el, index) {
+                                    self.charts.xAxis.categories.push(self.dtSubstr(el));
+                                    self.dataSet.push({a: self.dtSubstr(el)});
+                                });
+
+                                self.activeSeries0.push({
+                                    name: "活跃时长",
+                                    id: "series-0",
+                                    data: [],
+                                    tooltip: {valueSuffix: ' 小时'}
+                                });
+                                data.totalActiveTime.forEach(function (el, index) {
+                                    self.activeSeries0[0].data.push(Number((el / 3600).toFixed(2)));
+
+                                    var h = Math.floor(el / 3600);
+                                    var m = Math.floor((el - h * 3600) / 60);
+                                    var s = el - h * 3600 - m * 60;
+
+                                    self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
+                                    function zeroFill(data) {
+                                        if (data < 10) {
+                                            data = "0" + data;
+                                        }
+                                        return data;
+                                    }
+                                });
+                                self.activeSeries1.push({
+                                    name: "活跃终端数",
+                                    id: "series-0",
+                                    data: [],
+                                    tooltip: {valueSuffix: ' 个'}
+                                });
+                                data.activeCount.forEach(function (el, index) {
+                                    self.activeSeries1[0].data.push(el);
+                                    self.dataSet[index].c = el;
+                                });
+
+                                deferred.resolve();
+                            }
+                            else {
+                                alert(data.errInfo);
+                                deferred.reject();
+                            }
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
+                            deferred.reject();
+                        }).finally(function (value) {
+                            self.loadingChart = false;
+                        });
+                    }
+                    return deferred.promise;
+                }
+                
+                function loadOD() {
+                    var select = 0;
+                    self.OD.forEach(function (el, index) {
+                        if (el.show == true) select = index;
+                    })
+
+                    switch (select) {
+                        case 0:
+                            loadODCount();
+                            break;
+                        case 1:
+                            loadODRevenue();
+                            break;
+                    }
+
+                    function loadODCount() {
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTopNByMovieCount',
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            top: 10,
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                        self.loadingChart = true;
+
+                        $http({
+                            method: 'POST',
+                            url: util.getApiUrl('v2/statistics', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response) {
+                            var data = response.data;
+                            if (data.rescode == '200') {
+                                self.th = ["电影", "点播量"];
+                                self.dataSet = [];
+                                self.charts.xAxis.categories = [];
+                                self.charts.series = [];
+
+                                data.movieNameCHZ.forEach(function (el, index) {
+                                    self.charts.xAxis.categories.push(el);
+                                    self.dataSet.push({a: el});
+                                });
+
+                                self.charts.series.push({name: "点播量", data: [], tooltip: {valueSuffix: '次'}});
+                                data.count.forEach(function (el, index) {
+                                    self.charts.series[0].data.push(el);
+                                    self.dataSet[index].b = el;
+                                });
+
+                                deferred.resolve();
+                            }
+                            else {
+                                alert(data.errInfo);
+                                deferred.reject();
+                            }
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
+                            deferred.reject();
+                        }).finally(function (value) {
+                            self.loadingChart = false;
+                        });
+                    }
+
+                    function loadODRevenue() {
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTopNByMovieRevenue',
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            top: 10,
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                        self.loadingChart = true;
+
+                        $http({
+                            method: 'POST',
+                            url: util.getApiUrl('v2/statistics', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response) {
+                            var data = response.data;
+                            if (data.rescode == '200') {
+                                self.th = ["电影", "营收金额"];
+                                self.dataSet = [];
+                                self.charts.xAxis.categories = [];
+                                self.charts.series = [];
+
+                                data.movieNameCHZ.forEach(function (el, index) {
+                                    self.charts.xAxis.categories.push(el);
+                                    self.dataSet.push({a: el});
+                                });
+
+                                self.charts.series.push({name: "营收金额", data: [], tooltip: {valueSuffix: '元'}});
+                                data.price.forEach(function (el, index) {
+                                    self.charts.series[0].data.push(el / 100);
+                                    self.dataSet[index].b = el / 100;
+                                });
+
+                                deferred.resolve();
+                            }
+                            else {
+                                alert(data.errInfo);
+                                deferred.reject();
+                            }
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
+                            deferred.reject();
+                        }).finally(function (value) {
+                            self.loadingChart = false;
+                        });
+                    }
+
+                    return deferred.promise;
                 }
 
                 /**
