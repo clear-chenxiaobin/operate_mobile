@@ -1,0 +1,43 @@
+<div ng-controller="selectProjectController as pro" ng-init="pro.init()" class="autoscroll modal-dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title" id="modal-title">选择项目</h3>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <uib-accordion close-others="pro.oneAtATime">
+                <div uib-accordion-group class="panel-default" is-open="pro.reOpen">
+                    <uib-accordion-heading>
+                        付费项目 <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': pro.reOpen, 'glyphicon-chevron-right': !pro.reOpen}"></i>
+                    </uib-accordion-heading>
+                    <ul>
+                        <li><div class="form-group"><a ng-click="pro.reCheckALL()">全选</a> <a ng-click="pro.reUnCheckALL()">全不选</a></div></li>
+                        <li ng-repeat="item in pro.reProList track by $index">
+                            <div class="form-group">
+                                <checkbox type="checkbox" ng-model="item.active" ng-click="pro.itemSelected(item.ProjectName, item.active)"></checkbox>
+                                {{item.ProjectNameCHZ}}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+                <div uib-accordion-group class="panel-default" ng-if="pro.noProList.length == 0 ? false : true">
+                    <uib-accordion-heading>
+                        非付费项目 <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': pro.noOpen, 'glyphicon-chevron-right': !pro.noOpen}"></i>
+                    </uib-accordion-heading>
+                    <ul>
+                        <li><div class="form-group"><a ng-click="pro.noCheckALL()">全选</a> <a ng-click="pro.noUnCheckALL()">全不选</a></div></li>
+                        <li ng-repeat="item in pro.noProList track by $index">
+                            <div class="form-group">
+                                <checkbox type="checkbox" ng-model="item.active" ng-click="pro.itemSelected(item.ProjectName, item.active)"></checkbox>
+                                {{item.ProjectNameCHZ}}
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </uib-accordion>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-primary" type="button" ng-click="pro.ok()">OK</button>
+            <button class="btn btn-warning" type="button" ng-click="pro.cancel()">Cancel</button>
+        </div>
+    </div>
+</div>
