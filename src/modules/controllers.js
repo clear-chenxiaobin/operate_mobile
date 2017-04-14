@@ -1381,7 +1381,7 @@
                     {name: '平均活跃', show: false, sort: '', desc: false}
                 ];
                 self.term = [
-                    {name: '累积终端', show: false, sort: '', desc: false},
+                    {name: '累计终端', show: false, sort: '', desc: false},
                     {name: '上线终端', show: false, sort: '', desc: false},
                     {name: '活跃终端', show: false, sort: '', desc: false},
                     {name: '付费终端', show: false, sort: '', desc: false},
@@ -1541,53 +1541,47 @@
                         break;
                 }
                 function loadOnlineRate(){
-                    self.th=["项目名称","累积终端","上线终端","开机率"];
+                    self.th=["项目名称","累计终端","上线终端","开机率"];
                     self.charts.series[0].name="开机率";
+                    self.charts.tooltip.valueSuffix='%';
                     self.charts.xAxis.categories=[];
-                    self.charts.yAxis.min=0;
-                    self.charts.yAxis.max=1;
                     self.charts.series[0].data=[];
                     self.dataSet = [];                                
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
-                        StartTime: $scope.dateRangeStart ,
-                        EndTime: $scope.dateRangeEnd ,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        action: 'getSortedProjectOnlineRateInfo',
+                        StartTime: $scope.dateRangeStart,
+                        EndTime: $scope.dateRangeEnd,
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     console.log(JSON.parse(data).StartTime)
                     console.log(JSON.parse(data).EndTime)
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // console.log("开机率信息")
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         console.log(data);
                         if(data.rescode=="200"){
-                            //数据格式：[{项目名-累积终端-上线终端-开机率}]
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
-                            for(var i=0;i<data.projectList.length;i++){
+                            //数据格式：[{项目名-累计终端-上线终端-开机率}]
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
+                                    b:data.projectListCHZ[i],
                                     c:data.totalCount[i],
                                     d:data.onlineCount[i],
-                                    e:(data.onlineCount[i]/data.totalCount[i]).toFixed(2)
+                                    e:parseInt(data.onlineRate[i]*100)+'%'
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.e-a.e;
-                            }).splice(5);
-                            // console.log(1,self.dataSet);
-                            self.dataSet.forEach(function(el,index){
-                                self.charts.xAxis.categories.push(el.b);
-                                self.charts.series[0].data.push(parseFloat(el.e));
-                            })
+                            var length=(self.dataSet.length>5)?5:self.dataSet.length
+                            for(var i=0;i<length;i++){
+                                self.charts.xAxis.categories.push(self.dataSet[i].b);
+                                self.charts.series[0].data.push(parseFloat(self.dataSet[i].e));
+                            }
                         }
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
@@ -1598,49 +1592,43 @@
                 function loadActiveRate(){
                     self.th=["项目名称","上线终端","活跃终端","活跃率"];
                     self.charts.series[0].name="活跃率";
+                    self.charts.tooltip.valueSuffix='%';
                     self.charts.xAxis.categories=[];
-                    self.charts.yAxis.min=0;
-                    self.charts.yAxis.max=1;
                     self.charts.series[0].data=[];
                     self.dataSet = [];                                
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
-                        StartTime: $scope.dateRangeStart ,
+                        action: 'getSortedProjectActiveRateInfo',
+                        StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // console.log("活跃率信息")
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         console.log(data);
                         if(data.rescode=="200"){
                             //数据格式：[{日期-项目名-上线终端-活跃终端-活跃率}]
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
-                            for(var i=0;i<data.projectList.length;i++){
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
+                                    b:data.projectListCHZ[i],
                                     c:data.onlineCount[i],
                                     d:data.activeCount[i],
-                                    e:(data.activeCount[i]/data.onlineCount[i]).toFixed(2)
+                                    e:parseInt(data.activeRate[i]*100)+'%'
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.e-a.e;
-                            }).splice(5);
-                            // console.log(1,self.dataSet);
-                            self.dataSet.forEach(function(el,index){
-                                self.charts.xAxis.categories.push(el.b);
-                                self.charts.series[0].data.push(parseFloat(el.e));
-                            })
+                            var length=(self.dataSet.length>5)?5:self.dataSet.length
+                            for(var i=0;i<length;i++){
+                                self.charts.xAxis.categories.push(self.dataSet[i].b);
+                                self.charts.series[0].data.push(parseFloat(self.dataSet[i].e));
+                            }
                         }
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
@@ -1651,49 +1639,43 @@
                 function loadRevenue(){
                     self.th=["项目名称","活跃终端","付费终端","付费转化"];
                     self.charts.series[0].name="付费转化";
+                    self.charts.tooltip.valueSuffix='%';
                     self.charts.xAxis.categories=[];
-                    self.charts.yAxis.min=0;
-                    self.charts.yAxis.max=1;
                     self.charts.series[0].data=[];
                     self.dataSet = [];                                
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectPayRateInfo',
                         StartTime: $scope.dateRangeStart,
-                        EndTime: $scope.dateRangeEnd ,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        EndTime: $scope.dateRangeEnd,
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // console.log("活跃率信息")
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         console.log(data);
                         if(data.rescode=="200"){
                             //数据格式：[{日期-项目名-活跃终端-付费终端-付费转化}]
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
-                            for(var i=0;i<data.projectList.length;i++){
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
+                                    b:data.projectListCHZ[i],
                                     c:data.activeCount[i],
                                     d:data.payCount[i],
-                                    e:(data.payCount[i]/data.activeCount[i]).toFixed(2)
+                                    e:parseInt(data.payRate[i]*100)+'%'
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.e-a.e;
-                            }).splice(5);
-                            // console.log(1,self.dataSet);
-                            self.dataSet.forEach(function(el,index){
-                                self.charts.xAxis.categories.push(el.b);
-                                self.charts.series[0].data.push(parseFloat(el.e));
-                            })
+                            var length=(self.dataSet.length>5)?5:self.dataSet.length
+                            for(var i=0;i<length;i++){
+                                self.charts.xAxis.categories.push(self.dataSet[i].b);
+                                self.charts.series[0].data.push(parseFloat(self.dataSet[i].e));
+                            }
                         }
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
@@ -1702,49 +1684,46 @@
                     });                                 
                 }
                 function loadAverageRevenue(){
-                    self.th=["项目名称","累积终端","营收总额","平均营收"];
+                    self.th=["项目名称","上线终端","营收总额","平均营收(分)"];
                     self.charts.series[0].name="平均营收";
+                    self.charts.tooltip.valueSuffix='分';
                     self.charts.xAxis.categories=[];
                     self.charts.series[0].data=[];
                     self.dataSet = [];                                
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
-                        StartTime: $scope.dateRangeStart ,
-                        EndTime: $scope.dateRangeEnd ,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        action: 'getSortedProjectPerRevenueInfo',
+                        StartTime: $scope.dateRangeStart,
+                        EndTime: $scope.dateRangeEnd,
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
                         // console.log("平均营收信息")
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         console.log(data);
                         if(data.rescode=="200"){
                             //数据格式：[{日期-项目名-累积终端-营收总额-平均营收}]
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
-                            for(var i=0;i<data.projectList.length;i++){
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
-                                    c:data.totalCount[i],
-                                    d:data.totalMoney[i],
-                                    e:(data.totalMoney[i]/data.totalCount[i]).toFixed(2)
+                                    b:data.projectListCHZ[i],
+                                    c:data.onlineCount[i],
+                                    d:data.allMoney[i],
+                                    e:data.perRevenue[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.e-a.e;
-                            }).splice(5);
-                            // console.log(1,self.dataSet);
-                            self.dataSet.forEach(function(el,index){
-                                self.charts.xAxis.categories.push(el.b);
-                                self.charts.series[0].data.push(parseFloat(el.e));
-                            })
+                            var length=(self.dataSet.length>5)?5:self.dataSet.length
+                            for(var i=0;i<length;i++){
+                                self.charts.xAxis.categories.push(self.dataSet[i].b);
+                                self.charts.series[0].data.push(parseFloat(self.dataSet[i].e));
+                            }
                         }
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
@@ -1753,49 +1732,46 @@
                     });                                  
                 }
                 function loadAverageActive(){
-                    self.th=["项目名称","活跃终端","活跃时长","平均活跃"];
+                    self.th=["项目名称","活跃终端","活跃时长","平均活跃时长(h)"];
                     self.charts.series[0].name="平均活跃时长";
+                    self.charts.tooltip.valueSuffix='h';
                     self.charts.xAxis.categories=[];
                     self.charts.series[0].data=[];
                     self.dataSet = [];                                
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectPerActiveInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
                         // console.log("平均活跃时长信息")
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         console.log(data);
                         if(data.rescode=="200"){
                             //数据格式：[{日期-项目名-活跃终端-活跃时长-平均活跃}]
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
-                            for(var i=0;i<data.projectList.length;i++){
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
+                                    b:data.projectListCHZ[i],
                                     c:data.activeCount[i],
-                                    d:data.activeTime[i],
-                                    e:(data.activeTime[i]/data.activeCount[i]).toFixed(2)
+                                    d:(data.avgAllActiveTime[i]/3600).toFixed(2),
+                                    e:(data.avgActiveTime[i]/3600).toFixed(2)
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.e-a.e;
-                            }).splice(5);
-                            // console.log(1,self.dataSet);
-                            self.dataSet.forEach(function(el,index){
-                                self.charts.xAxis.categories.push(el.b);
-                                self.charts.series[0].data.push(parseFloat(el.e));
-                            })
+                            var length=(self.dataSet.length>5)?5:self.dataSet.length
+                            for(var i=0;i<length;i++){
+                                self.charts.xAxis.categories.push(self.dataSet[i].b);
+                                self.charts.series[0].data.push(parseFloat(self.dataSet[i].e));
+                            }
                         }
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
@@ -1804,57 +1780,53 @@
                     });                                   
                 }
                 function loadAccTerm() {
-                    console.log('加载累积终端数据……')
-                    self.th=["项目名称","累积终端"];
-                    self.charts.series[0].name="累积终端";
+                    console.log('加载累计终端数据……')
+                    self.th=["项目名称","累计终端"];
+                    self.charts.series[0].name="累计终端";
                     self.charts.series[0].data=[];
                     self.dataSet = [];
-                    //依次获取各个项目的累积终端数
-                    //数据格式：[{日期-项目名-累积终端}]                      
+                    //依次获取各个项目的累计终端数
+                    //数据格式：[{日期-项目名-累计终端}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectAddUpInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        page:1,
+                        per_page:1000,
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
-                                rest+=data.totalCount[i];
+                            for(var i=0;i<data.projectListCHZ.length;i++){
+                                rest+=data.addUpCount[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
-                                    c:data.totalCount[i]
+                                    b:data.projectListCHZ[i],
+                                    c:data.addUpCount[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
-
-
                             })
                             if(rest!=0){
                                 self.charts.series[0].data.push(['其他',rest]);
@@ -1876,48 +1848,44 @@
                     //数据格式：[{日期-项目名-上线终端}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
-                        StartTime: $scope.dateRangeStart ,
-                        EndTime: $scope.dateRangeEnd ,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        action: 'getSortedProjectOnlineInfo',
+                        StartTime: $scope.dateRangeStart,
+                        EndTime: $scope.dateRangeEnd,
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 rest+=data.onlineCount[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
+                                    b:data.projectListCHZ[i],
                                     c:data.onlineCount[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
-
-
                             })
                             if(rest!=0){
                                 self.charts.series[0].data.push(['其他',rest]);
@@ -1941,45 +1909,43 @@
                     //数据格式：[{日期-项目名-活跃终端}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectActiveInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 rest+=data.activeCount[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
+                                    b:data.projectListCHZ[i],
                                     c:data.activeCount[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
                             })
                             if(rest!=0){
@@ -2001,45 +1967,43 @@
                     //数据格式：[{日期-项目名-付费终端}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectPayedInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
-                                rest+=data.payCount[i];
+                            for(var i=0;i<data.projectListCHZ.length;i++){
+                                rest+=data.payedCount[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
-                                    c:data.payCount[i]
+                                    b:data.projectListCHZ[i],
+                                    c:data.payedCount[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
                             })
                             if(rest!=0){
@@ -2061,48 +2025,44 @@
                     //数据格式：[{日期-项目名-新增终端}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectNewAddInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 rest+=data.newAddCount[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
+                                    b:data.projectListCHZ[i],
                                     c:data.newAddCount[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
-
-
                             })
                             if(rest!=0){
                                 self.charts.series[0].data.push(['其他',rest]);
@@ -2123,45 +2083,43 @@
                     //数据格式：[{日期-项目名-订单总数}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectOrderCountInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 rest+=data.orderCount[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
+                                    b:data.projectListCHZ[i],
                                     c:data.orderCount[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
                             })
                             if(rest!=0){
@@ -2183,45 +2141,43 @@
                     //数据格式：[{日期-项目名-单次订单数}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectSingleOrderCountInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 rest+=data.orderCount[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
+                                    b:data.projectListCHZ[i],
                                     c:data.orderCount[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
                             })
                             if(rest!=0){
@@ -2243,45 +2199,43 @@
                     //数据格式：[{日期-项目名-打包订单数}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectSingleOrderCountInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
+                            for(var i=0;i<data.projectListCHZ.length;i++){
                                 rest+=data.orderCount[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
+                                    b:data.projectListCHZ[i],
                                     c:data.orderCount[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
                             })
                             if(rest!=0){
@@ -2295,7 +2249,7 @@
                     });             
                 }
                 function loadTotalRevenue() {
-                    self.th=["项目名称","营收总额"];
+                    self.th=["项目名称","营收总额(分)"];
                     self.charts.series[0].name="营收总额";
                     self.charts.series[0].data=[];
                     self.dataSet = [];
@@ -2303,45 +2257,43 @@
                     //数据格式：[{日期-项目名-营收总额}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectRevenueInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
-                                rest+=data.payCount[i];
+                            for(var i=0;i<data.projectListCHZ.length;i++){
+                                rest+=data.revenue[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
-                                    c:data.payCount[i]
+                                    b:data.projectListCHZ[i],
+                                    c:data.revenue[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
                             })
                             if(rest!=0){
@@ -2355,7 +2307,7 @@
                     });               
                 }
                 function loadSingleRevenue() {
-                    self.th=["项目名称","单次营收额"];
+                    self.th=["项目名称","单次营收额(分)"];
                     self.charts.series[0].name="单次营收额";
                     self.charts.series[0].data=[];
                     self.dataSet = [];
@@ -2363,45 +2315,43 @@
                     //数据格式：[{日期-项目名-单次营收额}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectSingleRevenueInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
-                                rest+=data.payCount[i];
+                            for(var i=0;i<data.projectListCHZ.length;i++){
+                                rest+=data.revenue[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
-                                    c:data.payCount[i]
+                                    b:data.projectListCHZ[i],
+                                    c:data.revenue[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
                             })
                             if(rest!=0){
@@ -2415,7 +2365,7 @@
                     });           
                 }
                 function loadPackRevenue() {
-                    self.th=["项目名称","打包营收额"];
+                    self.th=["项目名称","打包营收额(分)"];
                     self.charts.series[0].name="打包营收额";
                     self.charts.series[0].data=[];
                     self.dataSet = [];
@@ -2423,45 +2373,43 @@
                     //数据格式：[{日期-项目名-打包营收额}]                      
                     var data = JSON.stringify({
                         token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
+                        action: 'getSortedProjectPackageRevenueInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        username:'root',
-                        password:md5.createHash('clear!@#')
+                        "page":1, 
+                        "per_page":1000, 
+                        "project":["all"]
                     })
                     $http({
                         method:'POST',
-                        url:util.getApiUrl('v1/logon', '', 'server'),
+                        url:util.getApiUrl('v2/statistics', '', 'server'),
                         data: data
                     }).then(function successCallback(response){
-                        // var data=response.data;
-                        var data=self.myData;
+                        var data=response.data;
+                        // var data=self.myData;
                         if(data.rescode=="200"){
-                            // var start=self.dtSubstr($scope.dateRangeStart + " 00:00:00", self.selectGra);
-                            // var end=self.dtSubstr($scope.dateRangeEnd + " 00:00:00", self.selectGra);
                             var rest=0;
-                            for(var i=0;i<data.projectList.length;i++){
-                                rest+=data.payCount[i];
+                            for(var i=0;i<data.projectListCHZ.length;i++){
+                                rest+=data.revenue[i];
                                 self.dataSet.push({
                                     // a:start+"~"+end,
-                                    b:data.projectList[i],
-                                    c:data.payCount[i]
+                                    b:data.projectListCHZ[i],
+                                    c:data.revenue[i]
                                 });
                             }
-                            self.dataSet.sort(function(a,b){
-                                return b.c-a.c;
-                            }).splice(5);
                             self.dataSet.forEach(function(el,index){
-                                rest-=el.c;
-                                if(index==0){
-                                    self.charts.series[0].data.push({
-                                        name:el.b,
-                                        y:el.c,
-                                        sliced: true,
-                                        selected: true
-                                    })
-                                }else{
-                                    self.charts.series[0].data.push([el.b,el.c]); 
+                                if(index<5){
+                                    rest-=el.c;
+                                    if(index==0){
+                                        self.charts.series[0].data.push({
+                                            name:el.b,
+                                            y:el.c,
+                                            sliced: true,
+                                            selected: true
+                                        })
+                                    }else {
+                                        self.charts.series[0].data.push([el.b,el.c]); 
+                                    }
                                 }
                             })
                             if(rest!=0){
@@ -2498,118 +2446,118 @@
                 self.current=util.getParams('probabilityName');
                 self.indexNum=util.getParams('index');
                 self.showClass=true;
-                self.myData={
-                    "rescode": "200", 
-                    "projectList": [
-                        "project1",
-                        "project2", 
-                        "project3",
-                        "project4",
-                        "project5",
-                        "project6",
-                        "project7",
-                        "project8",
-                        "project9",
-                        "project10"   
-                    ], 
-                    "totalCount": [
-                        parseInt(Math.random()*100+300), 
-                        parseInt(Math.random()*100+300),
-                        parseInt(Math.random()*100+300), 
-                        parseInt(Math.random()*100+300), 
-                        parseInt(Math.random()*100+300), 
-                        parseInt(Math.random()*100+300), 
-                        parseInt(Math.random()*100+300), 
-                        parseInt(Math.random()*100+300), 
-                        parseInt(Math.random()*100+300), 
-                        parseInt(Math.random()*100+300)
-                    ], 
-                    "onlineCount": [
-                        parseInt(Math.random()*50+250), 
-                        parseInt(Math.random()*50+250),
-                        parseInt(Math.random()*50+250), 
-                        parseInt(Math.random()*50+250), 
-                        parseInt(Math.random()*50+250), 
-                        parseInt(Math.random()*50+250), 
-                        parseInt(Math.random()*50+250), 
-                        parseInt(Math.random()*50+250), 
-                        parseInt(Math.random()*50+250), 
-                        parseInt(Math.random()*50+250)
-                    ], 
-                    "activeCount": [
-                        parseInt(Math.random()*50+200), 
-                        parseInt(Math.random()*50+200),
-                        parseInt(Math.random()*50+200), 
-                        parseInt(Math.random()*50+200), 
-                        parseInt(Math.random()*50+200), 
-                        parseInt(Math.random()*50+200), 
-                        parseInt(Math.random()*50+200), 
-                        parseInt(Math.random()*50+200), 
-                        parseInt(Math.random()*50+200), 
-                        parseInt(Math.random()*50+200)
-                    ], 
-                    "payCount": [
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150),
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150)
-                    ],
-                    "newAddCount": [
-                        parseInt(Math.random()*50), 
-                        parseInt(Math.random()*50),
-                        parseInt(Math.random()*50), 
-                        parseInt(Math.random()*50), 
-                        parseInt(Math.random()*50), 
-                        parseInt(Math.random()*50), 
-                        parseInt(Math.random()*50), 
-                        parseInt(Math.random()*50), 
-                        parseInt(Math.random()*50), 
-                        parseInt(Math.random()*50)
-                    ],
-                    "activeTime": [
-                        parseInt(Math.random()*350), 
-                        parseInt(Math.random()*350),
-                        parseInt(Math.random()*350), 
-                        parseInt(Math.random()*350), 
-                        parseInt(Math.random()*350), 
-                        parseInt(Math.random()*350), 
-                        parseInt(Math.random()*350), 
-                        parseInt(Math.random()*350), 
-                        parseInt(Math.random()*350), 
-                        parseInt(Math.random()*350)
-                    ],
-                    "totalMoney": [
-                        parseInt(Math.random()*1150), 
-                        parseInt(Math.random()*1150),
-                        parseInt(Math.random()*1150), 
-                        parseInt(Math.random()*1150), 
-                        parseInt(Math.random()*1150), 
-                        parseInt(Math.random()*1150), 
-                        parseInt(Math.random()*1150), 
-                        parseInt(Math.random()*1150), 
-                        parseInt(Math.random()*1150), 
-                        parseInt(Math.random()*1150)
-                    ],
-                    "orderCount": [
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150),
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150), 
-                        parseInt(Math.random()*50+150)
-                    ],                   
-                    "errInfo": "None"
-                }
+                // self.myData={
+                //     "rescode": "200", 
+                //     "projectList": [
+                //         "project1",
+                //         "project2", 
+                //         "project3",
+                //         "project4",
+                //         "project5",
+                //         "project6",
+                //         "project7",
+                //         "project8",
+                //         "project9",
+                //         "project10"   
+                //     ], 
+                //     "totalCount": [
+                //         parseInt(Math.random()*100+300), 
+                //         parseInt(Math.random()*100+300),
+                //         parseInt(Math.random()*100+300), 
+                //         parseInt(Math.random()*100+300), 
+                //         parseInt(Math.random()*100+300), 
+                //         parseInt(Math.random()*100+300), 
+                //         parseInt(Math.random()*100+300), 
+                //         parseInt(Math.random()*100+300), 
+                //         parseInt(Math.random()*100+300), 
+                //         parseInt(Math.random()*100+300)
+                //     ], 
+                //     "onlineCount": [
+                //         parseInt(Math.random()*50+250), 
+                //         parseInt(Math.random()*50+250),
+                //         parseInt(Math.random()*50+250), 
+                //         parseInt(Math.random()*50+250), 
+                //         parseInt(Math.random()*50+250), 
+                //         parseInt(Math.random()*50+250), 
+                //         parseInt(Math.random()*50+250), 
+                //         parseInt(Math.random()*50+250), 
+                //         parseInt(Math.random()*50+250), 
+                //         parseInt(Math.random()*50+250)
+                //     ], 
+                //     "activeCount": [
+                //         parseInt(Math.random()*50+200), 
+                //         parseInt(Math.random()*50+200),
+                //         parseInt(Math.random()*50+200), 
+                //         parseInt(Math.random()*50+200), 
+                //         parseInt(Math.random()*50+200), 
+                //         parseInt(Math.random()*50+200), 
+                //         parseInt(Math.random()*50+200), 
+                //         parseInt(Math.random()*50+200), 
+                //         parseInt(Math.random()*50+200), 
+                //         parseInt(Math.random()*50+200)
+                //     ], 
+                //     "payCount": [
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150),
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150)
+                //     ],
+                //     "newAddCount": [
+                //         parseInt(Math.random()*50), 
+                //         parseInt(Math.random()*50),
+                //         parseInt(Math.random()*50), 
+                //         parseInt(Math.random()*50), 
+                //         parseInt(Math.random()*50), 
+                //         parseInt(Math.random()*50), 
+                //         parseInt(Math.random()*50), 
+                //         parseInt(Math.random()*50), 
+                //         parseInt(Math.random()*50), 
+                //         parseInt(Math.random()*50)
+                //     ],
+                //     "activeTime": [
+                //         parseInt(Math.random()*350), 
+                //         parseInt(Math.random()*350),
+                //         parseInt(Math.random()*350), 
+                //         parseInt(Math.random()*350), 
+                //         parseInt(Math.random()*350), 
+                //         parseInt(Math.random()*350), 
+                //         parseInt(Math.random()*350), 
+                //         parseInt(Math.random()*350), 
+                //         parseInt(Math.random()*350), 
+                //         parseInt(Math.random()*350)
+                //     ],
+                //     "totalMoney": [
+                //         parseInt(Math.random()*1150), 
+                //         parseInt(Math.random()*1150),
+                //         parseInt(Math.random()*1150), 
+                //         parseInt(Math.random()*1150), 
+                //         parseInt(Math.random()*1150), 
+                //         parseInt(Math.random()*1150), 
+                //         parseInt(Math.random()*1150), 
+                //         parseInt(Math.random()*1150), 
+                //         parseInt(Math.random()*1150), 
+                //         parseInt(Math.random()*1150)
+                //     ],
+                //     "orderCount": [
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150),
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150), 
+                //         parseInt(Math.random()*50+150)
+                //     ],                   
+                //     "errInfo": "None"
+                // }
                 // self.myData={
                 //     "rescode": "200", 
                 //     "projectList": [
