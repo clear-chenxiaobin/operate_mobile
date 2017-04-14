@@ -152,13 +152,13 @@
 
             self.openProject = function () {
                 $scope.app.maskParams = {};
-                $scope.app.showHideMask(true,'pages/project.html');
+                $scope.app.showHideMask(true,'pages/selectProject.html');
             }
         }
     ])
 
     //选择项目
-    .controller('projectController', ['$scope', '$state', '$stateParams', '$sessionStorage', 'util', 'CONFIG',
+    .controller('selectProjectController', ['$scope', '$state', '$stateParams', '$sessionStorage', 'util', 'CONFIG',
         function($scope, $state, $stateParams, $sessionStorage, util, CONFIG) {
             var self = this;
             self.init = function() {
