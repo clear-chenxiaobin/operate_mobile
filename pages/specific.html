@@ -63,7 +63,7 @@
                         活跃指标
                         <!--<i class="glyphicon glyphicon-chevron-down"></i>-->
                     </a>
-                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                    <ul class="dropdown-menu pull-right" uib-dropdown-menu aria-labelledby="simple-dropdown">
                         <li ng-repeat="item in specific.active">
                             <a href ng-click="specific.selectMenu(specific.active, $index)" class="style-color">
                                 {{item.name}}&nbsp;
@@ -82,9 +82,9 @@
                         点播统计
                         <!--<i class="glyphicon glyphicon-chevron-down"></i>-->
                     </a>
-                    <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                    <ul class="dropdown-menu pull-right" uib-dropdown-menu aria-labelledby="simple-dropdown">
                         <li ng-repeat="item in specific.OD">
-                            <a href ng-click="specific.selectMenu(specific.OD, $index)">
+                            <a href ng-click="specific.selectMenu(specific.OD, $index)" class="style-color">
                                 {{item.name}}&nbsp;
                                 <i class="glyphicon glyphicon-check" ng-show="item.show"></i>
                                 <i class="glyphicon glyphicon-unchecked" ng-hide="item.show"></i>
