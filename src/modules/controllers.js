@@ -432,15 +432,37 @@
                 }
                 //获取开机率
                 function loadOnlineRate() {
-                    var data = JSON.stringify({
-                        token: util.getParams("token"),
-                        action: 'getTermOnlineRateInfo',
-                        StartTime: $scope.dateRangeStart + " 00:00:00",
-                        EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: util.getProjectIds(),
-                        type: $scope.showDate == false ? 0 : 1,
-                        category: $scope.showDate == false ? $scope.category : $scope.dateType
-                    })
+                    if($scope.showDate){
+                        //自定义
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTermOnlineRateInfo',
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }else{
+                        //快捷
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTermOnlineRateInfo',
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }
+
+                    // var data = JSON.stringify({
+                    //     token: util.getParams("token"),
+                    //     action: 'getTermOnlineRateInfo',
+                    //     StartTime: $scope.showDate == false ? '':($scope.dateRangeStart + " 00:00:00"),
+                    //     EndTime: $scope.showDate == false? '':($scope.dateRangeEnd + " 00:00:00"),
+                    //     project: util.getProjectIds(),
+                    //     type: $scope.showDate == false ? 0 : 1,
+                    //     category: $scope.showDate == false ? $scope.category : $scope.dateType
+                    // })
                     self.loadingChart = true;
 
                     $http({
@@ -450,7 +472,8 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "上线终端", "累计终端", "开机率"];
+                            // self.th = ["日期", "上线终端", "累计终端", "开机率"];
+                            self.th = ["日期", "累计终端", "上线终端", "开机率"];                            
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
@@ -460,11 +483,11 @@
                                 self.dataSet.push({a: self.dtSubstr(el)});
                             });
 
-                            data.onlineCount.forEach(function (el, index) {
+                            data.totalCount.forEach(function (el, index) {
                                 self.dataSet[index].b = el;
                             });
 
-                            data.totalCount.forEach(function (el, index) {
+                            data.onlineCount.forEach(function (el, index) {
                                 self.dataSet[index].c = el;
                             });
 
@@ -493,15 +516,27 @@
 
                 //获取活跃率
                 function loadActiveRate() {
-                    var data = JSON.stringify({
-                        token: util.getParams("token"),
-                        action: 'getTermActiveRateInfo',
-                        StartTime: $scope.dateRangeStart + " 00:00:00",
-                        EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: util.getProjectIds(),
-                        type: $scope.showDate == false ? 0 : 1,
-                        category: $scope.showDate == false ? $scope.category : $scope.dateType
-                    })
+                    if($scope.showDate){
+                        //自定义
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTermActiveRateInfo',
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }else{
+                        //快捷
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTermActiveRateInfo',
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }
                     self.loadingChart = true;
 
                     $http({
@@ -511,7 +546,8 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "活跃终端", "上线终端", "活跃率"];
+                            // self.th = ["日期", "活跃终端", "上线终端", "活跃率"];
+                            self.th = ["日期", "上线终端", "活跃终端", "活跃率"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
@@ -521,11 +557,11 @@
                                 self.dataSet.push({a: self.dtSubstr(el)});
                             });
 
-                            data.activeCount.forEach(function (el, index) {
+                            data.onlineCount.forEach(function (el, index) {
                                 self.dataSet[index].b = el;
                             });
 
-                            data.onlineCount.forEach(function (el, index) {
+                            data.activeCount.forEach(function (el, index) {
                                 self.dataSet[index].c = el;
                             });
 
@@ -552,15 +588,27 @@
 
                 //付费转化率
                 function loadPayRate() {
-                    var data = JSON.stringify({
-                        token: util.getParams("token"),
-                        action: 'getTermPayRateInfo',
-                        StartTime: $scope.dateRangeStart + " 00:00:00",
-                        EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: util.getProjectIds(),
-                        type: $scope.showDate == false ? 0 : 1,
-                        category: $scope.showDate == false ? $scope.category : $scope.dateType
-                    })
+                    if($scope.showDate){
+                        //自定义
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTermPayRateInfo',
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }else{
+                        //快捷
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTermPayRateInfo',
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }
                     self.loadingChart = true;
 
                     $http({
@@ -580,11 +628,11 @@
                                 self.dataSet.push({a: self.dtSubstr(el)});
                             });
 
-                            data.payCount.forEach(function (el, index) {
+                            data.activeCount.forEach(function (el, index) {
                                 self.dataSet[index].b = el;
                             });
 
-                            data.activeCount.forEach(function (el, index) {
+                            data.payCount.forEach(function (el, index) {
                                 self.dataSet[index].c = el;
                             });
 
@@ -610,15 +658,27 @@
 
                 //每终端营收
                 function loadRevenue() {
-                    var data = JSON.stringify({
-                        token: util.getParams("token"),
-                        action: 'getPerTermRevenueInfo',
-                        StartTime: $scope.dateRangeStart + " 00:00:00",
-                        EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: util.getProjectIds(),
-                        type: $scope.showDate == false ? 0 : 1,
-                        category: $scope.showDate == false ? $scope.category : $scope.dateType
-                    })
+                    if($scope.showDate){
+                        //自定义
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getPerTermRevenueInfo',
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }else{
+                        //快捷
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getPerTermRevenueInfo',
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }
                     self.loadingChart = true;
 
                     $http({
@@ -628,7 +688,8 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "总营收", "总终端数", "平均营收"];
+                            self.th = ["日期", "活跃终端数", "总营收", "平均营收"];
+                            // self.th = ["日期", "总营收", "总终端数", "平均营收"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
@@ -638,19 +699,24 @@
                                 self.dataSet.push({a: self.dtSubstr(el)});
                             });
 
-                            data.totalMoney.forEach(function (el, index) {
+                            data.activeCount.forEach(function (el, index) {
                                 self.dataSet[index].b = el;
                             });
 
-                            data.onlineCount.forEach(function (el, index) {
+                            data.totalMoney.forEach(function (el, index) {
                                 self.dataSet[index].c = el;
                             });
 
-                            self.charts.series.push({name: "平均每终端营收", data: [], tooltip: {valueSuffix: ' 元'}});
+                            self.charts.series.push(
+                                {name: "平均每终端营收", data: [], tooltip: {valueSuffix: ' 元'}},
+                                {name: "日均营收", data: [], tooltip: {valueSuffix: ' 元'}}
+                                );
                             data.revenue.forEach(function (el, index) {
                                 self.charts.series[0].data.push(el);
+                                self.charts.series[1].data.push(data.dayPerRevenue);
                                 self.dataSet[index].d = el;
                             });
+
 
                             deferred.resolve();
                         }
@@ -668,15 +734,27 @@
 
                 //获取平均活跃时长
                 function loadActiveDur() {
-                    var data = JSON.stringify({
-                        token: util.getParams("token"),
-                        action: 'getPerTermActiveTimeInfo',
-                        StartTime: $scope.dateRangeStart + " 00:00:00",
-                        EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: util.getProjectIds(),
-                        type: $scope.showDate == false ? 0 : 1,
-                        category: $scope.showDate == false ? $scope.category : $scope.dateType
-                    })
+                    if($scope.showDate){
+                        //自定义
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getPerTermActiveTimeInfo',
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }else{
+                        //快捷
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getPerTermActiveTimeInfo',
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }                    
                     self.loadingChart = true;
 
                     $http({
@@ -686,7 +764,8 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            self.th = ["日期", "总活跃时长", "总终端数", "平均活跃时长"];
+                            self.th = ["日期", "活跃终端数", "总活跃时长", "平均活跃时长"];
+                            // self.th = ["日期", "总活跃时长", "总终端数", "平均活跃时长"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
@@ -696,11 +775,11 @@
                                 self.dataSet.push({a: self.dtSubstr(el)});
                             });
 
-                            data.activeTime.forEach(function (el, index) {
+                            data.activeCount.forEach(function (el, index) {
                                 self.dataSet[index].b = el;
                             });
 
-                            data.activeCount.forEach(function (el, index) {
+                            data.activeTime.forEach(function (el, index) {
                                 self.dataSet[index].c = el;
                             });
 
@@ -1022,15 +1101,27 @@
                  * 获取终端指标
                  */
                 function loadTerm() {
-                    var data = JSON.stringify({
-                        token: util.getParams("token"),
-                        action: 'getTermStatisticsInfo',
-                        StartTime: $scope.dateRangeStart + " 00:00:00",
-                        EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: util.getProjectIds(),
-                        type: $scope.showDate == false ? 0 : 1,
-                        category: $scope.showDate == false ? $scope.category : $scope.dateType
-                    })
+                    if($scope.showDate){
+                        //自定义
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTermStatisticsInfo',
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }else{
+                        //快捷
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getTermStatisticsInfo',
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }
                     self.loadingChart = true;
 
                     $http({
@@ -1154,16 +1245,28 @@
                             self.th = ["日期", "总下单数", "总支付数", "转化率"];
                             break;
                     }
+                    if($scope.showDate){
+                        //自定义
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: action,
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }else{
+                        //快捷
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: action,
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }
 
-                    var data = JSON.stringify({
-                        token: util.getParams("token"),
-                        action: action,
-                        StartTime: $scope.dateRangeStart + " 00:00:00",
-                        EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: util.getProjectIds(),
-                        type: $scope.showDate == false ? 0 : 1,
-                        category: $scope.showDate == false ? $scope.category : $scope.dateType
-                    })
                     self.loadingChart = true;
 
                     $http({
@@ -1227,15 +1330,28 @@
                  * @returns {jQuery.promise|promise|IPromise<T>|((target?:any)=>JQueryPromise<T>)|((type?:string, target?:Object)=>JQueryPromise<any>)|Promise|*}
                  */
                 function loadRevenue() {
-                    var data = JSON.stringify({
-                        token: util.getParams("token"),
-                        action: 'getRevenueStatisticsInfo',
-                        StartTime: $scope.dateRangeStart + " 00:00:00",
-                        EndTime: $scope.dateRangeEnd + " 00:00:00",
-                        project: util.getProjectIds(),
-                        type: $scope.showDate == false ? 0 : 1,
-                        category: $scope.showDate == false ? $scope.category : $scope.dateType
-                    })
+                    if($scope.showDate){
+                        //自定义
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getRevenueStatisticsInfo',
+                            StartTime: $scope.dateRangeStart + " 00:00:00",
+                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }else{
+                        //快捷
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getRevenueStatisticsInfo',
+                            project: util.getProjectIds(),
+                            type: $scope.showDate == false ? 0 : 1,
+                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                        })
+                    }
+
                     self.loadingChart = true;
 
                     $http({
@@ -1301,15 +1417,28 @@
                     }
 
                     function loadActiveTime() {
-                        var data = JSON.stringify({
-                            token: util.getParams("token"),
-                            action: 'getActiveStatisticsInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
-                            project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
-                        })
+                        if($scope.showDate){
+                            //自定义
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getActiveStatisticsInfo',
+                                StartTime: $scope.dateRangeStart + " 00:00:00",
+                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                project: util.getProjectIds(),
+                                type: $scope.showDate == false ? 0 : 1,
+                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            })
+                        }else{
+                            //快捷
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getActiveStatisticsInfo',
+                                project: util.getProjectIds(),
+                                type: $scope.showDate == false ? 0 : 1,
+                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            })
+                        }
+
                         self.loadingChart = true;
 
                         $http({
@@ -1387,15 +1516,28 @@
                     }
 
                     function loadActiveTimeInterval() {
-                        var data = JSON.stringify({
-                            token: util.getParams("token"),
-                            action: 'getTermCountBySpanActiveTime',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
-                            project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
-                        })
+                        if($scope.showDate){
+                            //自定义
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getTermCountBySpanActiveTime',
+                                StartTime: $scope.dateRangeStart + " 00:00:00",
+                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                project: util.getProjectIds(),
+                                type: $scope.showDate == false ? 0 : 1,
+                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            })
+                        }else{
+                            //快捷
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getTermCountBySpanActiveTime',
+                                project: util.getProjectIds(),
+                                type: $scope.showDate == false ? 0 : 1,
+                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            })
+                        }
+
                         self.loadingChart = true;
 
                         $http({
@@ -1479,16 +1621,27 @@
                     }
 
                     function loadODCount() {
-                        var data = JSON.stringify({
-                            token: util.getParams("token"),
-                            action: 'getTopNByMovieCount',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
-                            top: 10,
-                            project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
-                        })
+                        if($scope.showDate){
+                            //自定义
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getTopNByMovieCount',
+                                StartTime: $scope.dateRangeStart + " 00:00:00",
+                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                project: util.getProjectIds(),
+                                type: $scope.showDate == false ? 0 : 1,
+                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            })
+                        }else{
+                            //快捷
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getTopNByMovieCount',
+                                project: util.getProjectIds(),
+                                type: $scope.showDate == false ? 0 : 1,
+                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            })
+                        }
                         self.loadingChart = true;
 
                         $http({
@@ -1529,16 +1682,28 @@
                     }
 
                     function loadODRevenue() {
-                        var data = JSON.stringify({
-                            token: util.getParams("token"),
-                            action: 'getTopNByMovieRevenue',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
-                            top: 10,
-                            project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
-                        })
+                        if($scope.showDate){
+                            //自定义
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getTopNByMovieRevenue',
+                                StartTime: $scope.dateRangeStart + " 00:00:00",
+                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                project: util.getProjectIds(),
+                                type: $scope.showDate == false ? 0 : 1,
+                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            })
+                        }else{
+                            //快捷
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getTopNByMovieRevenue',
+                                project: util.getProjectIds(),
+                                type: $scope.showDate == false ? 0 : 1,
+                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            })
+                        }
+
                         self.loadingChart = true;
 
                         $http({
@@ -1624,7 +1789,7 @@
         }
     ])
 
-    //项目模块
+        //项目模块
         .controller('projectController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
             function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
                 var self = this;
@@ -1652,20 +1817,24 @@
                     self.term.forEach(function (el, index) {
                         el.show=!el.show;
                     })
+                    self.drop[0]=!self.drop[0];
                 }
                 self.changeOrderShow=function(){
                     self.order.forEach(function (el, index) {
                         el.show=!el.show;
                     })
+                    self.drop[1]=!self.drop[1];
                 }
                 self.changeRevenueShow=function(){
                     self.revenue.forEach(function (el, index) {
                         el.show=!el.show;
                     })
+                    self.drop[2]=!self.drop[2];
                 }
 
                 self.init = function() {
                     self.current=util.getParams('probabilityName');
+                    self.drop=[true,true,true];
                     self.probability=[
                         {name: '开机率', show: false, sort: '', desc: false},
                         {name: '活跃率', show: false, sort: '', desc: false},
@@ -1683,8 +1852,11 @@
                     ];
                     self.order = [
                         {name: '订单总数',   show: false, sort: '', desc: false},
+                        {name: '付费订单总数',   show: false, sort: '', desc: false},
                         {name: '单次订单数', show: false, sort: '', desc: false},
-                        {name: '打包订单数', show: false, sort: '', desc: false}
+                        {name: '单次付费订单数', show: false, sort: '', desc: false},
+                        {name: '打包订单数', show: false, sort: '', desc: false},
+                        {name: '打包付费订单数', show: false, sort: '', desc: false}
                     ];
                     self.revenue = [
                         {name: '营收总额',   show: false, sort: '', desc: false},
@@ -1753,18 +1925,6 @@
                     }
                 }
 
-                // /**
-                //  * 快捷日期和自定义日期修改
-                //  */
-                // self.categoryChange = function () {
-                //     if ($scope.category == 4) {
-                //         $scope.showDate = true;
-                //     } else {
-                //         $scope.showDate = true;
-                //     }
-                //     self.loadChart(self.indexNum);
-                // }
-
                 self.loadChart=function(index){
                     var deferred = $q.defer();
                     switch (index) {
@@ -1813,22 +1973,34 @@
                             loadTotalOrder();
                             break;
                         case 11:
+                            // 付费订单总数
+                            loadTotalPayOrder();
+                            break;
+                        case 12:
                             // 单次订单数
                             loadSingleOrder();
                             break;
-                        case 12:
+                        case 13:
+                            // 单次付费订单数
+                            loadSinglePayOrder();
+                            break;                            
+                        case 14:
                             // 打包订单数
                             loadPackOrder();
                             break;
-                        case 13:
+                        case 15:
+                            // 打包付费订单数
+                            loadPackPayOrder();
+                            break;                            
+                        case 16:
                             // 营收总额
                             loadTotalRevenue();
                             break;
-                        case 14:
+                        case 17:
                             // 单次营收额
                             loadSingleRevenue();
                             break;
-                        case 15:
+                        case 18:
                             // 打包营收额
                             loadPackRevenue();
                             break;
@@ -1868,7 +2040,7 @@
                                 if(self.charts.yAxis.max==0){
                                     self.charts.yAxis.max=1;
                                 }else if(self.charts.yAxis.max>100){
-                                    self.charts.yAxis.max==100;
+                                    self.charts.yAxis.max=100;
                                 }
                                 for(var i=0;i<data.projectListCHZ.length;i++){
                                     self.dataSet.push({
@@ -1922,7 +2094,7 @@
                                 if(self.charts.yAxis.max==0){
                                     self.charts.yAxis.max=1;
                                 }else if(self.charts.yAxis.max>100){
-                                    self.charts.yAxis.max==100;
+                                    self.charts.yAxis.max=100;
                                 }
                                 for(var i=0;i<data.projectListCHZ.length;i++){
                                     self.dataSet.push({
@@ -1976,7 +2148,7 @@
                                 if(self.charts.yAxis.max==0){
                                     self.charts.yAxis.max=1;
                                 }else if(self.charts.yAxis.max>100){
-                                    self.charts.yAxis.max==100;
+                                    self.charts.yAxis.max=100;
                                 }
                                 for(var i=0;i<data.projectListCHZ.length;i++){
                                     self.dataSet.push({
@@ -2000,9 +2172,9 @@
                         });
                     }
                     function loadAverageRevenue(){
-                        self.th=["项目名称","上线终端","营收总额","平均营收(分)"];
+                        self.th=["项目名称","活跃终端","营收总额","平均营收","日均营收"];
                         self.charts.series[0].name="平均营收";
-                        self.charts.tooltip.valueSuffix='分';
+                        self.charts.tooltip.valueSuffix='元';
                         self.charts.xAxis.categories=[];
                         self.charts.series[0].data=[];
                         self.charts.yAxis.min=0;
@@ -2027,17 +2199,18 @@
                             console.log(data);
                             if(data.rescode=="200"){
                                 //数据格式：[{日期-项目名-累积终端-营收总额-平均营收}]
-                                self.charts.yAxis.max=data.perRevenue[0]+50;
-                                if(self.charts.yAxis.max==0){
-                                    self.charts.yAxis.max=1;
-                                }
+                                self.charts.yAxis.max=Number((data.perRevenue[0]/100).toFixed(2))+.1;
+                                // if(self.charts.yAxis.max==2){
+                                //     self.charts.yAxis.max=1;
+                                // }
                                 for(var i=0;i<data.projectListCHZ.length;i++){
                                     self.dataSet.push({
                                         // a:start+"~"+end,
                                         b:data.projectListCHZ[i],
-                                        c:data.onlineCount[i],
-                                        d:data.allMoney[i],
-                                        e:data.perRevenue[i]
+                                        c:data.activeCount[i],
+                                        d:Number((data.allMoney[i]/100).toFixed(2)),
+                                        e:Number((data.perRevenue[i]/100).toFixed(2)),
+                                        f:Number((data.dayPerRevenue[i]/100).toFixed(2))
                                     });
                                 }
                                 var length=(self.dataSet.length>5)?5:self.dataSet.length
@@ -2080,8 +2253,8 @@
                             console.log(data);
                             if(data.rescode=="200"){
                                 //数据格式：[{日期-项目名-活跃终端-活跃时长-平均活跃}]
-                                self.charts.yAxis.max=parseInt(data.avgActiveTime[0]/3600)+20;
-                                if(self.charts.yAxis.max==0){
+                                self.charts.yAxis.max=parseInt(data.avgActiveTime[0]/3600)+5;
+                                if(self.charts.yAxis.max==5){
                                     self.charts.yAxis.max=1;
                                 }
                                 for(var i=0;i<data.projectListCHZ.length;i++){
@@ -2458,6 +2631,64 @@
                         }).finally(function (value) {
                         });
                     }
+                    function loadTotalPayOrder() {
+                        self.th=["项目名称","付费订单总数"];
+                        self.charts.series[0].name="付费订单总数";
+                        self.charts.series[0].data=[];
+                        self.dataSet = [];
+                        //依次获取各个项目的付费订单总数
+                        //数据格式：[{日期-项目名-付费订单总数}]
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getSortedProjectPayedOrderCountInfo',
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
+                            "page":1,
+                            "per_page":1000,
+                            "project":["all"]
+                        })
+                        $http({
+                            method:'POST',
+                            url:util.getApiUrl('v2/statistics', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response){
+                            var data=response.data;
+                            // var data=self.myData;
+                            if(data.rescode=="200"){
+                                var rest=0;
+                                for(var i=0;i<data.projectListCHZ.length;i++){
+                                    rest+=data.payedOrderCount[i];
+                                    self.dataSet.push({
+                                        // a:start+"~"+end,
+                                        b:data.projectListCHZ[i],
+                                        c:data.payedOrderCount[i]
+                                    });
+                                }
+                                self.dataSet.forEach(function(el,index){
+                                    if(index<5){
+                                        rest-=el.c;
+                                        if(index==0){
+                                            self.charts.series[0].data.push({
+                                                name:el.b,
+                                                y:el.c,
+                                                sliced: true,
+                                                selected: true
+                                            })
+                                        }else {
+                                            self.charts.series[0].data.push([el.b,el.c]);
+                                        }
+                                    }
+                                })
+                                if(rest!=0){
+                                    self.charts.series[0].data.push(['其他',rest]);
+                                }
+                            }
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
+                            deferred.reject();
+                        }).finally(function (value) {
+                        });
+                    }                    
                     function loadSingleOrder() {
                         self.th=["项目名称","单次订单数"];
                         self.charts.series[0].name="单次订单数";
@@ -2516,16 +2747,75 @@
                         }).finally(function (value) {
                         });
                     }
+                    function loadSinglePayOrder() {
+                        self.th=["项目名称","单次付费订单数"];
+                        self.charts.series[0].name="单次付费订单数";
+                        self.charts.series[0].data=[];
+                        self.dataSet = [];
+                        //依次获取各个项目的单次付费订单数
+                        //数据格式：[{日期-项目名-单次付费订单数}]
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getSortedProjectSinglePayedOrderCountInfo',
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
+                            "page":1,
+                            "per_page":1000,
+                            "project":["all"]
+                        })
+                        $http({
+                            method:'POST',
+                            url:util.getApiUrl('v2/statistics', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response){
+                            var data=response.data;
+                            // var data=self.myData;
+                            if(data.rescode=="200"){
+                                var rest=0;
+                                for(var i=0;i<data.projectListCHZ.length;i++){
+                                    rest+=data.payedOrderCount[i];
+                                    self.dataSet.push({
+                                        // a:start+"~"+end,
+                                        b:data.projectListCHZ[i],
+                                        c:data.payedOrderCount[i]
+                                    });
+                                }
+                                self.dataSet.forEach(function(el,index){
+                                    if(index<5){
+                                        rest-=el.c;
+                                        if(index==0){
+                                            self.charts.series[0].data.push({
+                                                name:el.b,
+                                                y:el.c,
+                                                sliced: true,
+                                                selected: true
+                                            })
+                                        }else {
+                                            self.charts.series[0].data.push([el.b,el.c]);
+                                        }
+                                    }
+                                })
+                                if(rest!=0){
+                                    self.charts.series[0].data.push(['其他',rest]);
+                                }
+                            }
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
+                            deferred.reject();
+                        }).finally(function (value) {
+                        });
+                    }
+
                     function loadPackOrder() {
                         self.th=["项目名称","打包订单数"];
-                        self.charts.series[0].name="新增终端";
+                        self.charts.series[0].name="打包订单数";
                         self.charts.series[0].data=[];
                         self.dataSet = [];
                         //依次获取各个项目的打包订单数
                         //数据格式：[{日期-项目名-打包订单数}]
                         var data = JSON.stringify({
                             token: util.getParams("token"),
-                            action: 'getSortedProjectSingleOrderCountInfo',
+                            action: 'getSortedProjectPackageOrderCountInfo',
                             StartTime: $scope.dateRangeStart,
                             EndTime: $scope.dateRangeEnd,
                             "page":1,
@@ -2574,8 +2864,67 @@
                         }).finally(function (value) {
                         });
                     }
+                    function loadPackPayOrder() {
+                        self.th=["项目名称","打包付费订单数"];
+                        self.charts.series[0].name="打包付费订单数";
+                        self.charts.series[0].data=[];
+                        self.dataSet = [];
+                        //依次获取各个项目的打包付费订单数
+                        //数据格式：[{日期-项目名-打包付费订单数}]
+                        var data = JSON.stringify({
+                            token: util.getParams("token"),
+                            action: 'getSortedProjectPackagePayedOrderCountInfo',
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
+                            "page":1,
+                            "per_page":1000,
+                            "project":["all"]
+                        })
+                        $http({
+                            method:'POST',
+                            url:util.getApiUrl('v2/statistics', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response){
+                            var data=response.data;
+                            // var data=self.myData;
+                            if(data.rescode=="200"){
+                                var rest=0;
+                                for(var i=0;i<data.projectListCHZ.length;i++){
+                                    rest+=data.payedOrderCount[i];
+                                    self.dataSet.push({
+                                        // a:start+"~"+end,
+                                        b:data.projectListCHZ[i],
+                                        c:data.payedOrderCount[i]
+                                    });
+                                }
+                                self.dataSet.forEach(function(el,index){
+                                    if(index<5){
+                                        rest-=el.c;
+                                        if(index==0){
+                                            self.charts.series[0].data.push({
+                                                name:el.b,
+                                                y:el.c,
+                                                sliced: true,
+                                                selected: true
+                                            })
+                                        }else {
+                                            self.charts.series[0].data.push([el.b,el.c]);
+                                        }
+                                    }
+                                })
+                                if(rest!=0){
+                                    self.charts.series[0].data.push(['其他',rest]);
+                                }
+                            }
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
+                            deferred.reject();
+                        }).finally(function (value) {
+                        });
+                    }
+
                     function loadTotalRevenue() {
-                        self.th=["项目名称","营收总额(分)"];
+                        self.th=["项目名称","营收总额(元)"];
                         self.charts.series[0].name="营收总额";
                         self.charts.series[0].data=[];
                         self.dataSet = [];
@@ -2600,11 +2949,11 @@
                             if(data.rescode=="200"){
                                 var rest=0;
                                 for(var i=0;i<data.projectListCHZ.length;i++){
-                                    rest+=data.revenue[i];
+                                    rest+=Number((data.revenue[i]/100).toFixed(2));
                                     self.dataSet.push({
                                         // a:start+"~"+end,
                                         b:data.projectListCHZ[i],
-                                        c:data.revenue[i]
+                                        c:Number((data.revenue[i]/100).toFixed(2))
                                     });
                                 }
                                 self.dataSet.forEach(function(el,index){
@@ -2633,7 +2982,7 @@
                         });
                     }
                     function loadSingleRevenue() {
-                        self.th=["项目名称","单次营收额(分)"];
+                        self.th=["项目名称","单次营收额(元)"];
                         self.charts.series[0].name="单次营收额";
                         self.charts.series[0].data=[];
                         self.dataSet = [];
@@ -2658,11 +3007,11 @@
                             if(data.rescode=="200"){
                                 var rest=0;
                                 for(var i=0;i<data.projectListCHZ.length;i++){
-                                    rest+=data.revenue[i];
+                                    rest+=Number((data.revenue[i]/100).toFixed(2));
                                     self.dataSet.push({
                                         // a:start+"~"+end,
                                         b:data.projectListCHZ[i],
-                                        c:data.revenue[i]
+                                        c:Number((data.revenue[i]/100).toFixed(2))
                                     });
                                 }
                                 self.dataSet.forEach(function(el,index){
@@ -2691,7 +3040,7 @@
                         });
                     }
                     function loadPackRevenue() {
-                        self.th=["项目名称","打包营收额(分)"];
+                        self.th=["项目名称","打包营收额(元)"];
                         self.charts.series[0].name="打包营收额";
                         self.charts.series[0].data=[];
                         self.dataSet = [];
@@ -2716,11 +3065,11 @@
                             if(data.rescode=="200"){
                                 var rest=0;
                                 for(var i=0;i<data.projectListCHZ.length;i++){
-                                    rest+=data.revenue[i];
+                                    rest+=Number((data.revenue[i]/100).toFixed(2));
                                     self.dataSet.push({
                                         // a:start+"~"+end,
                                         b:data.projectListCHZ[i],
-                                        c:data.revenue[i]
+                                        c:Number((data.revenue[i]/100).toFixed(2))
                                     });
                                 }
                                 self.dataSet.forEach(function(el,index){
@@ -2774,7 +3123,7 @@
                     self.showClass=true;
                     // self.myData={
                     //     "rescode": "200",
-                    //     "projectList": [
+                    //     "projectListCHZ": [
                     //         "project1",
                     //         "project2",
                     //         "project3",
@@ -2858,7 +3207,7 @@
                     //         parseInt(Math.random()*350),
                     //         parseInt(Math.random()*350)
                     //     ],
-                    //     "totalMoney": [
+                    //     "revenue": [
                     //         parseInt(Math.random()*1150),
                     //         parseInt(Math.random()*1150),
                     //         parseInt(Math.random()*1150),
@@ -2877,64 +3226,6 @@
                     //         parseInt(Math.random()*50+150),
                     //         parseInt(Math.random()*50+150),
                     //         parseInt(Math.random()*50+150),
-                    //         parseInt(Math.random()*50+150),
-                    //         parseInt(Math.random()*50+150),
-                    //         parseInt(Math.random()*50+150),
-                    //         parseInt(Math.random()*50+150)
-                    //     ],
-                    //     "errInfo": "None"
-                    // }
-                    // self.myData={
-                    //     "rescode": "200",
-                    //     "projectList": [
-                    //         "project1",
-                    //         "project2",
-                    //         "project3",
-                    //         "project4",
-                    //     ],
-                    //     "totalCount": [
-                    //         parseInt(Math.random()*100+300),
-                    //         parseInt(Math.random()*100+300),
-                    //         parseInt(Math.random()*100+300),
-                    //         parseInt(Math.random()*100+300)
-                    //     ],
-                    //     "onlineCount": [
-                    //         parseInt(Math.random()*50+250),
-                    //         parseInt(Math.random()*50+250),
-                    //         parseInt(Math.random()*50+250),
-                    //         parseInt(Math.random()*50+250)
-                    //     ],
-                    //     "activeCount": [
-                    //         parseInt(Math.random()*50+200),
-                    //         parseInt(Math.random()*50+200),
-                    //         parseInt(Math.random()*50+200),
-                    //         parseInt(Math.random()*50+200)
-                    //     ],
-                    //     "payCount": [
-                    //         parseInt(Math.random()*50+150),
-                    //         parseInt(Math.random()*50+150),
-                    //         parseInt(Math.random()*50+150),
-                    //         parseInt(Math.random()*50+150)
-                    //     ],
-                    //     "newAddCount": [
-                    //         parseInt(Math.random()*50),
-                    //         parseInt(Math.random()*50),
-                    //         parseInt(Math.random()*50),
-                    //         parseInt(Math.random()*50)
-                    //     ],
-                    //     "activeTime": [
-                    //         parseInt(Math.random()*350),
-                    //         parseInt(Math.random()*350),
-                    //         parseInt(Math.random()*350),
-                    //         parseInt(Math.random()*350)
-                    //     ],
-                    //     "totalMoney": [
-                    //         parseInt(Math.random()*1150),
-                    //         parseInt(Math.random()*1150),
-                    //         parseInt(Math.random()*1150),
-                    //         parseInt(Math.random()*1150)
-                    //     ],
-                    //     "orderCount": [
                     //         parseInt(Math.random()*50+150),
                     //         parseInt(Math.random()*50+150),
                     //         parseInt(Math.random()*50+150),
