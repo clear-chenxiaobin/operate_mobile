@@ -360,16 +360,6 @@
                 self.loadData();
             }
 
-            /**
-             * 修改粒度
-             */
-            self.changeGra = function (value) {
-                if (value == 0) {
-                } else {
-                }
-                self.loadData();
-            }
-
             self.charts = {
                 chart: {
                     type: 'areaspline'
@@ -437,11 +427,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getTermOnlineRateInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.dateType
                         })
                     }else{
                         //快捷
@@ -449,20 +439,11 @@
                             token: util.getParams("token"),
                             action: 'getTermOnlineRateInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }
 
-                    // var data = JSON.stringify({
-                    //     token: util.getParams("token"),
-                    //     action: 'getTermOnlineRateInfo',
-                    //     StartTime: $scope.showDate == false ? '':($scope.dateRangeStart + " 00:00:00"),
-                    //     EndTime: $scope.showDate == false? '':($scope.dateRangeEnd + " 00:00:00"),
-                    //     project: util.getProjectIds(),
-                    //     type: $scope.showDate == false ? 0 : 1,
-                    //     category: $scope.showDate == false ? $scope.category : $scope.dateType
-                    // })
                     self.loadingChart = true;
 
                     $http({
@@ -472,8 +453,7 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            // self.th = ["日期", "上线终端", "累计终端", "开机率"];
-                            self.th = ["日期", "累计终端", "上线终端", "开机率"];                            
+                            self.th = ["日期", "累计终端", "上线终端", "开机率"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
@@ -521,11 +501,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getTermActiveRateInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.dateType
                         })
                     }else{
                         //快捷
@@ -533,8 +513,8 @@
                             token: util.getParams("token"),
                             action: 'getTermActiveRateInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }
                     self.loadingChart = true;
@@ -546,7 +526,6 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            // self.th = ["日期", "活跃终端", "上线终端", "活跃率"];
                             self.th = ["日期", "上线终端", "活跃终端", "活跃率"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
@@ -593,11 +572,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getTermPayRateInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.dateType
                         })
                     }else{
                         //快捷
@@ -605,8 +584,8 @@
                             token: util.getParams("token"),
                             action: 'getTermPayRateInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }
                     self.loadingChart = true;
@@ -663,11 +642,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getPerTermRevenueInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.dateType
                         })
                     }else{
                         //快捷
@@ -675,8 +654,8 @@
                             token: util.getParams("token"),
                             action: 'getPerTermRevenueInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }
                     self.loadingChart = true;
@@ -689,7 +668,6 @@
                         var data = response.data;
                         if (data.rescode == '200') {
                             self.th = ["日期", "活跃终端数", "总营收", "平均营收"];
-                            // self.th = ["日期", "总营收", "总终端数", "平均营收"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
@@ -739,11 +717,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getPerTermActiveTimeInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.dateType
                         })
                     }else{
                         //快捷
@@ -751,8 +729,8 @@
                             token: util.getParams("token"),
                             action: 'getPerTermActiveTimeInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }                    
                     self.loadingChart = true;
@@ -765,7 +743,6 @@
                         var data = response.data;
                         if (data.rescode == '200') {
                             self.th = ["日期", "活跃终端数", "总活跃时长", "平均活跃时长"];
-                            // self.th = ["日期", "总活跃时长", "总终端数", "平均活跃时长"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
@@ -1106,11 +1083,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getTermStatisticsInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.dateType
                         })
                     }else{
                         //快捷
@@ -1118,8 +1095,8 @@
                             token: util.getParams("token"),
                             action: 'getTermStatisticsInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }
                     self.loadingChart = true;
@@ -1250,11 +1227,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: action,
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.dateType
                         })
                     }else{
                         //快捷
@@ -1262,8 +1239,8 @@
                             token: util.getParams("token"),
                             action: action,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }
 
@@ -1335,11 +1312,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getRevenueStatisticsInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.dateType
                         })
                     }else{
                         //快捷
@@ -1347,8 +1324,8 @@
                             token: util.getParams("token"),
                             action: 'getRevenueStatisticsInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }
 
@@ -1422,11 +1399,11 @@
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
                                 action: 'getActiveStatisticsInfo',
-                                StartTime: $scope.dateRangeStart + " 00:00:00",
-                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                StartTime: $scope.dateRangeStart,
+                                EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 0,
+                                category: $scope.dateType
                             })
                         }else{
                             //快捷
@@ -1434,8 +1411,8 @@
                                 token: util.getParams("token"),
                                 action: 'getActiveStatisticsInfo',
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 0,
+                                category: $scope.category
                             })
                         }
 
@@ -1521,11 +1498,11 @@
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
                                 action: 'getTermCountBySpanActiveTime',
-                                StartTime: $scope.dateRangeStart + " 00:00:00",
-                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                StartTime: $scope.dateRangeStart,
+                                EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.dateType
                             })
                         }else{
                             //快捷
@@ -1533,8 +1510,8 @@
                                 token: util.getParams("token"),
                                 action: 'getTermCountBySpanActiveTime',
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.category
                             })
                         }
 
@@ -1626,11 +1603,11 @@
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
                                 action: 'getTopNByMovieCount',
-                                StartTime: $scope.dateRangeStart + " 00:00:00",
-                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                StartTime: $scope.dateRangeStart,
+                                EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.dateType
                             })
                         }else{
                             //快捷
@@ -1638,8 +1615,8 @@
                                 token: util.getParams("token"),
                                 action: 'getTopNByMovieCount',
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.category
                             })
                         }
                         self.loadingChart = true;
@@ -1687,11 +1664,11 @@
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
                                 action: 'getTopNByMovieRevenue',
-                                StartTime: $scope.dateRangeStart + " 00:00:00",
-                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                StartTime: $scope.dateRangeStart,
+                                EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.dateType
                             })
                         }else{
                             //快捷
@@ -1699,8 +1676,8 @@
                                 token: util.getParams("token"),
                                 action: 'getTopNByMovieRevenue',
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.category
                             })
                         }
 

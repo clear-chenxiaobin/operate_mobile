@@ -71,7 +71,7 @@
                                ng-click="overview.categoryChange()">自定义</label>
                     </div>
                     <div class="btn-group-sm padding-0-1" ng-class="{'col-xs-0': !showDate, 'col-xs-3': showDate}">
-                        <select class="select-charts-time" ng-class="{'active': showDate}" ng-model="dateType"
+                        <select class="select-charts-time" ng-class="{'active': showDate}" ng-model="dateType" ng-change="overview.loadData()"
                                 ng-options="x.id as x.name for x in granularity">
                         </select>
                     </div>
