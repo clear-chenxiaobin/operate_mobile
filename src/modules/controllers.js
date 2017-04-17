@@ -126,14 +126,15 @@
                     {id: 3, name: "年"}
                 ]
 
-                $scope.dateRangeStart = $filter('date')(new Date(), 'yyyy-MM-dd');
+                $scope.dateRangeStart = $filter('date')(new Date() - 7*24*60*60*1000, 'yyyy-MM-dd');
                 $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
                 $scope.showDate = false;
+                $scope.shotcut = 0;
                 $scope.category = 0;
-                $scope.dateType = 0;
+
 
                 if (util.getProjectIds() == undefined || $sessionStorage.revenueProjects == undefined) {
-                    alert('访问超时，请重新登录');
+                    alert('项目获取失败，请重新登录');
                     $location.path("pages/login.html");
                 }
             }
@@ -295,6 +296,7 @@
 
             self.init = function() {
                 self.activerow = 0;
+                self.dateType = 1;
                 self.loadData();
             }
 
@@ -352,7 +354,7 @@
              * 快捷日期和自定义日期修改
              */
             self.categoryChange = function () {
-                if ($scope.category == 4) {
+                if ($scope.shotcut == 4) {
                     $scope.showDate = true;
                 } else {
                     $scope.showDate = false;
@@ -366,16 +368,6 @@
                 },
                 title: {
                     text: ''
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'top',
-                    x: 0,
-                    y: 0,
-                    floating: true,
-                    borderWidth: 1,
-                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
                 },
                 xAxis: {
                     categories: [],
@@ -431,7 +423,7 @@
                             EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.dateType
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -440,7 +432,7 @@
                             action: 'getTermOnlineRateInfo',
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.category
+                            category: $scope.shotcut
                         })
                     }
 
@@ -474,7 +466,7 @@
                             self.charts.series.push({name: "开机率", id: "series-0", data: [], tooltip: {valueSuffix: '%'}});
                             data.onlineRate.forEach(function (el, index) {
                                 self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                self.dataSet[index].d = util.FloatMul(el, 100) + "%";
+                                self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + "%";
                             });
 
                             deferred.resolve();
@@ -505,7 +497,7 @@
                             EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.dateType
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -514,7 +506,7 @@
                             action: 'getTermActiveRateInfo',
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.category
+                            category: $scope.shotcut
                         })
                     }
                     self.loadingChart = true;
@@ -547,7 +539,7 @@
                             self.charts.series.push({name: "活跃率", id: "series-0", data: [], tooltip: {valueSuffix: '%'}});
                             data.activeRate.forEach(function (el, index) {
                                 self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                self.dataSet[index].d = util.FloatMul(el, 100) + "%";
+                                self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + "%";
                             });
 
                             deferred.resolve();
@@ -576,7 +568,7 @@
                             EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.dateType
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -585,7 +577,7 @@
                             action: 'getTermPayRateInfo',
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.category
+                            category: $scope.shotcut
                         })
                     }
                     self.loadingChart = true;
@@ -618,7 +610,7 @@
                             self.charts.series.push({name: "终端付费转化率", data: [], tooltip: {valueSuffix: '%'}});
                             data.payRate.forEach(function (el, index) {
                                 self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                self.dataSet[index].d = util.FloatMul(el, 100) + '%';
+                                self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + '%';
                             });
 
                             deferred.resolve();
@@ -646,7 +638,7 @@
                             EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.dateType
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -655,7 +647,7 @@
                             action: 'getPerTermRevenueInfo',
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.category
+                            category: $scope.shotcut
                         })
                     }
                     self.loadingChart = true;
@@ -721,7 +713,7 @@
                             EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.dateType
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -730,9 +722,9 @@
                             action: 'getPerTermActiveTimeInfo',
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.category
+                            category: $scope.shotcut
                         })
-                    }                    
+                    }
                     self.loadingChart = true;
 
                     $http({
@@ -808,7 +800,7 @@
              * @returns {string}
              */
             self.dtSubstr = function(datetime) {
-                if ($scope.showDate == false) {
+                if ($scope.showDate == true) {
                     switch ($scope.category) {
                         case 0:
                             return datetime.substring(5, 16);
@@ -820,7 +812,7 @@
                             return datetime.substring(0, 7);
                     }
                 } else {
-                    switch ($scope.dateType) {
+                    switch ($scope.shotcut) {
                         case 0:
                             return datetime.substring(5, 10);
                         case 1:
@@ -936,7 +928,7 @@
              * 快捷日期和自定义日期修改
              */
             self.categoryChange = function () {
-                if ($scope.category == 4) {
+                if ($scope.shotcut == 4) {
                     $scope.showDate = true;
                 } else {
                     $scope.showDate = false;
@@ -1016,16 +1008,6 @@
                 title: {
                     text: ''
                 },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'top',
-                    x: 0,
-                    y: 0,
-                    floating: true,
-                    borderWidth: 1,
-                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-                },
                 xAxis: {
                     categories: [],
                 },
@@ -1087,7 +1069,7 @@
                             EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.dateType
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -1096,7 +1078,7 @@
                             action: 'getTermStatisticsInfo',
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.category
+                            category: $scope.shotcut
                         })
                     }
                     self.loadingChart = true;
@@ -1210,11 +1192,11 @@
                             self.th = ["日期", "总下单数", "总支付数", "转化率"];
                             break;
                         case 1:
-                            action = "getAllOrderCountStatisticsInfo";
+                            action = "getSingleOrderCountStatisticsInfo";
                             self.th = ["日期", "单次下单数", "单次支付数", "转化率"];
                             break;
                         case 2:
-                            action = "getAllOrderCountStatisticsInfo";
+                            action = "getPackageOrderCountStatisticsInfo";
                             self.th = ["日期", "打包下单数", "打包支付数", "转化率"];
                             break;
                         default:
@@ -1231,7 +1213,7 @@
                             EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.dateType
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -1240,7 +1222,7 @@
                             action: action,
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.category
+                            category: $scope.shotcut
                         })
                     }
 
@@ -1272,6 +1254,7 @@
                                 self.charts.series[0].data.push(el);
                                 self.dataSet[index].b = el;
                             });
+
                             self.charts.series.push({
                                 name: self.th[2],
                                 id: "series-1",
@@ -1284,7 +1267,7 @@
                             });
 
                             data.rate.forEach(function (el, index) {
-                                self.dataSet[index].d = el;
+                                self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + "%";
                             });
 
                             deferred.resolve();
@@ -1316,7 +1299,7 @@
                             EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.dateType
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -1325,7 +1308,7 @@
                             action: 'getRevenueStatisticsInfo',
                             project: util.getProjectIds(),
                             type: 0,
-                            category: $scope.category
+                            category: $scope.shotcut
                         })
                     }
 
@@ -1403,7 +1386,7 @@
                                 EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
                                 type: 0,
-                                category: $scope.dateType
+                                category: $scope.category
                             })
                         }else{
                             //快捷
@@ -1412,7 +1395,7 @@
                                 action: 'getActiveStatisticsInfo',
                                 project: util.getProjectIds(),
                                 type: 0,
-                                category: $scope.category
+                                category: $scope.shotcut
                             })
                         }
 
@@ -1449,7 +1432,7 @@
 
                                     var h = Math.floor(el / 3600);
                                     var m = Math.floor((el - h * 3600) / 60);
-                                    var s = el - h * 3600 - m * 60;
+                                    var s = (el - h * 3600 - m * 60).toFixed(2);
 
                                     self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
                                     function zeroFill(data) {
@@ -1502,7 +1485,7 @@
                                 EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
                                 type: 1,
-                                category: $scope.dateType
+                                category: $scope.category
                             })
                         }else{
                             //快捷
@@ -1511,7 +1494,7 @@
                                 action: 'getTermCountBySpanActiveTime',
                                 project: util.getProjectIds(),
                                 type: 1,
-                                category: $scope.category
+                                category: $scope.shotcut
                             })
                         }
 
@@ -1607,7 +1590,7 @@
                                 EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
                                 type: 1,
-                                category: $scope.dateType
+                                category: $scope.category
                             })
                         }else{
                             //快捷
@@ -1616,7 +1599,7 @@
                                 action: 'getTopNByMovieCount',
                                 project: util.getProjectIds(),
                                 type: 1,
-                                category: $scope.category
+                                category: $scope.shotcut
                             })
                         }
                         self.loadingChart = true;
@@ -1668,7 +1651,7 @@
                                 EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
                                 type: 1,
-                                category: $scope.dateType
+                                category: $scope.category
                             })
                         }else{
                             //快捷
@@ -1677,7 +1660,7 @@
                                 action: 'getTopNByMovieRevenue',
                                 project: util.getProjectIds(),
                                 type: 1,
-                                category: $scope.category
+                                category: $scope.shotcut
                             })
                         }
 
@@ -1738,7 +1721,7 @@
                  * @returns {string}
                  */
                 self.dtSubstr = function (datetime) {
-                    if ($scope.showDate == false) {
+                    if ($scope.showDate == true) {
                         switch ($scope.category) {
                             case 0:
                                 return datetime.substring(5, 16);
@@ -1750,7 +1733,7 @@
                                 return datetime.substring(0, 7);
                         }
                     } else {
-                        switch ($scope.dateType) {
+                        switch ($scope.shotcut) {
                             case 0:
                                 return datetime.substring(5, 10);
                             case 1:
@@ -3310,37 +3293,6 @@
                 self.changeOrderby = function (orderby) {
                     // self.orderby.sort = orderby;
                     self.desc = !self.desc;
-                }
-
-                /**
-                 * 根据时间类型返回时间
-                 * @param datetime
-                 * @returns {string}
-                 */
-                self.dtSubstr = function(datetime) {
-                    if ($scope.showDate == false) {
-                        switch ($scope.category) {
-                            case 0:
-                                return datetime.substring(11, 16);
-                            case 1:
-                                return datetime.substring(5, 10);
-                            case 2:
-                                return datetime.substring(5, 7);
-                            case 3:
-                                return datetime.substring(0, 4);
-                        }
-                    } else {
-                        switch ($scope.dateType) {
-                            case 0:
-                                return datetime.substring(5, 10);
-                            case 1:
-                                return datetime.substring(5, 10);
-                            case 2:
-                                return datetime.substring(5, 7);
-                            case 3:
-                                return datetime.substring(0, 4);
-                        }
-                    }
                 }
 
             }
