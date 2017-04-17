@@ -31,7 +31,7 @@
     <div class="project-bottom">
         <ul class="">
             <li class="list-group-item project-li" >终端指标
-                <i class="glyphicon glyphicon-plus right"
+                <i class="glyphicon glyphicon-plus right" ng-class="{'glyphicon-plus':project.drop[0],'glyphicon-minus':!project.drop[0]}"
                 ng-click="project.changeTermShow()">
                 </i>
             </li>
@@ -43,7 +43,7 @@
             
 
             <li class="list-group-item project-li" >订单统计
-                <i class="glyphicon glyphicon-plus right"
+                <i class="glyphicon right" ng-class="{'glyphicon-plus':project.drop[1],'glyphicon-minus':!project.drop[1]}"
                 ng-click="project.changeOrderShow()">
                 </i>
             </li>
@@ -54,11 +54,11 @@
             </li>
 
             <li class="list-group-item project-li" >营收统计
-                <i class="glyphicon glyphicon-plus right"
+                <i class="glyphicon glyphicon-plus right" ng-class="{'glyphicon-plus':project.drop[2],'glyphicon-minus':!project.drop[2]}"
                 ng-click="project.changeRevenueShow()">
                 </i>
             </li>
-            <li class="list-group-item project-li project-item-li" ng-repeat="item in project.revenue" ng-show="item.show" ng-click="project.changeProbability(item.name,$index+13)">{{item.name}}
+            <li class="list-group-item project-li project-item-li" ng-repeat="item in project.revenue" ng-show="item.show" ng-click="project.changeProbability(item.name,$index+16)">{{item.name}}
                 <i class="glyphicon glyphicon-chevron-right right"></i>
             </li>
 
