@@ -2853,7 +2853,7 @@
                                     }
                                 }
                             })
-                            if(rest!=0){
+                            if(Number(rest.toFixed(2))>0){
                                 self.charts.series[0].data.push(['其他',rest]);
                             }
                         }
@@ -2911,7 +2911,7 @@
                                     }
                                 }
                             })
-                            if(rest!=0){
+                            if(Number(rest.toFixed(2))>0){
                                 self.charts.series[0].data.push(['其他',rest]);
                             }
                         }
@@ -2969,7 +2969,7 @@
                                     }
                                 }
                             })
-                            if(rest!=0){
+                            if(Number(rest.toFixed(2))>0){
                                 self.charts.series[0].data.push(['其他',rest]);
                             }
                         }
