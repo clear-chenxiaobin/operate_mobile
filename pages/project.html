@@ -2,19 +2,9 @@
     <div class="panel-header page-top">
         <a class="page-top-back" ui-sref="app.home"><img src="dist/img/返回.png"></a>
         <div class="page-top-title text-center"><img src="dist/img/项目白.png">&nbsp;项目</div>
-       <!--  <div uib-dropdown class="project-dropdown">
-            <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/小抽屉.png"></a>
-            <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="project-dropdown">
-                <li ng-repeat="item in app.projectList">
-                    <a href ng-click="project.changeProject(item.projectName)" class="style-color">
-                        {{item.projectNameCHZ}}
-                    </a>
-                </li>
-            </ul>
-        </div> -->
     </div>
-
     <!--筛选条件-->
+
     <div class="project-top">
         <ul class="" >
             <li class="list-group-item project-li " ng-repeat="item in project.probability"
@@ -30,25 +20,16 @@
      <!--筛选条件-->
     <div class="project-bottom">
         <ul class="">
-            <li class="list-group-item project-li" >终端指标
-                <i class="glyphicon glyphicon-plus right" ng-class="{'glyphicon-plus':project.drop[0],'glyphicon-minus':!project.drop[0]}"
-                ng-click="project.changeTermShow()">
-                </i>
-            </li>
-            <li class="list-group-item project-li project-item-li" ng-repeat="item in project.term"
-             ng-show="item.show" ng-click="project.changeProbability(item.name,$index+5)" >
-             {{item.name}}
+            <li class="list-group-item project-li" ng-click="project.changeProbability('终端指标',$index+5)">终端指标
                 <i class="glyphicon glyphicon-chevron-right right"></i>
-            </li>
-            
-
+            </li>            
             <li class="list-group-item project-li" >订单统计
                 <i class="glyphicon right" ng-class="{'glyphicon-plus':project.drop[1],'glyphicon-minus':!project.drop[1]}"
                 ng-click="project.changeOrderShow()">
                 </i>
             </li>
             <li class="list-group-item project-li project-item-li" ng-repeat="item in project.order"
-             ng-show="item.show" ng-click="project.changeProbability(item.name,$index+10)" >
+             ng-show="item.show" ng-click="project.changeProbability(item.name,$index+6)" >
              {{item.name}}
                 <i class="glyphicon glyphicon-chevron-right right"></i>
             </li>
@@ -58,7 +39,7 @@
                 ng-click="project.changeRevenueShow()">
                 </i>
             </li>
-            <li class="list-group-item project-li project-item-li" ng-repeat="item in project.revenue" ng-show="item.show" ng-click="project.changeProbability(item.name,$index+16)">{{item.name}}
+            <li class="list-group-item project-li project-item-li" ng-repeat="item in project.revenue" ng-show="item.show" ng-click="project.changeProbability(item.name,$index+9)">{{item.name}}
                 <i class="glyphicon glyphicon-chevron-right right"></i>
             </li>
 

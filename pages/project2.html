@@ -5,30 +5,74 @@
             {{project.current}}</div>
 
     </div>
-
-    
-        
-    <div class="" style="margin-top:-10px;">
+    <div class="body-top" ng-show="project.termShow">
+        <ul>
+            <li class="col-xs-4ths specific-sift-menu" ng-class="{activedClass:0 == project.activerow}"
+                ng-click="project.isCurrent(0)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        累计
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-4ths specific-sift-menu" ng-class="{activedClass:1 == project.activerow}"
+                ng-click="project.isCurrent(1)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        上线
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-4ths specific-sift-menu" ng-class="{activedClass:2 == project.activerow}"
+                ng-click="project.isCurrent(2)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        活跃
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-4ths specific-sift-menu" ng-class="{activedClass:3 == project.activerow}"
+                ng-click="project.isCurrent(3)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        付费
+                    </a>
+                </span>
+            </li>
+           <!--  <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:4 == project.activerow}"
+                ng-click="project.isCurrent(4)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        新增
+                    </a>
+                </span>
+            </li> -->
+        </ul>
+    </div>
+    <div class="body-top" ng-show="project.orderShow">
+        <ul>
+            <li class="col-xs-2ths specific-sift-menu" ng-class="{activedClass:0 == project.activerow}"
+                ng-click="project.isCurrent(0)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        总订单
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-2ths specific-sift-menu" ng-class="{activedClass:1 == project.activerow}"
+                ng-click="project.isCurrent(1)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        已支付
+                    </a>
+                </span>
+            </li>
+        </ul>
+    </div>       
+    <div ng-class="{'isTop':project.indexNum<5||project.indexNum>8}">
         <div class="charts-content">
             <div class="row">
                 <div class="btn-group col-xs-12 " ng-class="{'charts-content-datepicker':project.showClass}">
-<!--                     <div class="btn-group-sm" ng-class="{'col-xs-12': !showDate, 'col-xs-9': showDate}">
-                        <label class="btn btn-default col-xs-2 style-color" ng-model="category" uib-btn-radio="0"
-                               ng-click="project.categoryChange()">日</label>
-                        <label class="btn btn-default col-xs-2 style-color" ng-model="category" uib-btn-radio="1"
-                               ng-click="project.categoryChange()">周</label>
-                        <label class="btn btn-default col-xs-2 style-color" ng-model="category" uib-btn-radio="2"
-                               ng-click="project.categoryChange()">月</label>
-                        <label class="btn btn-default col-xs-2 style-color" ng-model="category" uib-btn-radio="3"
-                               ng-click="project.categoryChange()">年</label>
-                        <label class="btn btn-default col-xs-4 style-color" ng-model="category" uib-btn-radio="4"
-                               ng-click="project.categoryChange()">自定义</label>
-                    </div>
-                    <div class="btn-group-sm padding-0-1" ng-class="{'col-xs-0': !showDate, 'col-xs-3': showDate}">
-                        <select class="select-charts-time" ng-class="{'active': showDate}" ng-model="dateType" ng-change="project.categoryChange()"
-                                ng-options="x.id as x.name for x in granularity">
-                        </select>
-                    </div> -->
                     <div class="btn-group-sm col-xs-12 select-date-box" >
                         <div class="form-group-sm dropdown col-xs-5 padding-0-1">
                             <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="" href="">
