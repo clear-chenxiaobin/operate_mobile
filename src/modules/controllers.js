@@ -1919,32 +1919,36 @@
 
                 self.charts = {
                     chart: {
-                        type: 'funnel',
-                        marginRight: 100
+                        type: 'bar',
                     },
                     title: {
                         text: ''
                     },
-                    tooltip: {
-                        shared: true,
-                        valueSuffix: ''
+                    xAxis: {
+                        categories: ['累计', '上线', '活跃', '付费'],
+                        title: {
+                            text: null
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '终端数 (个)',
+                            align: 'high'
+                        },
+                        labels: {
+                            overflow: 'justify'
+                        }
                     },
                     credits: {
                         enabled: false
                     },
                     plotOptions: {
-                        series: {
+                        bar: {
                             dataLabels: {
                                 enabled: true,
-                                format: '<b>{point.name}</b> ({point.y:,.0f})',
-                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
-                                softConnector: true
-                            },
-                            neckWidth: '30%',
-                            neckHeight: '25%'
-                            //-- Other available options
-                            // height: pixels or percent
-                            // width: pixels or percent
+                                allowOverlap: true
+                            }
                         }
                     },
                     series: [],
@@ -1973,7 +1977,7 @@
                             //自定义
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
-                                action: 'getTermStatisticsInfo',
+                                action: 'getTermLoudouInfo',
                                 StartTime: $scope.dateRangeStart,
                                 EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
@@ -1984,7 +1988,7 @@
                             //快捷
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
-                                action: 'getTermStatisticsInfo',
+                                action: 'getTermLoudouInfo',
                                 project: util.getProjectIds(),
                                 type: 1,
                                 category: $scope.shotcut
@@ -2000,37 +2004,39 @@
                         }).then(function successCallback(response) {
                             var data = response.data;
                             if (data.rescode == '200') {
-                                self.th = ["日期", "累计终端", "上线终端", "活跃终端", "付费终端"];
+                                self.th = ["步骤", "名称", "个数", "上一步转化率", "总体转化率"];
                                 self.dataSet = [];
-                                self.charts.xAxis.categories = [];
                                 self.charts.series = [];
 
-                                checkDataLength(data.timeList);
+                                checkDataLength(data.StartTime);
 
-                                self.charts.series.push({name: "终端", data: [], tooltip: {valueSuffix: '个'}});
+                                var add = data.addUpCount,
+                                    online = data.onlineCount,
+                                    active = data.activeCount,
+                                    pay = data.payCount;
 
-                                data.addUpCount.forEach(function (el, index) {
-                                    self.charts.series[0].data.
-                                    self.dataSet[index].b = el;
-                                });
+                                self.charts = {
+                                    subtitle: {
+                                        text: data.StartTime.substring(0,10) + " ~ " + data.EndTime.substring(0,10)
+                                    },
+                                    series :[{
+                                        name: "终端",
+                                        data: [
+                                            [add],
+                                            [online],
+                                            [active],
+                                            [pay]
+                                        ],
+                                        tooltip: {valueSuffix: ' 个'},
+                                    }]
+                                };
 
-                                data.onlineCount.forEach(function (el, index) {
-                                    self.dataSet[index].c = el;
-                                });
-
-                                data.activeCount.forEach(function (el, index) {
-                                    self.dataSet[index].b = el;
-                                });
-
-                                data.payCount.forEach(function (el, index) {
-                                    self.dataSet[index].c = el;
-                                });
-
-                                self.charts.series.push({name: "开机率", id: "series-0", data: [], tooltip: {valueSuffix: '%'}});
-                                data.onlineRate.forEach(function (el, index) {
-                                    self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                    self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + "%";
-                                });
+                                self.dataSet = [
+                                    [1, "累计终端", add, "", ""],
+                                    [2, "上线终端", online, (add == 0 ? "0.00%" : (online / add).toFixed(2) + "%"), (add == 0 ? "0.00%" : (online / add).toFixed(2) + "%")],
+                                    [3, "活跃终端", active, (online == 0 ? "0.00%" : (active / online).toFixed(2) + "%"), (add == 0 ? "0.00%" : (active / add).toFixed(2) + "%")],
+                                    [4, "付费终端", pay, (active == 0 ? "0.00%" : (pay / active).toFixed(2) + "%"), (add == 0 ? "0.00%" : (pay / add).toFixed(2) + "%")]
+                                ]
 
                                 deferred.resolve();
                             } else if (data.rescode == '401') {
@@ -2054,13 +2060,20 @@
 
                 /**
                  * 检测返回数据是否为空
-                 * @param dataJson {array} 数组
+                 * @param dataJson {array} or {object}
                  * @returns {boolean}
                  */
                 function checkDataLength(dataJson) {
-                    if (dataJson.length == 0) {
-                        self.noData = true;
-                        return false;
+                    if (typeof dataJson == "array") {
+                        if (dataJson.length == 0) {
+                            self.noData = true;
+                            return false;
+                        }
+                    } else {
+                        if (dataJson == undefined) {
+                            self.noData = true;
+                            return false;
+                        }
                     }
                 }
 
