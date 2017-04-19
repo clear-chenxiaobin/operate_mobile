@@ -18,6 +18,11 @@ ul, li {
     list-style: none;
 }
 
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px white inset;
+    border: 1px solid #CCC!important;
+}
+
 .nav, .pagination, .carousel, .panel-title a {
     cursor: pointer;
 }
@@ -334,9 +339,9 @@ td {
     padding-bottom: 24px;
 }
 
-.form-control[required]:placeholder-shown {
-    background-color: rgb(255, 221, 128)
-}
+/*.form-control[required]:placeholder-shown {*/
+    /*background-color: rgb(255, 221, 128)*/
+/*}*/
 
 /*score board*/
 .panel.scoreboard {
@@ -471,6 +476,16 @@ td {
         transform: rotate(360deg);
         box-shadow: -0.11em -0.83em 0 -0.4em #ffffff, -0.11em -0.83em 0 -0.42em #ffffff, -0.11em -0.83em 0 -0.44em #ffffff, -0.11em -0.83em 0 -0.46em #ffffff, -0.11em -0.83em 0 -0.477em #ffffff;
     }
+}
+
+/* copyright */
+.copyright {
+    position: absolute;
+    width: 200px;
+    bottom: 10px;
+    left: 50%;
+    margin-left: -100px;
+    color: rgba(255,255,255,0.8);
 }
 
 @media ( min-width: 768px) {
