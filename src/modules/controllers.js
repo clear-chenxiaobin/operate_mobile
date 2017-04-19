@@ -18,7 +18,7 @@
             self.init = function() {
 
             }
-            
+
             self.login = function () {
                 self.loading = true;
 
@@ -46,20 +46,11 @@
                     self.loading = false;
                 });
             }
-            //
-            self.getEditLangs = function() {
-                $http({
-                    method: 'GET',
-                    url: util.getApiUrl('', 'editLangs.json', 'local')
-                }).then(function successCallback(response) {
-                    util.setParams('editLangs', response.data.editLangs);
-                    $state.go('app.home');
-                }, function errorCallback(response) {
 
-                });
-            }
-
-            //获取项目列表
+            /**
+             * 获取项目列表
+             * @returns {promise|((target?:any)=>JQueryPromise<T>)|jQuery.promise|((type?:string, target?:Object)=>JQueryPromise<any>)|IPromise<T>|*}
+             */
             self.getProject = function () {
                 var deferred = $q.defer();
 
@@ -93,6 +84,8 @@
 
                         self.getEditLangs();
                         deferred.resolve();
+                    } else if (data.rescode == '401') {
+                        $state.reload();
                     } else {
                         alert(data.errInfo);
                         deferred.reject();
@@ -105,6 +98,19 @@
                 });
 
                 return deferred.promise;
+            }
+
+            //
+            self.getEditLangs = function() {
+                $http({
+                    method: 'GET',
+                    url: util.getApiUrl('', 'editLangs.json', 'local')
+                }).then(function successCallback(response) {
+                    util.setParams('editLangs', response.data.editLangs);
+                    $state.go('app.home');
+                }, function errorCallback(response) {
+
+                });
             }
         }
     ])
@@ -564,8 +570,10 @@
                             });
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -637,8 +645,10 @@
                             });
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -714,8 +724,10 @@
 
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -797,8 +809,10 @@
                             });
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -1221,8 +1235,10 @@
                             })
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -1332,8 +1348,10 @@
                             });
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -1410,8 +1428,10 @@
                                 self.dataSet[index].d = el / 100;
                             });
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -1507,8 +1527,10 @@
                                 });
 
                                 deferred.resolve();
-                            }
-                            else {
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $location.path("pages/login.html");
+                            } else {
                                 alert(data.errInfo);
                                 deferred.reject();
                             }
@@ -1604,8 +1626,10 @@
                                 });
 
                                 deferred.resolve();
-                            }
-                            else {
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $location.path("pages/login.html");
+                            } else {
                                 alert(data.errInfo);
                                 deferred.reject();
                             }
@@ -1687,11 +1711,11 @@
                                     self.dataSet[index].c = el;
                                 });
 
-
-
                                 deferred.resolve();
-                            }
-                            else {
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $location.path("pages/login.html");
+                            } else {
                                 alert(data.errInfo);
                                 deferred.reject();
                             }
@@ -1758,8 +1782,10 @@
                                 });
 
                                 deferred.resolve();
-                            }
-                            else {
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $location.path("pages/login.html");
+                            } else {
                                 alert(data.errInfo);
                                 deferred.reject();
                             }
@@ -1828,6 +1854,249 @@
             }
         }
     ])
+
+        //漏斗模块
+        .controller('funnelController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+            function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
+                var self = this;
+
+                self.init = function() {
+                    self.activerow = 0;
+                    self.dateType = 1;
+                    self.loadData();
+                }
+
+                moment.locale('zh-cn');
+                $scope.endDateBeforeRender = endDateBeforeRender
+                $scope.endDateOnSetTime = endDateOnSetTime
+                $scope.startDateBeforeRender = startDateBeforeRender
+                $scope.startDateOnSetTime = startDateOnSetTime
+
+                function startDateOnSetTime () {
+                    $scope.$broadcast('start-date-changed');
+                }
+
+                function endDateOnSetTime () {
+                    $scope.$broadcast('end-date-changed');
+                }
+
+                function startDateBeforeRender ($view, $dates) {
+                    if ($scope.dateRangeEnd) {
+                        var activeDate = moment($scope.dateRangeEnd).subtract(0, $view).add(1, 'minute');
+
+                        $dates.filter(function (date) {
+                            return date.localDateValue() >= activeDate.valueOf()
+                        }).forEach(function (date) {
+                            date.selectable = false;
+                        })
+                    }
+                }
+
+                function endDateBeforeRender ($view, $dates) {
+                    if ($scope.dateRangeStart) {
+                        var activeDate = moment($scope.dateRangeStart).subtract(1, $view).add(1, 'minute');
+                        var nowDate = new Date().getTime();
+
+                        $dates.filter(function (date) {
+                            return date.localDateValue() <= activeDate.valueOf() || date.localDateValue() >= nowDate.valueOf()
+                        }).forEach(function (date) {
+                            date.selectable = false;
+                        })
+                    }
+                }
+
+                /**
+                 * 快捷日期和自定义日期修改
+                 */
+                self.categoryChange = function () {
+                    if ($scope.shotcut == 4) {
+                        $scope.showDate = true;
+                    } else {
+                        $scope.showDate = false;
+                    }
+                    self.loadData();
+                }
+
+                self.charts = {
+                    chart: {
+                        type: 'funnel',
+                        marginRight: 100
+                    },
+                    title: {
+                        text: ''
+                    },
+                    tooltip: {
+                        shared: true,
+                        valueSuffix: ''
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        series: {
+                            dataLabels: {
+                                enabled: true,
+                                format: '<b>{point.name}</b> ({point.y:,.0f})',
+                                color: (Highcharts.theme && Highcharts.theme.contrastTextColor) || 'black',
+                                softConnector: true
+                            },
+                            neckWidth: '30%',
+                            neckHeight: '25%'
+                            //-- Other available options
+                            // height: pixels or percent
+                            // width: pixels or percent
+                        }
+                    },
+                    series: [],
+                    lang: {
+                        noData: '暂无数据'
+                    },
+                    noData: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            color: '#9B9B9B'
+                        }
+                    }
+                }
+
+                self.loadData = function () {
+                    var deferred = $q.defer();
+                    switch (self.activerow) {
+                        case 0:
+                            loadOnlineRate();
+                            break;
+                    }
+                    //获取开机率
+                    function loadOnlineRate() {
+                        if($scope.showDate){
+                            //自定义
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getTermStatisticsInfo',
+                                StartTime: $scope.dateRangeStart,
+                                EndTime: $scope.dateRangeEnd,
+                                project: util.getProjectIds(),
+                                type: 1,
+                                category: $scope.category
+                            })
+                        }else{
+                            //快捷
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getTermStatisticsInfo',
+                                project: util.getProjectIds(),
+                                type: 1,
+                                category: $scope.shotcut
+                            })
+                        }
+
+                        $scope.$emit("loading", true);
+
+                        $http({
+                            method: 'POST',
+                            url: util.getApiUrl('v2/statistics', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response) {
+                            var data = response.data;
+                            if (data.rescode == '200') {
+                                self.th = ["日期", "累计终端", "上线终端", "活跃终端", "付费终端"];
+                                self.dataSet = [];
+                                self.charts.xAxis.categories = [];
+                                self.charts.series = [];
+
+                                checkDataLength(data.timeList);
+
+                                self.charts.series.push({name: "终端", data: [], tooltip: {valueSuffix: '个'}});
+
+                                data.addUpCount.forEach(function (el, index) {
+                                    self.charts.series[0].data.
+                                    self.dataSet[index].b = el;
+                                });
+
+                                data.onlineCount.forEach(function (el, index) {
+                                    self.dataSet[index].c = el;
+                                });
+
+                                data.activeCount.forEach(function (el, index) {
+                                    self.dataSet[index].b = el;
+                                });
+
+                                data.payCount.forEach(function (el, index) {
+                                    self.dataSet[index].c = el;
+                                });
+
+                                self.charts.series.push({name: "开机率", id: "series-0", data: [], tooltip: {valueSuffix: '%'}});
+                                data.onlineRate.forEach(function (el, index) {
+                                    self.charts.series[0].data.push(util.FloatMul(el, 100));
+                                    self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + "%";
+                                });
+
+                                deferred.resolve();
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $location.path("pages/login.html");
+                            } else {
+                                alert(data.errInfo);
+                                deferred.reject();
+                            }
+                            return deferred.promise;
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
+                            deferred.reject();
+                        }).finally(function (value) {
+                            $scope.$emit("loading", false);
+                        });
+                    }
+
+                    return deferred.promise;
+                }
+
+                /**
+                 * 检测返回数据是否为空
+                 * @param dataJson {array} 数组
+                 * @returns {boolean}
+                 */
+                function checkDataLength(dataJson) {
+                    if (dataJson.length == 0) {
+                        self.noData = true;
+                        return false;
+                    }
+                }
+
+                /**
+                 * 根据时间类型返回时间
+                 * @param datetime
+                 * @returns {string}
+                 */
+                self.dtSubstr = function(datetime) {
+                    if ($scope.showDate == true) {
+                        switch ($scope.category) {
+                            case 0:
+                                return datetime.substring(5, 10);
+                            case 1:
+                                return datetime.substring(5, 10);
+                            case 2:
+                                return datetime.substring(5, 7);
+                            case 3:
+                                return datetime.substring(0, 4);
+                        }
+                    } else {
+                        switch ($scope.shotcut) {
+                            case 0:
+                                return datetime.substring(5, 16);
+                            case 1:
+                                return datetime.substring(5, 10);
+                            case 2:
+                                return datetime.substring(5, 10);
+                            case 3:
+                                return datetime.substring(0, 7);
+                        }
+                    }
+                }
+            }
+
+        ])
 
         //项目模块
         .controller('projectController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
@@ -2023,7 +2292,7 @@
                         case 13:
                             // 单次付费订单数
                             loadSinglePayOrder();
-                            break;                            
+                            break;
                         case 14:
                             // 打包订单数
                             loadPackOrder();
@@ -2031,7 +2300,7 @@
                         case 15:
                             // 打包付费订单数
                             loadPackPayOrder();
-                            break;                            
+                            break;
                         case 16:
                             // 营收总额
                             loadTotalRevenue();
@@ -2728,7 +2997,7 @@
                             deferred.reject();
                         }).finally(function (value) {
                         });
-                    }                    
+                    }
                     function loadSingleOrder() {
                         self.th=["项目名称","单次订单数"];
                         self.charts.series[0].name="单次订单数";
