@@ -385,14 +385,14 @@ td {
     padding-left: 10px;
 }
 
-/* loadding */
+/* loading */
 .loading-page {
     width: 100%;
     height: 100%;
     position: fixed;
     z-index: 9999;
     top: 0px;
-    background: #0dcecb;
+    background: #5C99FD;
 }
 
 .load-container {
