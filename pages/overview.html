@@ -126,7 +126,7 @@
             <!-- table 开始-->
             <table class="table">
                 <th ng-repeat="n in overview.th"><a ng-click="overview.changeOrderby()">{{n}}</a></th>
-                <tr ng-repeat="n in overview.dataSet | orderBy: 'a' : overview.desc">
+                <tr ng-repeat="n in overview.dataSet track by $index">
                     <td ng-repeat="(key, value) in n">{{value}}</td>
                 </tr>
             </table>

@@ -169,7 +169,7 @@
             <!-- table 开始-->
             <table class="table" ng-hide="specific.noData">
                 <th ng-repeat="n in specific.th"><a ng-click="specific.changeOrderby()">{{n}}</a></th>
-                <tr ng-repeat="n in specific.dataSet">
+                <tr ng-repeat="n in specific.dataSet track by $index">
                     <td ng-repeat="(key, value) in n">{{value}}</td>
                 </tr>
             </table>
