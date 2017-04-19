@@ -167,13 +167,17 @@
         </div>
         <div class="specific-table">
             <!-- table 开始-->
-            <table class="table">
+            <table class="table" ng-hide="specific.noData">
                 <th ng-repeat="n in specific.th"><a ng-click="specific.changeOrderby()">{{n}}</a></th>
                 <tr ng-repeat="n in specific.dataSet">
                     <td ng-repeat="(key, value) in n">{{value}}</td>
                 </tr>
             </table>
             <!-- table 结束-->
+
+            <!-- 无数据 开始-->
+            <div ng-show="specific.noData" class="text-center">暂无数据</div>
+            <!-- 无数据 结束-->
         </div>
     </div>
 </div>

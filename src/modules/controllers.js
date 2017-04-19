@@ -155,6 +155,10 @@
                 $scope.app.maskParams = {};
                 $scope.app.showHideMask(true,'pages/selectProject.html');
             }
+
+            $scope.$on("loading", function (event, msg) {
+                $scope.loading = msg;
+            })
         }
     ])
 
@@ -393,7 +397,17 @@
                         }
                     }
                 },
-                series: []
+                series: [],
+                lang: {
+                    noData: '暂无数据'
+                },
+                noData: {
+                    style: {
+                        fontWeight: 'bold',
+                        fontSize: '15px',
+                        color: '#9B9B9B'
+                    }
+                }
             }
 
             self.loadData = function () {
@@ -439,7 +453,7 @@
                         })
                     }
 
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -452,6 +466,8 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -485,7 +501,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                 }
 
@@ -512,7 +528,7 @@
                             category: $scope.shotcut
                         })
                     }
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -525,6 +541,8 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -555,7 +573,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                 }
 
@@ -583,7 +601,7 @@
                             category: $scope.shotcut
                         })
                     }
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -596,6 +614,8 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -626,7 +646,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                 }
 
@@ -653,7 +673,7 @@
                             category: $scope.shotcut
                         })
                     }
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -666,6 +686,8 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -701,7 +723,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                 }
 
@@ -728,7 +750,7 @@
                             category: $scope.shotcut
                         })
                     }
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -741,6 +763,8 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -782,11 +806,23 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                 }
 
                 return deferred.promise;
+            }
+
+            /**
+             * 检测返回数据是否为空
+             * @param dataJson {array} 数组
+             * @returns {boolean}
+             */
+            function checkDataLength(dataJson) {
+                if (dataJson.length == 0) {
+                    self.noData = true;
+                    return false;
+                }
             }
 
             /**
@@ -1034,7 +1070,17 @@
                         }
                     }
                 },
-                series: []
+                series: [],
+                lang: {
+                    noData: '暂无数据'
+                },
+                noData: {
+                    style: {
+                        fontWeight: 'bold',
+                        fontSize: '15px',
+                        color: '#9B9B9B'
+                    }
+                }
             }
 
             /**
@@ -1044,6 +1090,7 @@
             self.loadData = function () {
                 var deferred = $q.defer();
 
+                self.noData = false;
                 self.charts.chart.type = "areaspline";
                 switch (self.activerow) {
                     case 0:
@@ -1090,7 +1137,8 @@
                             category: $scope.shotcut
                         })
                     }
-                    $scope.loading = true;
+
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -1104,6 +1152,8 @@
                             self.charts.series = [];
                             self.termSeries = [];
                             self.termData = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -1180,7 +1230,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                     return deferred.promise;
                 }
@@ -1235,7 +1285,7 @@
                         })
                     }
 
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -1247,6 +1297,8 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -1289,7 +1341,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                     return deferred.promise;
                 }
@@ -1321,7 +1373,7 @@
                         })
                     }
 
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -1334,6 +1386,8 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -1365,7 +1419,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                     return deferred.promise;
                 }
@@ -1409,7 +1463,7 @@
                             })
                         }
 
-                        self.loadingChart = true;
+                        $scope.$emit("loading", true);
 
                         $http({
                             method: 'POST',
@@ -1422,6 +1476,8 @@
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
+
+                                checkDataLength(data.activeTimeSpan);
 
                                 var start = 0, end = 0;
                                 for (var i = 0; i < data.activeTimeSpan.length; i++) {
@@ -1460,7 +1516,7 @@
                             alert('连接服务器出错');
                             deferred.reject();
                         }).finally(function (value) {
-                            self.loadingChart = false;
+                            $scope.$emit("loading", false);
                         });
                     }
 
@@ -1488,7 +1544,7 @@
                             })
                         }
 
-                        self.loadingChart = true;
+                        $scope.$emit("loading", true);
 
                         $http({
                             method: 'POST',
@@ -1501,6 +1557,8 @@
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
+
+                                checkDataLength(data.activeCount);
 
                                 self.charts.xAxis.categories = ["00:00-01:00", "01:00-02:00", "02:00-03:00", "03:00-04:00",
                                     "04:00-05:00", "05:00-06:00", "06:00-07:00", "07:00-08:00", "08:00-09:00", "09:00-10:00",
@@ -1555,7 +1613,7 @@
                             alert('连接服务器出错');
                             deferred.reject();
                         }).finally(function (value) {
-                            self.loadingChart = false;
+                            $scope.$emit("loading", false);
                         });
                     }
                     return deferred.promise;
@@ -1598,7 +1656,7 @@
                                 category: $scope.shotcut
                             })
                         }
-                        self.loadingChart = true;
+                        $scope.$emit("loading", true);
 
                         $http({
                             method: 'POST',
@@ -1611,6 +1669,8 @@
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
+
+                                checkDataLength(data.movieID);
 
                                 data.movieID.forEach(function (el, index) {
                                     self.dataSet.push({a: el});
@@ -1639,7 +1699,7 @@
                             alert('连接服务器出错');
                             deferred.reject();
                         }).finally(function (value) {
-                            self.loadingChart = false;
+                            $scope.$emit("loading", false);
                         });
                     }
 
@@ -1666,7 +1726,7 @@
                             })
                         }
 
-                        self.loadingChart = true;
+                        $scope.$emit("loading", true);
 
                         $http({
                             method: 'POST',
@@ -1679,6 +1739,8 @@
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
+
+                                checkDataLength(data.movieID);
 
                                 data.movieID.forEach(function (el, index) {
                                     self.dataSet.push({a: el});
@@ -1705,11 +1767,23 @@
                             alert('连接服务器出错');
                             deferred.reject();
                         }).finally(function (value) {
-                            self.loadingChart = false;
+                            $scope.$emit("loading", false);
                         });
                     }
 
                     return deferred.promise;
+                }
+
+                /**
+                 * 检测返回数据是否为空
+                 * @param dataJson {array} 数组
+                 * @returns {boolean}
+                 */
+                function checkDataLength(dataJson) {
+                    if (dataJson.length == 0) {
+                        self.noData = true;
+                        return false;
+                    }
                 }
 
                 /**
