@@ -114,7 +114,7 @@
         function($http, $scope, $state, $stateParams, $q, $filter, $location, $sessionStorage, util, CONFIG) {
             var self = this;
             self.init = function() {
-
+                $scope.loading = false;
                 // 弹窗层
                 self.maskUrl = '';
                 self.maskParams = {};
@@ -126,7 +126,7 @@
                     {id: 3, name: "年"}
                 ]
 
-                $scope.dateRangeStart = $filter('date')(new Date() - 7*24*60*60*1000, 'yyyy-MM-dd');
+                $scope.dateRangeStart = $filter('date')(new Date() - 6*24*60*60*1000, 'yyyy-MM-dd');
                 $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
                 $scope.showDate = false;
                 $scope.shotcut = 0;
@@ -387,7 +387,10 @@
                 },
                 plotOptions: {
                     areaspline: {
-                        fillOpacity: 0.5
+                        fillOpacity: 0.5,
+                        marker: {
+                            enabled: false
+                        }
                     }
                 },
                 series: []
@@ -702,7 +705,7 @@
                     });
                 }
 
-                //获取平均活跃时长
+                //获取时长分布
                 function loadActiveDur() {
                     if($scope.showDate){
                         //自定义
@@ -803,17 +806,6 @@
                 if ($scope.showDate == true) {
                     switch ($scope.category) {
                         case 0:
-                            return datetime.substring(5, 16);
-                        case 1:
-                            return datetime.substring(5, 10);
-                        case 2:
-                            return datetime.substring(5, 10);
-                        case 3:
-                            return datetime.substring(0, 7);
-                    }
-                } else {
-                    switch ($scope.shotcut) {
-                        case 0:
                             return datetime.substring(5, 10);
                         case 1:
                             return datetime.substring(5, 10);
@@ -821,6 +813,17 @@
                             return datetime.substring(5, 7);
                         case 3:
                             return datetime.substring(0, 4);
+                    }
+                } else {
+                    switch ($scope.shotcut) {
+                        case 0:
+                            return datetime.substring(5, 16);
+                        case 1:
+                            return datetime.substring(5, 10);
+                        case 2:
+                            return datetime.substring(5, 10);
+                        case 3:
+                            return datetime.substring(0, 7);
                     }
                 }
             }
@@ -842,18 +845,18 @@
                     {name: '付费终端', show: true, sort: '', desc: false},
                     {name: '新增终端', show: false, sort: '', desc: false}
                 ];
+                self.selectCount = 4;
+
                 self.countStatistics = [
                     {name: '总', show: true, sort: '', desc: false},
                     {name: '单次', show: false, sort: '', desc: false},
                     {name: '打包', show: false, sort: '', desc: false}
 
                 ];
-                self.selectCount = 3;
+
                 self.active = [
-                    {name: '活跃时长', show: true, sort: '', desc: false},
-                    {name: '活跃终端', show: false, sort: '', desc: false},
-                    {name: '营 收 额', show: false, sort: '', desc: false},
-                    {name: '活跃区间', show: false, sort: '', desc: false}
+                    {name: '时长分布', show: true, sort: '', desc: false},
+                    {name: '时段分布', show: false, sort: '', desc: false}
                 ];
                 self.OD = [
                     {name: '点播Top10', show: true, sort: '', desc: false},
@@ -1025,7 +1028,10 @@
                 },
                 plotOptions: {
                     areaspline: {
-                        fillOpacity: 0.5
+                        fillOpacity: 0.5,
+                        marker: {
+                            enabled: false
+                        }
                     }
                 },
                 series: []
@@ -1038,6 +1044,7 @@
             self.loadData = function () {
                 var deferred = $q.defer();
 
+                self.charts.chart.type = "areaspline";
                 switch (self.activerow) {
                     case 0:
                         loadTerm();
@@ -1049,9 +1056,11 @@
                         loadRevenue();
                         break;
                     case 3:
+                        self.charts.chart.type = "column";
                         loadActive();
                         break;
                     case 4:
+                        self.charts.chart.type = "column";
                         loadOD();
                         break;
                 }
@@ -1081,7 +1090,7 @@
                             category: $scope.shotcut
                         })
                     }
-                    self.loadingChart = true;
+                    $scope.loading = true;
 
                     $http({
                         method: 'POST',
@@ -1370,31 +1379,32 @@
                         if (el.show == true) select = index;
                     })
 
-                    if (select == 0 || select == 1 || select == 2) {
+                    if (select == 0) {
                         loadActiveTime();
-                    } else if (select == 3) {
+                    } else if (select == 1) {
                         loadActiveTimeInterval();
                     }
 
+                    //时长分布
                     function loadActiveTime() {
                         if($scope.showDate){
                             //自定义
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
-                                action: 'getActiveStatisticsInfo',
+                                action: 'getTermCountBySpanActiveTime',
                                 StartTime: $scope.dateRangeStart,
                                 EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
-                                type: 0,
+                                type: 1,
                                 category: $scope.category
                             })
                         }else{
                             //快捷
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
-                                action: 'getActiveStatisticsInfo',
+                                action: 'getTermCountBySpanActiveTime',
                                 project: util.getProjectIds(),
-                                type: 0,
+                                type: 1,
                                 category: $scope.shotcut
                             })
                         }
@@ -1408,59 +1418,38 @@
                         }).then(function successCallback(response) {
                             var data = response.data;
                             if (data.rescode == '200') {
-                                self.activeSeries0 = [];
-                                self.activeSeries1 = [];
-
-                                self.th = ["日期", "活跃时长", "活跃终端数"];
+                                self.th = ["时长", "活跃终端数", "占比"];
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
 
-                                data.timeList.forEach(function (el, index) {
-                                    self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                    self.dataSet.push({a: self.dtSubstr(el)});
-                                });
-
-                                self.activeSeries0.push({
-                                    name: "活跃时长",
-                                    id: "series-0",
-                                    data: [],
-                                    tooltip: {valueSuffix: ' 小时'}
-                                });
-                                data.totalActiveTime.forEach(function (el, index) {
-                                    self.activeSeries0[0].data.push(Number((el / 3600).toFixed(2)));
-
-                                    var h = Math.floor(el / 3600);
-                                    var m = Math.floor((el - h * 3600) / 60);
-                                    var s = (el - h * 3600 - m * 60).toFixed(2);
-
-                                    self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
-                                    function zeroFill(data) {
-                                        if (data < 10) {
-                                            data = "0" + data;
-                                        }
-                                        return data;
+                                var start = 0, end = 0;
+                                for (var i = 0; i < data.activeTimeSpan.length; i++) {
+                                    start = data.activeTimeSpan[i] / 3600 + "h";
+                                    if (i < data.activeTimeSpan.length - 1) {
+                                        end = data.activeTimeSpan[i + 1] / 3600 + "h";
+                                    } else {
+                                        end = "";
                                     }
-                                });
-                                self.activeSeries1.push({
+                                    self.charts.xAxis.categories.push(start + " ~ " + end);
+                                    self.dataSet.push({a: start + " ~ " + end});
+                                }
+
+                                self.charts.series.push({
                                     name: "活跃终端数",
                                     id: "series-0",
                                     data: [],
                                     tooltip: {valueSuffix: ' 个'}
                                 });
                                 data.activeCount.forEach(function (el, index) {
-                                    self.activeSeries1[0].data.push(el);
-                                    self.dataSet[index].c = el;
+                                    self.charts.series[0].data.push(el);
+                                    self.dataSet[index].b = el;
                                 });
 
-                                if (self.active[0].show == true) {
-                                    self.charts.series = self.activeSeries0;
-                                } else if (self.active[1].show == true) {
-                                    self.charts.series = self.activeSeries1;
-                                }
-                                // else if (self.active[2].show == true) {
-                                //     self.charts.series = self.activeSeries2;
-                                // }
+                                data.rate.forEach(function (el, index) {
+                                    self.dataSet[index].c = util.FloatMul(el, 100).toFixed(2) + "%";
+                                });
+
                                 deferred.resolve();
                             }
                             else {
@@ -1475,12 +1464,13 @@
                         });
                     }
 
+                    //时段分布
                     function loadActiveTimeInterval() {
                         if($scope.showDate){
                             //自定义
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
-                                action: 'getTermCountBySpanActiveTime',
+                                action: 'getTerm24HourActiveInfo',
                                 StartTime: $scope.dateRangeStart,
                                 EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
@@ -1491,7 +1481,7 @@
                             //快捷
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
-                                action: 'getTermCountBySpanActiveTime',
+                                action: 'getTerm24HourActiveInfo',
                                 project: util.getProjectIds(),
                                 type: 1,
                                 category: $scope.shotcut
@@ -1507,46 +1497,52 @@
                         }).then(function successCallback(response) {
                             var data = response.data;
                             if (data.rescode == '200') {
-                                self.th = ["时间区间", "区间活跃终端数", "占比"];
+                                self.th = ["时间段", "活跃终端数", "活跃分钟数", "营收额"];
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
 
-                                data.timeList.forEach(function (el, index) {
-                                    self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                    self.dataSet.push({a: self.dtSubstr(el)});
-                                });
+                                self.charts.xAxis.categories = ["00:00-01:00", "01:00-02:00", "02:00-03:00", "03:00-04:00",
+                                    "04:00-05:00", "05:00-06:00", "06:00-07:00", "07:00-08:00", "08:00-09:00", "09:00-10:00",
+                                    "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00", "14:00-15:00", "15:00-16:00",
+                                    "16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00", "20:00-21:00", "21:00-22:00",
+                                    "22:00-23:00", "23:00-24:00"
+                                ]
+                                self.charts.xAxis.categories.forEach(function (el, index) {
+                                    self.dataSet.push({a: el});
+                                })
 
-                                self.activeSeries0.push({
-                                    name: "活跃时长",
-                                    id: "series-0",
-                                    data: [],
-                                    tooltip: {valueSuffix: ' 小时'}
-                                });
-                                data.totalActiveTime.forEach(function (el, index) {
-                                    self.activeSeries0[0].data.push(Number((el / 3600).toFixed(2)));
-
-                                    var h = Math.floor(el / 3600);
-                                    var m = Math.floor((el - h * 3600) / 60);
-                                    var s = el - h * 3600 - m * 60;
-
-                                    self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
-                                    function zeroFill(data) {
-                                        if (data < 10) {
-                                            data = "0" + data;
-                                        }
-                                        return data;
-                                    }
-                                });
-                                self.activeSeries1.push({
+                                self.charts.series.push({
                                     name: "活跃终端数",
                                     id: "series-0",
                                     data: [],
                                     tooltip: {valueSuffix: ' 个'}
                                 });
                                 data.activeCount.forEach(function (el, index) {
-                                    self.activeSeries1[0].data.push(el);
-                                    self.dataSet[index].c = el;
+                                    self.charts.series[0].data.push(el);
+                                    self.dataSet[index].b = el;
+                                });
+
+                                self.charts.series.push({
+                                    name: "活跃时长",
+                                    id: "series-1",
+                                    data: [],
+                                    tooltip: {valueSuffix: ' 小时'}
+                                });
+                                data.avgActiveTime.forEach(function (el, index) {
+                                    self.charts.series[1].data.push(Number((el / 60).toFixed(2)));
+                                    self.dataSet[index].c = (el / 60).toFixed(2);
+                                });
+
+                                self.charts.series.push({
+                                    name: "营收额",
+                                    id: "series-2",
+                                    data: [],
+                                    tooltip: {valueSuffix: ' 元'}
+                                });
+                                data.avgMoney.forEach(function (el, index) {
+                                    self.charts.series[2].data.push((el / 100).toFixed(2));
+                                    self.dataSet[index].d = (el / 100).toFixed(2);
                                 });
 
                                 deferred.resolve();
@@ -1611,21 +1607,27 @@
                         }).then(function successCallback(response) {
                             var data = response.data;
                             if (data.rescode == '200') {
-                                self.th = ["电影", "点播量"];
+                                self.th = ["ID", "电影", "点播量"];
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
 
+                                data.movieID.forEach(function (el, index) {
+                                    self.dataSet.push({a: el});
+                                });
+
                                 data.movieNameCHZ.forEach(function (el, index) {
                                     self.charts.xAxis.categories.push(el);
-                                    self.dataSet.push({a: el});
+                                    self.dataSet[index].b = el;
                                 });
 
                                 self.charts.series.push({name: "点播量", data: [], tooltip: {valueSuffix: '次'}});
                                 data.count.forEach(function (el, index) {
                                     self.charts.series[0].data.push(el);
-                                    self.dataSet[index].b = el;
+                                    self.dataSet[index].c = el;
                                 });
+
+
 
                                 deferred.resolve();
                             }
@@ -1673,20 +1675,24 @@
                         }).then(function successCallback(response) {
                             var data = response.data;
                             if (data.rescode == '200') {
-                                self.th = ["电影", "营收金额"];
+                                self.th = ["ID", "电影", "营收金额"];
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
 
+                                data.movieID.forEach(function (el, index) {
+                                    self.dataSet.push({a: el});
+                                });
+
                                 data.movieNameCHZ.forEach(function (el, index) {
                                     self.charts.xAxis.categories.push(el);
-                                    self.dataSet.push({a: el});
+                                    self.dataSet[index].b = el;
                                 });
 
                                 self.charts.series.push({name: "营收金额", data: [], tooltip: {valueSuffix: '元'}});
                                 data.price.forEach(function (el, index) {
                                     self.charts.series[0].data.push(el / 100);
-                                    self.dataSet[index].b = el / 100;
+                                    self.dataSet[index].c = el / 100;
                                 });
 
                                 deferred.resolve();
@@ -1724,17 +1730,6 @@
                     if ($scope.showDate == true) {
                         switch ($scope.category) {
                             case 0:
-                                return datetime.substring(5, 16);
-                            case 1:
-                                return datetime.substring(5, 10);
-                            case 2:
-                                return datetime.substring(5, 10);
-                            case 3:
-                                return datetime.substring(0, 7);
-                        }
-                    } else {
-                        switch ($scope.shotcut) {
-                            case 0:
                                 return datetime.substring(5, 10);
                             case 1:
                                 return datetime.substring(5, 10);
@@ -1742,6 +1737,17 @@
                                 return datetime.substring(5, 7);
                             case 3:
                                 return datetime.substring(0, 4);
+                        }
+                    } else {
+                        switch ($scope.shotcut) {
+                            case 0:
+                                return datetime.substring(5, 16);
+                            case 1:
+                                return datetime.substring(5, 10);
+                            case 2:
+                                return datetime.substring(0, 10);
+                            case 3:
+                                return datetime.substring(0, 7);
                         }
                     }
                 }
