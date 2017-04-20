@@ -2542,6 +2542,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -2576,6 +2577,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadActiveRate(){
@@ -2595,6 +2597,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -2629,6 +2632,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadRevenue(){
@@ -2648,6 +2652,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -2682,6 +2687,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadAverageRevenue(){
@@ -2701,6 +2707,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -2734,6 +2741,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadAverageActive(){
@@ -2753,6 +2761,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -2785,6 +2794,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadTerm() {
@@ -2799,6 +2809,7 @@
                         per_page:1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -2831,7 +2842,7 @@
                         deferred.reject();
                     }).finally(function (value) {
                         loadTermItem();
-                        
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadOnlineTerm() {
@@ -2850,6 +2861,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -2892,6 +2904,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadActiveTerm() {
@@ -2910,6 +2923,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -2950,6 +2964,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadReveTerm() {
@@ -2968,6 +2983,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -3008,6 +3024,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadNewTerm() {
@@ -3026,6 +3043,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -3066,6 +3084,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadTotalOrder() {
@@ -3082,6 +3101,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -3107,6 +3127,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                         loadOrderItem();
                     });
                 }                    
@@ -3124,6 +3145,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -3147,6 +3169,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                         loadOrderItem();
                     });
                 }
@@ -3165,6 +3188,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -3189,6 +3213,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                         loadOrderItem();
                     });
                 }
@@ -3208,6 +3233,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -3248,6 +3274,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadSingleRevenue() {
@@ -3266,6 +3293,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -3306,6 +3334,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
                 function loadPackRevenue() {
@@ -3324,6 +3353,7 @@
                         "per_page":1000,
                         "project":["all"]
                     })
+                    $scope.$emit("loading", true);
                     $http({
                         method:'POST',
                         url:util.getApiUrl('v2/statistics', '', 'server'),
@@ -3364,6 +3394,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
+                        $scope.$emit("loading", false);
                     });
                 }
             }

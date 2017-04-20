@@ -414,11 +414,10 @@ td {
 }
 
 .load-container {
-    /*border: 1px solid rgba(255, 255, 255, 0.2);*/
+    position: absolute;
     width: 240px;
     height: 240px;
     float: left;
-    position: relative;
     overflow: hidden;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -428,11 +427,13 @@ td {
 }
 
 .loading-text {
+    position: absolute;
     float: left;
     width: 100%;
-    margin-top: 110px;
+    margin-top: 62%;
     text-align: center;
-    color: white;
+    color: #fff;
+    font-size: 20px;
 }
 .load6 .loader {
     font-size: 90px;
