@@ -802,7 +802,17 @@
                             });
 
                             data.activeTime.forEach(function (el, index) {
-                                self.dataSet[index].c = el;
+                                var h = Math.floor(el / 3600);
+                                var m = Math.floor((el - h * 3600) / 60);
+                                var s = (el - h * 3600 - m * 60).toFixed(2);
+
+                                self.dataSet[index].c = h + ":" + zeroFill(m) + ":" + zeroFill(s);
+                                function zeroFill(data) {
+                                    if (data < 10) {
+                                        data = "0" + data;
+                                    }
+                                    return data;
+                                }
                             });
 
                             self.charts.series.push({name: "平均活跃时长", data: [], tooltip: {valueSuffix: ' 小时'}});
