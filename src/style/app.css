@@ -433,6 +433,7 @@ td {
     position: absolute;
     width: 140px;
     height: 30px;
+    line-height: 30px;
     left: 50%;
     margin-left: -70px;
     top: 50%;
@@ -509,6 +510,10 @@ td {
 }
 
 @media ( min-width: 768px) {
+    html, body {
+        min-height: 667px;
+    }
+
     .col-sm-5ths {
         width: 20%;
         float: left;
