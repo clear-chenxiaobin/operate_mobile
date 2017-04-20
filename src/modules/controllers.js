@@ -18,7 +18,7 @@
             self.init = function() {
 
             }
-            
+
             self.login = function () {
                 self.loading = true;
 
@@ -46,20 +46,11 @@
                     self.loading = false;
                 });
             }
-            //
-            self.getEditLangs = function() {
-                $http({
-                    method: 'GET',
-                    url: util.getApiUrl('', 'editLangs.json', 'local')
-                }).then(function successCallback(response) {
-                    util.setParams('editLangs', response.data.editLangs);
-                    $state.go('app.home');
-                }, function errorCallback(response) {
 
-                });
-            }
-
-            //获取项目列表
+            /**
+             * 获取项目列表
+             * @returns {promise|((target?:any)=>JQueryPromise<T>)|jQuery.promise|((type?:string, target?:Object)=>JQueryPromise<any>)|IPromise<T>|*}
+             */
             self.getProject = function () {
                 var deferred = $q.defer();
 
@@ -93,6 +84,8 @@
 
                         self.getEditLangs();
                         deferred.resolve();
+                    } else if (data.rescode == '401') {
+                        $state.reload();
                     } else {
                         alert(data.errInfo);
                         deferred.reject();
@@ -106,6 +99,19 @@
 
                 return deferred.promise;
             }
+
+            //
+            self.getEditLangs = function() {
+                $http({
+                    method: 'GET',
+                    url: util.getApiUrl('', 'editLangs.json', 'local')
+                }).then(function successCallback(response) {
+                    util.setParams('editLangs', response.data.editLangs);
+                    $state.go('app.home');
+                }, function errorCallback(response) {
+
+                });
+            }
         }
     ])
 
@@ -114,7 +120,7 @@
         function($http, $scope, $state, $stateParams, $q, $filter, $location, $sessionStorage, util, CONFIG) {
             var self = this;
             self.init = function() {
-
+                $scope.loading = false;
                 // 弹窗层
                 self.maskUrl = '';
                 self.maskParams = {};
@@ -126,14 +132,15 @@
                     {id: 3, name: "年"}
                 ]
 
-                $scope.dateRangeStart = $filter('date')(new Date(), 'yyyy-MM-dd');
+                $scope.dateRangeStart = $filter('date')(new Date() - 6*24*60*60*1000, 'yyyy-MM-dd');
                 $scope.dateRangeEnd = $filter('date')(new Date(), 'yyyy-MM-dd');
                 $scope.showDate = false;
+                $scope.shotcut = 0;
                 $scope.category = 0;
-                $scope.dateType = 0;
+
 
                 if (util.getProjectIds() == undefined || $sessionStorage.revenueProjects == undefined) {
-                    alert('访问超时，请重新登录');
+                    alert('项目获取失败，请重新登录');
                     $location.path("pages/login.html");
                 }
             }
@@ -150,10 +157,28 @@
                 }
             }
 
+            /**
+             * loading回退到菜单
+             */
+            self.backHome = function () {
+                $state.go('app.home');
+                $scope.loading = false;
+            }
+
+            /**
+             * 打开项目选择页面
+             */
             self.openProject = function () {
                 $scope.app.maskParams = {};
                 $scope.app.showHideMask(true,'pages/selectProject.html');
             }
+
+            /**
+             * 打开loading
+             */
+            $scope.$on("loading", function (event, msg) {
+                $scope.loading = msg;
+            })
         }
     ])
 
@@ -294,7 +319,8 @@
             var self = this;
 
             self.init = function() {
-                self.activerow = 3;
+                self.activerow = 0;
+                self.dateType = 1;
                 self.loadData();
             }
 
@@ -352,20 +378,10 @@
              * 快捷日期和自定义日期修改
              */
             self.categoryChange = function () {
-                if ($scope.category == 4) {
+                if ($scope.shotcut == 4) {
                     $scope.showDate = true;
                 } else {
                     $scope.showDate = false;
-                }
-                self.loadData();
-            }
-
-            /**
-             * 修改粒度
-             */
-            self.changeGra = function (value) {
-                if (value == 0) {
-                } else {
                 }
                 self.loadData();
             }
@@ -376,16 +392,6 @@
                 },
                 title: {
                     text: ''
-                },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'top',
-                    x: 0,
-                    y: 0,
-                    floating: true,
-                    borderWidth: 1,
-                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
                 },
                 xAxis: {
                     categories: [],
@@ -405,10 +411,23 @@
                 },
                 plotOptions: {
                     areaspline: {
-                        fillOpacity: 0.5
+                        fillOpacity: 0.5,
+                        marker: {
+                            enabled: false
+                        }
                     }
                 },
-                series: []
+                series: [],
+                lang: {
+                    noData: '暂无数据'
+                },
+                noData: {
+                    style: {
+                        fontWeight: 'bold',
+                        fontSize: '15px',
+                        color: '#9B9B9B'
+                    }
+                }
             }
 
             self.loadData = function () {
@@ -437,11 +456,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getTermOnlineRateInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -449,21 +468,12 @@
                             token: util.getParams("token"),
                             action: 'getTermOnlineRateInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.shotcut
                         })
                     }
 
-                    // var data = JSON.stringify({
-                    //     token: util.getParams("token"),
-                    //     action: 'getTermOnlineRateInfo',
-                    //     StartTime: $scope.showDate == false ? '':($scope.dateRangeStart + " 00:00:00"),
-                    //     EndTime: $scope.showDate == false? '':($scope.dateRangeEnd + " 00:00:00"),
-                    //     project: util.getProjectIds(),
-                    //     type: $scope.showDate == false ? 0 : 1,
-                    //     category: $scope.showDate == false ? $scope.category : $scope.dateType
-                    // })
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -472,11 +482,12 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            // self.th = ["日期", "上线终端", "累计终端", "开机率"];
-                            self.th = ["日期", "累计终端", "上线终端", "开机率"];                            
+                            self.th = ["日期", "累计终端", "上线终端", "开机率"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -494,7 +505,7 @@
                             self.charts.series.push({name: "开机率", id: "series-0", data: [], tooltip: {valueSuffix: '%'}});
                             data.onlineRate.forEach(function (el, index) {
                                 self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                self.dataSet[index].d = util.FloatMul(el, 100) + "%";
+                                self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + "%";
                             });
 
                             deferred.resolve();
@@ -510,7 +521,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                 }
 
@@ -521,11 +532,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getTermActiveRateInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -533,11 +544,11 @@
                             token: util.getParams("token"),
                             action: 'getTermActiveRateInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.shotcut
                         })
                     }
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -546,11 +557,12 @@
                     }).then(function successCallback(response) {
                         var data = response.data;
                         if (data.rescode == '200') {
-                            // self.th = ["日期", "活跃终端", "上线终端", "活跃率"];
                             self.th = ["日期", "上线终端", "活跃终端", "活跃率"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -568,12 +580,14 @@
                             self.charts.series.push({name: "活跃率", id: "series-0", data: [], tooltip: {valueSuffix: '%'}});
                             data.activeRate.forEach(function (el, index) {
                                 self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                self.dataSet[index].d = util.FloatMul(el, 100) + "%";
+                                self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + "%";
                             });
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -581,7 +595,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                 }
 
@@ -593,11 +607,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getTermPayRateInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -605,11 +619,11 @@
                             token: util.getParams("token"),
                             action: 'getTermPayRateInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.shotcut
                         })
                     }
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -622,6 +636,8 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -639,12 +655,14 @@
                             self.charts.series.push({name: "终端付费转化率", data: [], tooltip: {valueSuffix: '%'}});
                             data.payRate.forEach(function (el, index) {
                                 self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                self.dataSet[index].d = util.FloatMul(el, 100) + '%';
+                                self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + '%';
                             });
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -652,7 +670,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                 }
 
@@ -663,11 +681,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getPerTermRevenueInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -675,11 +693,11 @@
                             token: util.getParams("token"),
                             action: 'getPerTermRevenueInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.shotcut
                         })
                     }
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -689,10 +707,11 @@
                         var data = response.data;
                         if (data.rescode == '200') {
                             self.th = ["日期", "活跃终端数", "总营收", "平均营收"];
-                            // self.th = ["日期", "总营收", "总终端数", "平均营收"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -719,8 +738,10 @@
 
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -728,22 +749,22 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                 }
 
-                //获取平均活跃时长
+                //获取时长分布
                 function loadActiveDur() {
                     if($scope.showDate){
                         //自定义
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getPerTermActiveTimeInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -751,11 +772,11 @@
                             token: util.getParams("token"),
                             action: 'getPerTermActiveTimeInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.shotcut
                         })
-                    }                    
-                    self.loadingChart = true;
+                    }
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -765,10 +786,11 @@
                         var data = response.data;
                         if (data.rescode == '200') {
                             self.th = ["日期", "活跃终端数", "总活跃时长", "平均活跃时长"];
-                            // self.th = ["日期", "总活跃时长", "总终端数", "平均活跃时长"];
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -801,8 +823,10 @@
                             });
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -810,11 +834,23 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                 }
 
                 return deferred.promise;
+            }
+
+            /**
+             * 检测返回数据是否为空
+             * @param dataJson {array} 数组
+             * @returns {boolean}
+             */
+            function checkDataLength(dataJson) {
+                if (dataJson.length == 0) {
+                    self.noData = true;
+                    return false;
+                }
             }
 
             /**
@@ -831,19 +867,8 @@
              * @returns {string}
              */
             self.dtSubstr = function(datetime) {
-                if ($scope.showDate == false) {
+                if ($scope.showDate == true) {
                     switch ($scope.category) {
-                        case 0:
-                            return datetime.substring(5, 16);
-                        case 1:
-                            return datetime.substring(5, 10);
-                        case 2:
-                            return datetime.substring(5, 10);
-                        case 3:
-                            return datetime.substring(0, 7);
-                    }
-                } else {
-                    switch ($scope.dateType) {
                         case 0:
                             return datetime.substring(5, 10);
                         case 1:
@@ -852,6 +877,17 @@
                             return datetime.substring(5, 7);
                         case 3:
                             return datetime.substring(0, 4);
+                    }
+                } else {
+                    switch ($scope.shotcut) {
+                        case 0:
+                            return datetime.substring(5, 16);
+                        case 1:
+                            return datetime.substring(5, 10);
+                        case 2:
+                            return datetime.substring(5, 10);
+                        case 3:
+                            return datetime.substring(0, 7);
                     }
                 }
             }
@@ -873,18 +909,18 @@
                     {name: '付费终端', show: true, sort: '', desc: false},
                     {name: '新增终端', show: false, sort: '', desc: false}
                 ];
+                self.selectCount = 4;
+
                 self.countStatistics = [
                     {name: '总', show: true, sort: '', desc: false},
                     {name: '单次', show: false, sort: '', desc: false},
                     {name: '打包', show: false, sort: '', desc: false}
 
                 ];
-                self.selectCount = 3;
+
                 self.active = [
-                    {name: '活跃时长', show: true, sort: '', desc: false},
-                    {name: '活跃终端', show: false, sort: '', desc: false},
-                    {name: '营 收 额', show: false, sort: '', desc: false},
-                    {name: '活跃区间', show: false, sort: '', desc: false}
+                    {name: '时长分布', show: true, sort: '', desc: false},
+                    {name: '时段分布', show: false, sort: '', desc: false}
                 ];
                 self.OD = [
                     {name: '点播Top10', show: true, sort: '', desc: false},
@@ -959,7 +995,7 @@
              * 快捷日期和自定义日期修改
              */
             self.categoryChange = function () {
-                if ($scope.category == 4) {
+                if ($scope.shotcut == 4) {
                     $scope.showDate = true;
                 } else {
                     $scope.showDate = false;
@@ -1039,16 +1075,6 @@
                 title: {
                     text: ''
                 },
-                legend: {
-                    layout: 'vertical',
-                    align: 'right',
-                    verticalAlign: 'top',
-                    x: 0,
-                    y: 0,
-                    floating: true,
-                    borderWidth: 1,
-                    backgroundColor: (Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'
-                },
                 xAxis: {
                     categories: [],
                 },
@@ -1066,10 +1092,23 @@
                 },
                 plotOptions: {
                     areaspline: {
-                        fillOpacity: 0.5
+                        fillOpacity: 0.5,
+                        marker: {
+                            enabled: false
+                        }
                     }
                 },
-                series: []
+                series: [],
+                lang: {
+                    noData: '暂无数据'
+                },
+                noData: {
+                    style: {
+                        fontWeight: 'bold',
+                        fontSize: '15px',
+                        color: '#9B9B9B'
+                    }
+                }
             }
 
             /**
@@ -1079,6 +1118,8 @@
             self.loadData = function () {
                 var deferred = $q.defer();
 
+                self.noData = false;
+                self.charts.chart.type = "areaspline";
                 switch (self.activerow) {
                     case 0:
                         loadTerm();
@@ -1090,9 +1131,11 @@
                         loadRevenue();
                         break;
                     case 3:
+                        self.charts.chart.type = "column";
                         loadActive();
                         break;
                     case 4:
+                        self.charts.chart.type = "column";
                         loadOD();
                         break;
                 }
@@ -1106,11 +1149,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getTermStatisticsInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -1118,11 +1161,12 @@
                             token: util.getParams("token"),
                             action: 'getTermStatisticsInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.shotcut
                         })
                     }
-                    self.loadingChart = true;
+
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -1136,6 +1180,8 @@
                             self.charts.series = [];
                             self.termSeries = [];
                             self.termData = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -1203,8 +1249,10 @@
                             })
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -1212,7 +1260,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                     return deferred.promise;
                 }
@@ -1233,11 +1281,11 @@
                             self.th = ["日期", "总下单数", "总支付数", "转化率"];
                             break;
                         case 1:
-                            action = "getAllOrderCountStatisticsInfo";
+                            action = "getSingleOrderCountStatisticsInfo";
                             self.th = ["日期", "单次下单数", "单次支付数", "转化率"];
                             break;
                         case 2:
-                            action = "getAllOrderCountStatisticsInfo";
+                            action = "getPackageOrderCountStatisticsInfo";
                             self.th = ["日期", "打包下单数", "打包支付数", "转化率"];
                             break;
                         default:
@@ -1250,11 +1298,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: action,
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -1262,12 +1310,12 @@
                             token: util.getParams("token"),
                             action: action,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.shotcut
                         })
                     }
 
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -1279,6 +1327,8 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -1295,6 +1345,7 @@
                                 self.charts.series[0].data.push(el);
                                 self.dataSet[index].b = el;
                             });
+
                             self.charts.series.push({
                                 name: self.th[2],
                                 id: "series-1",
@@ -1307,12 +1358,14 @@
                             });
 
                             data.rate.forEach(function (el, index) {
-                                self.dataSet[index].d = el;
+                                self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + "%";
                             });
 
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -1320,7 +1373,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                     return deferred.promise;
                 }
@@ -1335,11 +1388,11 @@
                         var data = JSON.stringify({
                             token: util.getParams("token"),
                             action: 'getRevenueStatisticsInfo',
-                            StartTime: $scope.dateRangeStart + " 00:00:00",
-                            EndTime: $scope.dateRangeEnd + " 00:00:00",
+                            StartTime: $scope.dateRangeStart,
+                            EndTime: $scope.dateRangeEnd,
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.category
                         })
                     }else{
                         //快捷
@@ -1347,12 +1400,12 @@
                             token: util.getParams("token"),
                             action: 'getRevenueStatisticsInfo',
                             project: util.getProjectIds(),
-                            type: $scope.showDate == false ? 0 : 1,
-                            category: $scope.showDate == false ? $scope.category : $scope.dateType
+                            type: 0,
+                            category: $scope.shotcut
                         })
                     }
 
-                    self.loadingChart = true;
+                    $scope.$emit("loading", true);
 
                     $http({
                         method: 'POST',
@@ -1365,6 +1418,8 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+
+                            checkDataLength(data.timeList);
 
                             data.timeList.forEach(function (el, index) {
                                 self.charts.xAxis.categories.push(self.dtSubstr(el));
@@ -1387,8 +1442,10 @@
                                 self.dataSet[index].d = el / 100;
                             });
                             deferred.resolve();
-                        }
-                        else {
+                        } else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
                             alert(data.errInfo);
                             deferred.reject();
                         }
@@ -1396,7 +1453,7 @@
                         alert('连接服务器出错');
                         deferred.reject();
                     }).finally(function (value) {
-                        self.loadingChart = false;
+                        $scope.$emit("loading", false);
                     });
                     return deferred.promise;
                 }
@@ -1410,36 +1467,37 @@
                         if (el.show == true) select = index;
                     })
 
-                    if (select == 0 || select == 1 || select == 2) {
+                    if (select == 0) {
                         loadActiveTime();
-                    } else if (select == 3) {
+                    } else if (select == 1) {
                         loadActiveTimeInterval();
                     }
 
+                    //时长分布
                     function loadActiveTime() {
                         if($scope.showDate){
                             //自定义
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
-                                action: 'getActiveStatisticsInfo',
-                                StartTime: $scope.dateRangeStart + " 00:00:00",
-                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                action: 'getTermCountBySpanActiveTime',
+                                StartTime: $scope.dateRangeStart,
+                                EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.category
                             })
                         }else{
                             //快捷
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
-                                action: 'getActiveStatisticsInfo',
+                                action: 'getTermCountBySpanActiveTime',
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.shotcut
                             })
                         }
 
-                        self.loadingChart = true;
+                        $scope.$emit("loading", true);
 
                         $http({
                             method: 'POST',
@@ -1448,62 +1506,45 @@
                         }).then(function successCallback(response) {
                             var data = response.data;
                             if (data.rescode == '200') {
-                                self.activeSeries0 = [];
-                                self.activeSeries1 = [];
-
-                                self.th = ["日期", "活跃时长", "活跃终端数"];
+                                self.th = ["时长", "活跃终端数", "占比"];
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
 
-                                data.timeList.forEach(function (el, index) {
-                                    self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                    self.dataSet.push({a: self.dtSubstr(el)});
-                                });
+                                checkDataLength(data.activeTimeSpan);
 
-                                self.activeSeries0.push({
-                                    name: "活跃时长",
-                                    id: "series-0",
-                                    data: [],
-                                    tooltip: {valueSuffix: ' 小时'}
-                                });
-                                data.totalActiveTime.forEach(function (el, index) {
-                                    self.activeSeries0[0].data.push(Number((el / 3600).toFixed(2)));
-
-                                    var h = Math.floor(el / 3600);
-                                    var m = Math.floor((el - h * 3600) / 60);
-                                    var s = el - h * 3600 - m * 60;
-
-                                    self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
-                                    function zeroFill(data) {
-                                        if (data < 10) {
-                                            data = "0" + data;
-                                        }
-                                        return data;
+                                var start = 0, end = 0;
+                                for (var i = 0; i < data.activeTimeSpan.length; i++) {
+                                    start = data.activeTimeSpan[i] / 3600 + "h";
+                                    if (i < data.activeTimeSpan.length - 1) {
+                                        end = data.activeTimeSpan[i + 1] / 3600 + "h";
+                                    } else {
+                                        end = "";
                                     }
-                                });
-                                self.activeSeries1.push({
+                                    self.charts.xAxis.categories.push(start + " ~ " + end);
+                                    self.dataSet.push({a: start + " ~ " + end});
+                                }
+
+                                self.charts.series.push({
                                     name: "活跃终端数",
                                     id: "series-0",
                                     data: [],
                                     tooltip: {valueSuffix: ' 个'}
                                 });
                                 data.activeCount.forEach(function (el, index) {
-                                    self.activeSeries1[0].data.push(el);
-                                    self.dataSet[index].c = el;
+                                    self.charts.series[0].data.push(el);
+                                    self.dataSet[index].b = el;
                                 });
 
-                                if (self.active[0].show == true) {
-                                    self.charts.series = self.activeSeries0;
-                                } else if (self.active[1].show == true) {
-                                    self.charts.series = self.activeSeries1;
-                                }
-                                // else if (self.active[2].show == true) {
-                                //     self.charts.series = self.activeSeries2;
-                                // }
+                                data.rate.forEach(function (el, index) {
+                                    self.dataSet[index].c = util.FloatMul(el, 100).toFixed(2) + "%";
+                                });
+
                                 deferred.resolve();
-                            }
-                            else {
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $location.path("pages/login.html");
+                            } else {
                                 alert(data.errInfo);
                                 deferred.reject();
                             }
@@ -1511,34 +1552,35 @@
                             alert('连接服务器出错');
                             deferred.reject();
                         }).finally(function (value) {
-                            self.loadingChart = false;
+                            $scope.$emit("loading", false);
                         });
                     }
 
+                    //时段分布
                     function loadActiveTimeInterval() {
                         if($scope.showDate){
                             //自定义
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
-                                action: 'getTermCountBySpanActiveTime',
-                                StartTime: $scope.dateRangeStart + " 00:00:00",
-                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                action: 'getTerm24HourActiveInfo',
+                                StartTime: $scope.dateRangeStart,
+                                EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.category
                             })
                         }else{
                             //快捷
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
-                                action: 'getTermCountBySpanActiveTime',
+                                action: 'getTerm24HourActiveInfo',
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.shotcut
                             })
                         }
 
-                        self.loadingChart = true;
+                        $scope.$emit("loading", true);
 
                         $http({
                             method: 'POST',
@@ -1547,51 +1589,61 @@
                         }).then(function successCallback(response) {
                             var data = response.data;
                             if (data.rescode == '200') {
-                                self.th = ["时间区间", "区间活跃终端数", "占比"];
+                                self.th = ["时间段", "活跃终端数", "活跃分钟数", "营收额"];
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
 
-                                data.timeList.forEach(function (el, index) {
-                                    self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                    self.dataSet.push({a: self.dtSubstr(el)});
-                                });
+                                checkDataLength(data.activeCount);
 
-                                self.activeSeries0.push({
-                                    name: "活跃时长",
-                                    id: "series-0",
-                                    data: [],
-                                    tooltip: {valueSuffix: ' 小时'}
-                                });
-                                data.totalActiveTime.forEach(function (el, index) {
-                                    self.activeSeries0[0].data.push(Number((el / 3600).toFixed(2)));
+                                self.charts.xAxis.categories = ["00:00-01:00", "01:00-02:00", "02:00-03:00", "03:00-04:00",
+                                    "04:00-05:00", "05:00-06:00", "06:00-07:00", "07:00-08:00", "08:00-09:00", "09:00-10:00",
+                                    "10:00-11:00", "11:00-12:00", "12:00-13:00", "13:00-14:00", "14:00-15:00", "15:00-16:00",
+                                    "16:00-17:00", "17:00-18:00", "18:00-19:00", "19:00-20:00", "20:00-21:00", "21:00-22:00",
+                                    "22:00-23:00", "23:00-24:00"
+                                ]
+                                self.charts.xAxis.categories.forEach(function (el, index) {
+                                    self.dataSet.push({a: el});
+                                })
 
-                                    var h = Math.floor(el / 3600);
-                                    var m = Math.floor((el - h * 3600) / 60);
-                                    var s = el - h * 3600 - m * 60;
-
-                                    self.dataSet[index].b = h + ":" + zeroFill(m) + ":" + zeroFill(s);
-                                    function zeroFill(data) {
-                                        if (data < 10) {
-                                            data = "0" + data;
-                                        }
-                                        return data;
-                                    }
-                                });
-                                self.activeSeries1.push({
+                                self.charts.series.push({
                                     name: "活跃终端数",
                                     id: "series-0",
                                     data: [],
                                     tooltip: {valueSuffix: ' 个'}
                                 });
                                 data.activeCount.forEach(function (el, index) {
-                                    self.activeSeries1[0].data.push(el);
-                                    self.dataSet[index].c = el;
+                                    self.charts.series[0].data.push(el);
+                                    self.dataSet[index].b = el;
+                                });
+
+                                self.charts.series.push({
+                                    name: "活跃时长",
+                                    id: "series-1",
+                                    data: [],
+                                    tooltip: {valueSuffix: ' 小时'}
+                                });
+                                data.avgActiveTime.forEach(function (el, index) {
+                                    self.charts.series[1].data.push(Number((el / 60).toFixed(2)));
+                                    self.dataSet[index].c = (el / 60).toFixed(2);
+                                });
+
+                                self.charts.series.push({
+                                    name: "营收额",
+                                    id: "series-2",
+                                    data: [],
+                                    tooltip: {valueSuffix: ' 元'}
+                                });
+                                data.avgMoney.forEach(function (el, index) {
+                                    self.charts.series[2].data.push((el / 100).toFixed(2));
+                                    self.dataSet[index].d = (el / 100).toFixed(2);
                                 });
 
                                 deferred.resolve();
-                            }
-                            else {
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $location.path("pages/login.html");
+                            } else {
                                 alert(data.errInfo);
                                 deferred.reject();
                             }
@@ -1599,7 +1651,7 @@
                             alert('连接服务器出错');
                             deferred.reject();
                         }).finally(function (value) {
-                            self.loadingChart = false;
+                            $scope.$emit("loading", false);
                         });
                     }
                     return deferred.promise;
@@ -1626,11 +1678,11 @@
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
                                 action: 'getTopNByMovieCount',
-                                StartTime: $scope.dateRangeStart + " 00:00:00",
-                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                StartTime: $scope.dateRangeStart,
+                                EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.category
                             })
                         }else{
                             //快捷
@@ -1638,11 +1690,11 @@
                                 token: util.getParams("token"),
                                 action: 'getTopNByMovieCount',
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.shotcut
                             })
                         }
-                        self.loadingChart = true;
+                        $scope.$emit("loading", true);
 
                         $http({
                             method: 'POST',
@@ -1651,25 +1703,33 @@
                         }).then(function successCallback(response) {
                             var data = response.data;
                             if (data.rescode == '200') {
-                                self.th = ["电影", "点播量"];
+                                self.th = ["ID", "电影", "点播量"];
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
 
+                                checkDataLength(data.movieID);
+
+                                data.movieID.forEach(function (el, index) {
+                                    self.dataSet.push({a: el});
+                                });
+
                                 data.movieNameCHZ.forEach(function (el, index) {
                                     self.charts.xAxis.categories.push(el);
-                                    self.dataSet.push({a: el});
+                                    self.dataSet[index].b = el;
                                 });
 
                                 self.charts.series.push({name: "点播量", data: [], tooltip: {valueSuffix: '次'}});
                                 data.count.forEach(function (el, index) {
                                     self.charts.series[0].data.push(el);
-                                    self.dataSet[index].b = el;
+                                    self.dataSet[index].c = el;
                                 });
 
                                 deferred.resolve();
-                            }
-                            else {
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $location.path("pages/login.html");
+                            } else {
                                 alert(data.errInfo);
                                 deferred.reject();
                             }
@@ -1677,7 +1737,7 @@
                             alert('连接服务器出错');
                             deferred.reject();
                         }).finally(function (value) {
-                            self.loadingChart = false;
+                            $scope.$emit("loading", false);
                         });
                     }
 
@@ -1687,11 +1747,11 @@
                             var data = JSON.stringify({
                                 token: util.getParams("token"),
                                 action: 'getTopNByMovieRevenue',
-                                StartTime: $scope.dateRangeStart + " 00:00:00",
-                                EndTime: $scope.dateRangeEnd + " 00:00:00",
+                                StartTime: $scope.dateRangeStart,
+                                EndTime: $scope.dateRangeEnd,
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.category
                             })
                         }else{
                             //快捷
@@ -1699,12 +1759,12 @@
                                 token: util.getParams("token"),
                                 action: 'getTopNByMovieRevenue',
                                 project: util.getProjectIds(),
-                                type: $scope.showDate == false ? 0 : 1,
-                                category: $scope.showDate == false ? $scope.category : $scope.dateType
+                                type: 1,
+                                category: $scope.shotcut
                             })
                         }
 
-                        self.loadingChart = true;
+                        $scope.$emit("loading", true);
 
                         $http({
                             method: 'POST',
@@ -1713,25 +1773,33 @@
                         }).then(function successCallback(response) {
                             var data = response.data;
                             if (data.rescode == '200') {
-                                self.th = ["电影", "营收金额"];
+                                self.th = ["ID", "电影", "营收金额"];
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
 
+                                checkDataLength(data.movieID);
+
+                                data.movieID.forEach(function (el, index) {
+                                    self.dataSet.push({a: el});
+                                });
+
                                 data.movieNameCHZ.forEach(function (el, index) {
                                     self.charts.xAxis.categories.push(el);
-                                    self.dataSet.push({a: el});
+                                    self.dataSet[index].b = el;
                                 });
 
                                 self.charts.series.push({name: "营收金额", data: [], tooltip: {valueSuffix: '元'}});
                                 data.price.forEach(function (el, index) {
                                     self.charts.series[0].data.push(el / 100);
-                                    self.dataSet[index].b = el / 100;
+                                    self.dataSet[index].c = el / 100;
                                 });
 
                                 deferred.resolve();
-                            }
-                            else {
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $location.path("pages/login.html");
+                            } else {
                                 alert(data.errInfo);
                                 deferred.reject();
                             }
@@ -1739,11 +1807,23 @@
                             alert('连接服务器出错');
                             deferred.reject();
                         }).finally(function (value) {
-                            self.loadingChart = false;
+                            $scope.$emit("loading", false);
                         });
                     }
 
                     return deferred.promise;
+                }
+
+                /**
+                 * 检测返回数据是否为空
+                 * @param dataJson {array} 数组
+                 * @returns {boolean}
+                 */
+                function checkDataLength(dataJson) {
+                    if (dataJson.length == 0) {
+                        self.noData = true;
+                        return false;
+                    }
                 }
 
                 /**
@@ -1761,19 +1841,8 @@
                  * @returns {string}
                  */
                 self.dtSubstr = function (datetime) {
-                    if ($scope.showDate == false) {
+                    if ($scope.showDate == true) {
                         switch ($scope.category) {
-                            case 0:
-                                return datetime.substring(5, 16);
-                            case 1:
-                                return datetime.substring(5, 10);
-                            case 2:
-                                return datetime.substring(5, 10);
-                            case 3:
-                                return datetime.substring(0, 7);
-                        }
-                    } else {
-                        switch ($scope.dateType) {
                             case 0:
                                 return datetime.substring(5, 10);
                             case 1:
@@ -1783,11 +1852,329 @@
                             case 3:
                                 return datetime.substring(0, 4);
                         }
+                    } else {
+                        switch ($scope.shotcut) {
+                            case 0:
+                                return datetime.substring(5, 16);
+                            case 1:
+                                return datetime.substring(5, 10);
+                            case 2:
+                                return datetime.substring(0, 10);
+                            case 3:
+                                return datetime.substring(0, 7);
+                        }
                     }
                 }
             }
         }
     ])
+
+        //漏斗模块
+        .controller('funnelController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
+            function($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
+                var self = this;
+
+                self.init = function() {
+                    self.activerow = 0;
+                    self.dateType = 1;
+                    self.loadData();
+                }
+
+                moment.locale('zh-cn');
+                $scope.endDateBeforeRender = endDateBeforeRender
+                $scope.endDateOnSetTime = endDateOnSetTime
+                $scope.startDateBeforeRender = startDateBeforeRender
+                $scope.startDateOnSetTime = startDateOnSetTime
+
+                function startDateOnSetTime () {
+                    $scope.$broadcast('start-date-changed');
+                }
+
+                function endDateOnSetTime () {
+                    $scope.$broadcast('end-date-changed');
+                }
+
+                function startDateBeforeRender ($view, $dates) {
+                    if ($scope.dateRangeEnd) {
+                        var activeDate = moment($scope.dateRangeEnd).subtract(0, $view).add(1, 'minute');
+
+                        $dates.filter(function (date) {
+                            return date.localDateValue() >= activeDate.valueOf()
+                        }).forEach(function (date) {
+                            date.selectable = false;
+                        })
+                    }
+                }
+
+                function endDateBeforeRender ($view, $dates) {
+                    if ($scope.dateRangeStart) {
+                        var activeDate = moment($scope.dateRangeStart).subtract(1, $view).add(1, 'minute');
+                        var nowDate = new Date().getTime();
+
+                        $dates.filter(function (date) {
+                            return date.localDateValue() <= activeDate.valueOf() || date.localDateValue() >= nowDate.valueOf()
+                        }).forEach(function (date) {
+                            date.selectable = false;
+                        })
+                    }
+                }
+
+                /**
+                 * 快捷日期和自定义日期修改
+                 */
+                self.categoryChange = function () {
+                    if ($scope.shotcut == 4) {
+                        $scope.showDate = true;
+                    } else {
+                        $scope.showDate = false;
+                    }
+                    self.loadData();
+                }
+
+                self.charts = {
+                    chart: {
+                        type: 'bar',
+                    },
+                    title: {
+                        text: ''
+                    },
+                    xAxis: {
+                        categories: ['累计', '上线', '活跃', '付费'],
+                        title: {
+                            text: null
+                        }
+                    },
+                    yAxis: {
+                        min: 0,
+                        title: {
+                            text: '终端数 (个)',
+                            align: 'high'
+                        },
+                        labels: {
+                            overflow: 'justify'
+                        }
+                    },
+                    credits: {
+                        enabled: false
+                    },
+                    plotOptions: {
+                        bar: {
+                            dataLabels: {
+                                enabled: true,
+                                allowOverlap: true
+                            }
+                        },
+                        line : {
+                            stacking : "normal",
+                            lineWidth : 1,
+                            tooltip: {
+                                pointFormatter: function() {
+                                    var a = 0;
+                                    var index = this.index;
+                                    if(index !=0){
+                                        if(this.y != 0){
+                                            a = this.y/this.series.yData[index-1]*100;
+                                        }
+                                    }else{
+                                        return;
+                                    }
+                                    return '转化率: <b>' + a.toFixed(2) + '%</b><br/>';
+                                }
+                            },
+                            dataLabels : {
+                                enabled : true,
+                                color : "gray",
+       		    	            // x : -10,
+       		    	            y : -15,
+                                formatter : function() {
+                                    var a = 0;
+                                    var index = this.point.index;
+                                    if(index !=0){
+                                        if(this.y != 0){
+                                            a = this.y/this.point.series.yData[index-1]*100;
+                                        }
+                                    }else{
+                                        return;
+                                    }
+                                    return "转化率:" + a.toFixed(2) + "%";
+                                }
+                            },
+                            marker: {
+                                enabled: false
+                            }
+                        }
+                    },
+                    series: [],
+                    lang: {
+                        noData: '暂无数据'
+                    },
+                    noData: {
+                        style: {
+                            fontWeight: 'bold',
+                            fontSize: '15px',
+                            color: '#9B9B9B'
+                        }
+                    }
+                }
+
+                self.loadData = function () {
+                    var deferred = $q.defer();
+                    switch (self.activerow) {
+                        case 0:
+                            loadOnlineRate();
+                            break;
+                    }
+                    //获取开机率
+                    function loadOnlineRate() {
+                        if($scope.showDate){
+                            //自定义
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getTermLoudouInfo',
+                                StartTime: $scope.dateRangeStart,
+                                EndTime: $scope.dateRangeEnd,
+                                project: util.getProjectIds(),
+                                type: 1,
+                                category: $scope.category
+                            })
+                        }else{
+                            //快捷
+                            var data = JSON.stringify({
+                                token: util.getParams("token"),
+                                action: 'getTermLoudouInfo',
+                                project: util.getProjectIds(),
+                                type: 1,
+                                category: $scope.shotcut
+                            })
+                        }
+
+                        $scope.$emit("loading", true);
+
+                        $http({
+                            method: 'POST',
+                            url: util.getApiUrl('v2/statistics', '', 'server'),
+                            data: data
+                        }).then(function successCallback(response) {
+                            var data = response.data;
+                            if (data.rescode == '200') {
+                                self.th = ["步骤", "名称", "个数", "上一步转化率", "总体转化率"];
+                                self.dataSet = [];
+                                self.charts.series = [];
+
+                                checkDataLength(data.StartTime);
+
+                                var add = data.addUpCount,
+                                    online = data.onlineCount,
+                                    active = data.activeCount,
+                                    pay = data.payCount;
+
+                                self.charts = {
+                                    subtitle: {
+                                        text: data.StartTime.substring(0,10) + " ~ " + data.EndTime.substring(0,10)
+                                    },
+                                    series: [{
+                                        name: "终端",
+                                        type : "bar",
+                                        data: [
+                                            [add],
+                                            [online],
+                                            [active],
+                                            [pay]
+                                        ],
+                                        tooltip: {valueSuffix: ' 个'}
+                                    },
+                                    {
+                                        name: "转化率",
+                                        type : "line",
+                                        color: "gary",
+                                        data: [
+                                            [add],
+                                            [online],
+                                            [active],
+                                            [pay]
+                                        ],
+                                    }]
+                                };
+
+                                self.dataSet = [
+                                    [1, "累计终端", add, "", ""],
+                                    [2, "上线终端", online, util.FloatMul(add == 0 ? 0 : (online / add), 100).toFixed(2) + "%", util.FloatMul(add == 0 ? 0 : (online / add), 100).toFixed(2) + "%"],
+                                    [3, "活跃终端", active, util.FloatMul(online == 0 ? 0 : (active / online), 100).toFixed(2) + "%", util.FloatMul(add == 0 ? 0 : (active / add), 100).toFixed(2) + "%"],
+                                    [4, "付费终端", pay, util.FloatMul(active == 0 ? 0 : (pay / active), 100).toFixed(2) + "%", util.FloatMul(add == 0 ? 0 : (pay / add), 100).toFixed(2) + "%"]
+                                ]
+
+                                deferred.resolve();
+                            } else if (data.rescode == '401') {
+                                alert('访问超时，请重新登录');
+                                $location.path("pages/login.html");
+                            } else {
+                                alert(data.errInfo);
+                                deferred.reject();
+                            }
+                            return deferred.promise;
+                        }, function errorCallback(response) {
+                            alert('连接服务器出错');
+                            deferred.reject();
+                        }).finally(function (value) {
+                            $scope.$emit("loading", false);
+                        });
+                    }
+
+                    return deferred.promise;
+                }
+
+                /**
+                 * 检测返回数据是否为空
+                 * @param dataJson {array} or {object}
+                 * @returns {boolean}
+                 */
+                function checkDataLength(dataJson) {
+                    if (typeof dataJson == "array") {
+                        if (dataJson.length == 0) {
+                            self.noData = true;
+                            return false;
+                        }
+                    } else {
+                        if (dataJson == undefined) {
+                            self.noData = true;
+                            return false;
+                        }
+                    }
+                }
+
+                /**
+                 * 根据时间类型返回时间
+                 * @param datetime
+                 * @returns {string}
+                 */
+                self.dtSubstr = function(datetime) {
+                    if ($scope.showDate == true) {
+                        switch ($scope.category) {
+                            case 0:
+                                return datetime.substring(5, 10);
+                            case 1:
+                                return datetime.substring(5, 10);
+                            case 2:
+                                return datetime.substring(5, 7);
+                            case 3:
+                                return datetime.substring(0, 4);
+                        }
+                    } else {
+                        switch ($scope.shotcut) {
+                            case 0:
+                                return datetime.substring(5, 16);
+                            case 1:
+                                return datetime.substring(5, 10);
+                            case 2:
+                                return datetime.substring(5, 10);
+                            case 3:
+                                return datetime.substring(0, 7);
+                        }
+                    }
+                }
+            }
+
+        ])
 
     //项目模块
     .controller('projectController', ['$http', '$scope', '$state', '$location','$filter', '$stateParams', '$q', 'util', 'CONFIG',
@@ -3224,38 +3611,6 @@
                 // self.orderby.sort = orderby;
                 self.desc = !self.desc;
             }
-
-            /**
-             * 根据时间类型返回时间
-             * @param datetime
-             * @returns {string}
-             */
-            self.dtSubstr = function(datetime) {
-                if ($scope.showDate == false) {
-                    switch ($scope.category) {
-                        case 0:
-                            return datetime.substring(11, 16);
-                        case 1:
-                            return datetime.substring(5, 10);
-                        case 2:
-                            return datetime.substring(5, 7);
-                        case 3:
-                            return datetime.substring(0, 4);
-                    }
-                } else {
-                    switch ($scope.dateType) {
-                        case 0:
-                            return datetime.substring(5, 10);
-                        case 1:
-                            return datetime.substring(5, 10);
-                        case 2:
-                            return datetime.substring(5, 7);
-                        case 3:
-                            return datetime.substring(0, 4);
-                    }
-                }
-            }
-
         }
     ])
 })();

@@ -178,7 +178,7 @@
 
                 /**
                  * 设置选中的项目列表
-                 * @param ids [Array]
+                 * @param ids <array> 项目列表
                  */
                 'setProjectIds': function (ids) {
                     $sessionStorage.ProjectIds = ids;
