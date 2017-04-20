@@ -1949,6 +1949,45 @@
                                 enabled: true,
                                 allowOverlap: true
                             }
+                        },
+                        line : {
+                            stacking : "normal",
+                            lineWidth : 1,
+                            tooltip: {
+                                pointFormatter: function() {
+                                    var a = 0;
+                                    var index = this.index;
+                                    if(index !=0){
+                                        if(this.y != 0){
+                                            a = this.y/this.series.yData[index-1]*100;
+                                        }
+                                    }else{
+                                        return;
+                                    }
+                                    return '转化率: <b>' + a.toFixed(2) + '%</b><br/>';
+                                }
+                            },
+                            dataLabels : {
+                                enabled : true,
+                                color : "gray",
+       		    	            // x : -10,
+       		    	            y : -15,
+                                formatter : function() {
+                                    var a = 0;
+                                    var index = this.point.index;
+                                    if(index !=0){
+                                        if(this.y != 0){
+                                            a = this.y/this.point.series.yData[index-1]*100;
+                                        }
+                                    }else{
+                                        return;
+                                    }
+                                    return "转化率:" + a.toFixed(2) + "%";
+                                }
+                            },
+                            marker: {
+                                enabled: false
+                            }
                         }
                     },
                     series: [],
@@ -2019,23 +2058,35 @@
                                     subtitle: {
                                         text: data.StartTime.substring(0,10) + " ~ " + data.EndTime.substring(0,10)
                                     },
-                                    series :[{
+                                    series: [{
                                         name: "终端",
+                                        type : "bar",
                                         data: [
                                             [add],
                                             [online],
                                             [active],
                                             [pay]
                                         ],
-                                        tooltip: {valueSuffix: ' 个'},
+                                        tooltip: {valueSuffix: ' 个'}
+                                    },
+                                    {
+                                        name: "转化率",
+                                        type : "line",
+                                        color: "gary",
+                                        data: [
+                                            [add],
+                                            [online],
+                                            [active],
+                                            [pay]
+                                        ],
                                     }]
                                 };
 
                                 self.dataSet = [
                                     [1, "累计终端", add, "", ""],
-                                    [2, "上线终端", online, (add == 0 ? "0.00%" : (online / add).toFixed(2) + "%"), (add == 0 ? "0.00%" : (online / add).toFixed(2) + "%")],
-                                    [3, "活跃终端", active, (online == 0 ? "0.00%" : (active / online).toFixed(2) + "%"), (add == 0 ? "0.00%" : (active / add).toFixed(2) + "%")],
-                                    [4, "付费终端", pay, (active == 0 ? "0.00%" : (pay / active).toFixed(2) + "%"), (add == 0 ? "0.00%" : (pay / add).toFixed(2) + "%")]
+                                    [2, "上线终端", online, util.FloatMul(add == 0 ? 0 : (online / add), 100).toFixed(2) + "%", util.FloatMul(add == 0 ? 0 : (online / add), 100).toFixed(2) + "%"],
+                                    [3, "活跃终端", active, util.FloatMul(online == 0 ? 0 : (active / online), 100).toFixed(2) + "%", util.FloatMul(add == 0 ? 0 : (active / add), 100).toFixed(2) + "%"],
+                                    [4, "付费终端", pay, util.FloatMul(active == 0 ? 0 : (pay / active), 100).toFixed(2) + "%", util.FloatMul(add == 0 ? 0 : (pay / add), 100).toFixed(2) + "%"]
                                 ]
 
                                 deferred.resolve();

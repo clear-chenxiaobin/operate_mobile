@@ -99,7 +99,7 @@
         <div class="specific-table">
             <!-- table 开始-->
             <table class="table" ng-hide="funnel.noData">
-                <th ng-repeat="n in funnel.th"><a ng-click="funnel.changeOrderby()">{{n}}</a></th>
+                <th ng-repeat="n in funnel.th">{{n}}</th>
                 <tr ng-repeat="n in funnel.dataSet track by $index">
                     <td ng-repeat="item in n track by $index">{{item}}</td>
                 </tr>
