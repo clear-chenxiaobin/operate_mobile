@@ -1,6 +1,6 @@
 <div ng-controller="funnelController as funnel" ng-init="funnel.init()" class="specific-page">
     <div class="panel-header page-top">
-        <a class="page-top-back" ui-sref="app.home"><img src="dist/img/返回.png"></a>
+        <a class="page-top-back" ui-sref="app.home" ng-click="app.backHome()"><img src="dist/img/返回.png"></a>
         <div class="page-top-title text-center"><img src="dist/img/漏斗白.png">&nbsp;漏斗</div>
         <div uib-dropdown class="project-dropdown">
             <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/小抽屉.png" ng-click="app.openProject()"></a>

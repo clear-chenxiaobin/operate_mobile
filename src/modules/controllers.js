@@ -161,7 +161,6 @@
              * loading回退到菜单
              */
             self.backHome = function () {
-                $state.go('app.home');
                 $scope.loading = false;
             }
 
