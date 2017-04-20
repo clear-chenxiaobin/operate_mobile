@@ -1,6 +1,7 @@
 @media screen and (max-width: 768px) {
     .specific-page {
         background: #f3efe7;
+        height: 100%;
     }
 
     .specific-page .dropdown-menu {
@@ -50,6 +51,5 @@
         background: white;
         padding: 10px;
         font-size: 12px;
-        margin-bottom: 10px;
     }
 }

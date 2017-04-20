@@ -3439,118 +3439,7 @@
                     self.orderShow=true;
                 }
                 self.showClass=true;
-                // self.myData={
-                //     "rescode": "200",
-                //     "projectListCHZ": [
-                //         "project1",
-                //         "project2",
-                //         "project3",
-                //         "project4",
-                //         "project5",
-                //         "project6",
-                //         "project7",
-                //         "project8",
-                //         "project9",
-                //         "project10"
-                //     ],
-                //     "totalCount": [
-                //         parseInt(Math.random()*100+300),
-                //         parseInt(Math.random()*100+300),
-                //         parseInt(Math.random()*100+300),
-                //         parseInt(Math.random()*100+300),
-                //         parseInt(Math.random()*100+300),
-                //         parseInt(Math.random()*100+300),
-                //         parseInt(Math.random()*100+300),
-                //         parseInt(Math.random()*100+300),
-                //         parseInt(Math.random()*100+300),
-                //         parseInt(Math.random()*100+300)
-                //     ],
-                //     "onlineCount": [
-                //         parseInt(Math.random()*50+250),
-                //         parseInt(Math.random()*50+250),
-                //         parseInt(Math.random()*50+250),
-                //         parseInt(Math.random()*50+250),
-                //         parseInt(Math.random()*50+250),
-                //         parseInt(Math.random()*50+250),
-                //         parseInt(Math.random()*50+250),
-                //         parseInt(Math.random()*50+250),
-                //         parseInt(Math.random()*50+250),
-                //         parseInt(Math.random()*50+250)
-                //     ],
-                //     "activeCount": [
-                //         parseInt(Math.random()*50+200),
-                //         parseInt(Math.random()*50+200),
-                //         parseInt(Math.random()*50+200),
-                //         parseInt(Math.random()*50+200),
-                //         parseInt(Math.random()*50+200),
-                //         parseInt(Math.random()*50+200),
-                //         parseInt(Math.random()*50+200),
-                //         parseInt(Math.random()*50+200),
-                //         parseInt(Math.random()*50+200),
-                //         parseInt(Math.random()*50+200)
-                //     ],
-                //     "payCount": [
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150)
-                //     ],
-                //     "newAddCount": [
-                //         parseInt(Math.random()*50),
-                //         parseInt(Math.random()*50),
-                //         parseInt(Math.random()*50),
-                //         parseInt(Math.random()*50),
-                //         parseInt(Math.random()*50),
-                //         parseInt(Math.random()*50),
-                //         parseInt(Math.random()*50),
-                //         parseInt(Math.random()*50),
-                //         parseInt(Math.random()*50),
-                //         parseInt(Math.random()*50)
-                //     ],
-                //     "activeTime": [
-                //         parseInt(Math.random()*350),
-                //         parseInt(Math.random()*350),
-                //         parseInt(Math.random()*350),
-                //         parseInt(Math.random()*350),
-                //         parseInt(Math.random()*350),
-                //         parseInt(Math.random()*350),
-                //         parseInt(Math.random()*350),
-                //         parseInt(Math.random()*350),
-                //         parseInt(Math.random()*350),
-                //         parseInt(Math.random()*350)
-                //     ],
-                //     "revenue": [
-                //         parseInt(Math.random()*1150),
-                //         parseInt(Math.random()*1150),
-                //         parseInt(Math.random()*1150),
-                //         parseInt(Math.random()*1150),
-                //         parseInt(Math.random()*1150),
-                //         parseInt(Math.random()*1150),
-                //         parseInt(Math.random()*1150),
-                //         parseInt(Math.random()*1150),
-                //         parseInt(Math.random()*1150),
-                //         parseInt(Math.random()*1150)
-                //     ],
-                //     "orderCount": [
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150),
-                //         parseInt(Math.random()*50+150)
-                //     ],
-                //     "errInfo": "None"
-                // }
+
                 if(self.indexNum<5){
                     self.charts = {
                         chart: {
@@ -3580,9 +3469,6 @@
                             enabled: false
                         },
                         plotOptions: {
-                            areaspline: {
-                                fillOpacity: 0.5
-                            },
                             series:
                                 {
                                     groupPadding:0.4,
@@ -3640,8 +3526,6 @@
                     }
                 }
                 self.loadChart(self.indexNum);
-                self.orderby = {};
-                self.orderby.desc = true;
             }
 
             /**

@@ -1,12 +1,11 @@
-<div ng-controller="loginController as login" ng-init="login.init()" class="login-box">
+<div ng-controller="loginController as login" ng-init="login.init()" class="login-page">
     <!--表单-->
-    <div class="center-block fixed-width-5 login-box-content">
-        <div class="">
+    <div class="login-box">
+        <div class="center-block fixed-width-5 login-box-content">
             <div class="panel-heading">
                 <h3 class=" text-center">清鹤运营平台</h3>
             </div>
             <div class="panel-body">
-
                 <form class="form form-vertical" name="loginForm" ng-submit="loginForm.$valid && login.login()">
                     <!--账号-->
                     <div class="control-group controls">
@@ -27,11 +26,12 @@
                     <hr class="break-space-double">
                     <div class="text-center loading" ng-show="login.loading" style="color: white">登录中...</div>
                 </form>
-
             </div>
         </div>
     </div>
     <!--表单-->
 
+    <!-- copyright 开始 -->
     <div class="text-center copyright">© Copyright 2017 ClearTV</div>
+    <!-- copyright 结束 -->
 </div>

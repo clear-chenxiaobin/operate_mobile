@@ -1,9 +1,13 @@
-.login-box {
+.login-page {
     height: 100%;
     background: -webkit-linear-gradient(60deg, #f05ea9, #5c98fc); /* Safari 5.1 - 6.0 */
     background: -o-linear-gradient(60deg, #f05ea9, #5c98fc); /* Opera 11.1 - 12.0 */
     background: -moz-linear-gradient(60deg, #f05ea9, #5c98fc); /* Firefox 3.6 - 15 */
     background: linear-gradient(30deg, #f05ea9, #5c98fc); /* 标准的语法 */
+}
+
+.login-box {
+    height: calc(100% - 20px);
 }
 
 .login-box-content {

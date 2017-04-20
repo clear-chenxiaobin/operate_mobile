@@ -503,12 +503,10 @@ td {
 
 /* copyright */
 .copyright {
-    position: absolute;
-    width: 200px;
-    bottom: 10px;
-    left: 50%;
-    margin-left: -100px;
-    color: rgba(255,255,255,0.8);
+    /*position: relative;*/
+    /*bottom: 25px;*/
+    /*margin-bottom: -17px;*/
+    color: rgba(255,255,255,.8);
 }
 
 
@@ -559,7 +557,7 @@ footer ul li {
 
 @media screen and (max-width: 768px) {
     html, body {
-        min-height: 667px;
+        min-height: 600px;
     }
 
     .col-xs-5ths {
@@ -631,7 +629,9 @@ footer ul li {
     }
 
     .box-content {
-        width: 100%;
+        /*width: 100%;*/
+        /*height: calc(100% - 90px);*/
+        /*overflow-y: auto;*/
     }
 
     /* 日期选择器 */

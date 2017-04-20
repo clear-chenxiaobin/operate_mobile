@@ -8,6 +8,10 @@
         background: linear-gradient(45deg, #FD5EA3, #6E60EA 70%, #5C99FD); /* 标准的语法 */
     }
 
+    .home-body {
+        height: calc(100% - 75px);
+    }
+
     .home-logout {
         color: white;
         position: absolute;
