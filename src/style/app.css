@@ -399,19 +399,13 @@ td {
 
 /* loading */
 .loading-page {
-    /*width: 100%;*/
-    /*height: 100%;*/
-    /*position: absolute;*/
-    /*z-index: 9999;*/
-    /*top: 0px;*/
-    /*background: #5C99FD;*/
-    width: 240px;
-    height: 240px;
+    width: 180px;
+    height: 180px;
     z-index: 999;
     top: 30%;
     left: 50%;
-    margin-left: -120px;
-    background: rgba(0,0,0,0.2);
+    margin-left: -90px;
+    background: rgba(0,0,0,.3);
     position: fixed;
     border-radius: 20px;
 }
@@ -423,36 +417,38 @@ td {
 }
 
 .load-container {
-    position: relative;
-    width: 240px;
-    height: 240px;
+    position: absolute;
+    width: 180px;
+    height: 180px;
     float: left;
     overflow: hidden;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     top: 0;
     left: 50%;
-    margin-left: -120px;
+    margin-left: -90px;
 }
 
 .loading-text {
     position: absolute;
     width: 140px;
+    height: 30px;
     left: 50%;
     margin-left: -70px;
-    top: 45%;
+    top: 50%;
+    margin-top: -15px;
     text-align: center;
     color: #fff;
-    font-size: 20px;
+    font-size: 12px;
 }
 .load6 .loader {
-    font-size: 90px;
+    font-size: 60px;
     text-indent: -9999em;
     overflow: hidden;
     width: 1em;
     height: 1em;
     border-radius: 50%;
-    margin: 0.8em auto;
+    margin: 1em auto;
     position: relative;
     -webkit-animation: load6 1.7s infinite ease;
     animation: load6 1.7s infinite ease;
