@@ -74,8 +74,11 @@
     }
 
     .home-project > select{
+        -webkit-appearance: none;
         border-radius: 30px;
         width: 180px;
+        background: #FFFFFF;
+        border: 1px solid rgba(0, 0, 0, 0.2);
     }
 
     .home-project > select{

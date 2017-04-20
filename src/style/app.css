@@ -557,7 +557,7 @@ footer ul li {
 
 @media screen and (max-width: 768px) {
     html, body {
-        min-height: 600px;
+        min-height: 500px;
     }
 
     .col-xs-5ths {
@@ -584,7 +584,7 @@ footer ul li {
 
     .page-top-back {
         height: 44px;
-        width: 44px;
+        width: 60px;
         float: left;
     }
 
@@ -617,7 +617,7 @@ footer ul li {
     .page-top-project {
         float: right;
         height: 44px;
-        width: 44px;
+        width: 60px;
         display: inline-block;
     }
 
@@ -629,9 +629,25 @@ footer ul li {
     }
 
     .box-content {
-        /*width: 100%;*/
-        /*height: calc(100% - 90px);*/
-        /*overflow-y: auto;*/
+        width: 100%;
+        height: calc(100% - 90px);
+        overflow-y: auto;
+        background: #f3efe7;
+    }
+
+    /* charts */
+    .charts-content {
+        margin: 10px 0px;
+        padding: 10px 0px;
+        width: 100%;
+        height: 420px;
+        background: white;
+        border-radius: 5px;
+    }
+
+    .charts-content highchart {
+        width: 100%;
+        height: 325px;
     }
 
     /* 日期选择器 */
@@ -649,6 +665,9 @@ footer ul li {
     }
 
     .select-charts-time {
+        -webkit-appearance: none;
+        border: 1px solid #9b9b9b;
+        border-radius: 3px;
         color: #9B9B9B;
         height: 30px;
         width: 100%;
@@ -659,19 +678,7 @@ footer ul li {
         background: white;
     }
 
-    /* charts */
-    .charts-content {
-        margin: 10px 0px;
-        padding: 10px 0px;
-        width: 100%;
-        height: 425px;
-        background: white;
-    }
 
-    .charts-content highchart {
-        width: 100%;
-        height: 369px;
-    }
 }
 
 @media ( min-width: 768px) {

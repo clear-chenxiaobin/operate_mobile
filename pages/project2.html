@@ -69,7 +69,7 @@
             </li>
         </ul>
     </div>       
-    <div ng-class="{'isTop':project.indexNum<5||project.indexNum>8}">
+    <div class="box-content" ng-class="{'isTop':project.indexNum<5||project.indexNum>8}">
         <div class="charts-content">
             <div class="btn-group col-xs-12 " ng-class="{'charts-content-datepicker':project.showClass}">
                 <div class="btn-group-sm col-xs-12 select-date-box" >
@@ -115,8 +115,7 @@
                 </div>
             </div>
 
-            <highchart class="chart-container-big" config="project.charts"
-                       style="width: 100%; height: 346px"></highchart>
+            <highchart class="chart-container-big" config="project.charts" style="width: 100%; height: 335px"></highchart>
         </div>
         <div class="project-table">
             <!-- table 开始-->

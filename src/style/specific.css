@@ -1,6 +1,6 @@
 @media screen and (max-width: 768px) {
     .specific-page {
-        background: #f3efe7;
+        /*background: #f3efe7;*/
         height: 100%;
     }
 
@@ -22,12 +22,13 @@
     .body-top {
         background: white;
         height: 45px;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.05);
     }
 
     .specific-sift-menu {
         padding: 0px;
         text-align: center;
-        line-height: 45px;
+        line-height: 44px;
     }
 
     .specific-sift-menu-btn {
@@ -51,5 +52,7 @@
         background: white;
         padding: 10px;
         font-size: 12px;
+        border-radius: 5px;
+        min-height: 130px;
     }
 }
