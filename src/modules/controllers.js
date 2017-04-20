@@ -723,7 +723,7 @@
                             });
 
                             data.totalMoney.forEach(function (el, index) {
-                                self.dataSet[index].c = el;
+                                self.dataSet[index].c = (el / 100).toFixed(2);
                             });
 
                             self.charts.series.push(
@@ -731,9 +731,9 @@
                                 {name: "日均营收", data: [], tooltip: {valueSuffix: ' 元'}}
                                 );
                             data.revenue.forEach(function (el, index) {
-                                self.charts.series[0].data.push(el);
-                                self.charts.series[1].data.push(data.dayPerRevenue);
-                                self.dataSet[index].d = el;
+                                self.charts.series[0].data.push(Number((el / 100).toFixed(2)));
+                                self.charts.series[1].data.push(Number((data.dayPerRevenue / 100).toFixed(2)));
+                                self.dataSet[index].d = (el / 100).toFixed(2);
                             });
 
 
