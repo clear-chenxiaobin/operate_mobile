@@ -803,15 +803,9 @@
                             data.activeTime.forEach(function (el, index) {
                                 var h = Math.floor(el / 3600);
                                 var m = Math.floor((el - h * 3600) / 60);
-                                var s = (el - h * 3600 - m * 60).toFixed(2);
+                                var s = (el - h * 3600 - m * 60).toFixed(0);
 
                                 self.dataSet[index].c = h + ":" + zeroFill(m) + ":" + zeroFill(s);
-                                function zeroFill(data) {
-                                    if (data < 10) {
-                                        data = "0" + data;
-                                    }
-                                    return data;
-                                }
                             });
 
                             self.charts.series.push({name: "平均活跃时长", data: [], tooltip: {valueSuffix: ' 小时'}});
@@ -820,15 +814,10 @@
 
                                 var h = Math.floor(el / 3600);
                                 var m = Math.floor((el - h * 3600) / 60);
-                                var s = (el - h * 3600 - m * 60).toFixed(2);
+                                var s = (el - h * 3600 - m * 60).toFixed(0);
 
                                 self.dataSet[index].d = h + ":" + zeroFill(m) + ":" + zeroFill(s);
-                                function zeroFill(data) {
-                                    if (data < 10) {
-                                        data = "0" + data;
-                                    }
-                                    return data;
-                                }
+
                             });
 
                             deferred.resolve();
@@ -845,6 +834,18 @@
                     }).finally(function (value) {
                         $scope.$emit("loading", false);
                     });
+                }
+
+                /**
+                 * 秒转时分秒补0
+                 * @param data
+                 * @returns {*}
+                 */
+                function zeroFill(data) {
+                    if (data < 10) {
+                        data = "0" + data;
+                    }
+                    return data;
                 }
 
                 return deferred.promise;
