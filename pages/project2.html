@@ -71,49 +71,47 @@
     </div>       
     <div ng-class="{'isTop':project.indexNum<5||project.indexNum>8}">
         <div class="charts-content">
-            <div class="row">
-                <div class="btn-group col-xs-12 " ng-class="{'charts-content-datepicker':project.showClass}">
-                    <div class="btn-group-sm col-xs-12 select-date-box" >
-                        <div class="form-group-sm dropdown col-xs-5 padding-0-1">
-                            <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="" href="">
-                                <div class="input-group date">
-                                    <input type="text" class="form-control style-color" ng-model="dateRangeStart">
-                                    <span class="input-group-addon">
-                                        <i class="glyphicon glyphicon-calendar style-color"></i>
-                                    </span>
-                                </div>
-                            </a>
-                            <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                <datetimepicker ng-model="dateRangeStart"
-                                                data-datetimepicker-config="{dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                                                data-on-set-time="startDateOnSetTime()"
-                                                data-before-render="startDateBeforeRender($view, $dates)"
-                                                ng-change="project.loadChart(project.indexNum)">
-                                </datetimepicker>
-                            </ul>
-                        </div>
-                        <div class="form-group-sm col-xs-2 padding-0-1 text-center style-color"><span style="line-height: 30px">-</span></div>
-                        <div class="form-group-sm dropdown col-xs-5 padding-0-1">
-                            <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="" href="">
-                                <div class="input-group date">
-                                    <input type="text" class="form-control style-color" ng-model="dateRangeEnd">
-                                    <span class="input-group-addon">
-                                        <i class="glyphicon glyphicon-calendar style-color"></i>
-                                    </span>
-                                </div>
-                            </a>
-                            <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
-                                <datetimepicker ng-model="dateRangeEnd"
-                                                data-datetimepicker-config="{dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                                                data-on-set-time="endDateOnSetTime()"
-                                                data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"
-                                                ng-change="project.loadChart(project.indexNum)">
-                                </datetimepicker>
-                            </ul>
-
-                        </div>
+            <div class="btn-group col-xs-12 " ng-class="{'charts-content-datepicker':project.showClass}">
+                <div class="btn-group-sm col-xs-12 select-date-box" >
+                    <div class="form-group-sm dropdown col-xs-5 padding-0-1">
+                        <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="" href="">
+                            <div class="input-group date">
+                                <input type="text" class="form-control style-color" ng-model="dateRangeStart">
+                                <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar style-color"></i>
+                                </span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker ng-model="dateRangeStart"
+                                            data-datetimepicker-config="{dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                            data-on-set-time="startDateOnSetTime()"
+                                            data-before-render="startDateBeforeRender($view, $dates)"
+                                            ng-change="project.loadChart(project.indexNum)">
+                            </datetimepicker>
+                        </ul>
+                    </div>
+                    <div class="form-group-sm col-xs-2 padding-0-1 text-center style-color"><span style="line-height: 30px">-</span></div>
+                    <div class="form-group-sm dropdown col-xs-5 padding-0-1">
+                        <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="" href="">
+                            <div class="input-group date">
+                                <input type="text" class="form-control style-color" ng-model="dateRangeEnd">
+                                <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar style-color"></i>
+                                </span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker ng-model="dateRangeEnd"
+                                            data-datetimepicker-config="{dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                            data-on-set-time="endDateOnSetTime()"
+                                            data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"
+                                            ng-change="project.loadChart(project.indexNum)">
+                            </datetimepicker>
+                        </ul>
 
                     </div>
+
                 </div>
             </div>
 

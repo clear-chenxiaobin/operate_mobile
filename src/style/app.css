@@ -7,6 +7,7 @@ body {
 html, body {
     height: 100%;
     width: 100%;
+    overflow-x: hidden;
 }
 
 html, body, ul, li {
@@ -510,54 +511,7 @@ td {
     color: rgba(255,255,255,0.8);
 }
 
-@media ( min-width: 768px) {
-    html, body {
-        min-height: 667px;
-    }
 
-    .col-sm-5ths {
-        width: 20%;
-        float: left;
-    }
-    .col-sm-4ths {
-        width: 25%;
-        float: left;
-    }
-    .col-sm-2ths {
-        width: 50%;
-        float: left;
-    }
-}
-
-@media ( min-width: 992px) {
-    .col-md-5ths {
-        width: 20%;
-        float: left;
-    }
-    .col-md-4ths {
-        width: 25%;
-        float: left;
-    }    
-    .col-md-2ths {
-        width: 50%;
-        float: left;
-    }
-}
-
-@media ( min-width: 1200px) {
-    .col-lg-5ths {
-        width: 20%;
-        float: left;
-    }
-    .col-lg-4ths {
-        width: 25%;
-        float: left;
-    }    
-    .col-lg-2ths {
-        width: 50%;
-        float: left;
-    }
-}
 
 /*fullpage*/
 .full-page {
@@ -581,6 +535,7 @@ footer ul li {
 }
 
 .charts-content .charts-content-datepicker {
+    padding: 0;
     height: 70px;
 }
 
@@ -603,6 +558,10 @@ footer ul li {
 }
 
 @media screen and (max-width: 768px) {
+    html, body {
+        min-height: 667px;
+    }
+
     .col-xs-5ths {
         width: 20%;
         float: left;
@@ -671,6 +630,10 @@ footer ul li {
         float: right;
     }
 
+    .box-content {
+        width: 100%;
+    }
+
     /* 日期选择器 */
     .select-date-box > .padding-0-1{
         padding: 0 1px;
@@ -708,5 +671,50 @@ footer ul li {
     .charts-content highchart {
         width: 100%;
         height: 369px;
+    }
+}
+
+@media ( min-width: 768px) {
+    .col-sm-5ths {
+        width: 20%;
+        float: left;
+    }
+    .col-sm-4ths {
+        width: 25%;
+        float: left;
+    }
+    .col-sm-2ths {
+        width: 50%;
+        float: left;
+    }
+}
+
+@media ( min-width: 992px) {
+    .col-md-5ths {
+        width: 20%;
+        float: left;
+    }
+    .col-md-4ths {
+        width: 25%;
+        float: left;
+    }
+    .col-md-2ths {
+        width: 50%;
+        float: left;
+    }
+}
+
+@media ( min-width: 1200px) {
+    .col-lg-5ths {
+        width: 20%;
+        float: left;
+    }
+    .col-lg-4ths {
+        width: 25%;
+        float: left;
+    }
+    .col-lg-2ths {
+        width: 50%;
+        float: left;
     }
 }
