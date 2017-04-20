@@ -383,6 +383,13 @@ td {
     padding-right: 10px;
     padding-left: 10px;
 }
+.col-xs-4ths, .col-sm-4ths, .col-md-4ths, .col-lg-4ths {
+    position: relative;
+    min-height: 1px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
 .col-xs-2ths, .col-sm-2ths, .col-md-2ths, .col-lg-2ths {
     position: relative;
     min-height: 1px;
@@ -499,6 +506,10 @@ td {
         width: 20%;
         float: left;
     }
+    .col-sm-4ths {
+        width: 25%;
+        float: left;
+    }
     .col-sm-2ths {
         width: 50%;
         float: left;
@@ -510,6 +521,10 @@ td {
         width: 20%;
         float: left;
     }
+    .col-md-4ths {
+        width: 25%;
+        float: left;
+    }    
     .col-md-2ths {
         width: 50%;
         float: left;
@@ -521,6 +536,10 @@ td {
         width: 20%;
         float: left;
     }
+    .col-lg-4ths {
+        width: 25%;
+        float: left;
+    }    
     .col-lg-2ths {
         width: 50%;
         float: left;
@@ -575,6 +594,10 @@ footer ul li {
         width: 20%;
         float: left;
     }
+    .col-xs-4ths {
+        width: 25%;
+        float: left;
+    }    
     .col-xs-2ths {
         width: 50%;
         float: left;
