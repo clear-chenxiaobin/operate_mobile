@@ -35,6 +35,7 @@ input:-webkit-autofill {
 .modal {
     display: block;
     overflow-y: auto;
+    -webkit-overflow-scrolling : touch;
 }
 
 .modal-backdrop {
@@ -296,6 +297,7 @@ td {
 .modal {
     display: block;
     overflow-y: auto;
+    -webkit-overflow-scrolling : touch;
     pointer-events: none;
 }
 
@@ -632,6 +634,7 @@ footer ul li {
         width: 100%;
         height: calc(100% - 90px);
         overflow-y: auto;
+        -webkit-overflow-scrolling : touch;
         background: #f3efe7;
     }
 
