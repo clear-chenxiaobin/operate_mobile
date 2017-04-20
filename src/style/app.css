@@ -370,11 +370,11 @@ td {
 .col-xs-0 {
     width: 0px;
     float: left;
-    /*display: none !important;*/
-    transition: all 0.5s;
-    -moz-transition: all 0.5s; /* Firefox 4 */
-    -webkit-transition: all 0.5s; /* Safari 和 Chrome */
-    -o-transition: all 0.5s; /* Opera */
+    display: none !important;
+    /*transition: all 0.5s;*/
+    /*-moz-transition: all 0.5s; !* Firefox 4 *!*/
+    /*-webkit-transition: all 0.5s; !* Safari 和 Chrome *!*/
+    /*-o-transition: all 0.5s; !* Opera *!*/
 }
 
 .col-xs-5ths, .col-sm-5ths, .col-md-5ths, .col-lg-5ths {
@@ -399,15 +399,16 @@ td {
 
 /* loading */
 .loading-page {
-    width: 180px;
-    height: 180px;
+    width: 120px;
+    height: 120px;
     z-index: 999;
-    top: 30%;
+    top: 35%;
     left: 50%;
-    margin-left: -90px;
+    margin-left: -60px;
     background: rgba(0,0,0,.3);
     position: fixed;
     border-radius: 20px;
+    box-shadow: 0 0 1px 1px rgba(0,0,0,.1);
 }
 
 .loading-page .loading-top img {
@@ -418,38 +419,38 @@ td {
 
 .load-container {
     position: absolute;
-    width: 180px;
-    height: 180px;
+    width: 120px;
+    height: 120px;
     float: left;
     overflow: hidden;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
     top: 0;
     left: 50%;
-    margin-left: -90px;
+    margin-left: -60px;
 }
 
 .loading-text {
     position: absolute;
-    width: 140px;
+    width: 120px;
     height: 30px;
     line-height: 30px;
     left: 50%;
-    margin-left: -70px;
-    top: 50%;
+    margin-left: -60px;
+    top: 80%;
     margin-top: -15px;
     text-align: center;
     color: #fff;
     font-size: 12px;
 }
 .load6 .loader {
-    font-size: 60px;
+    font-size: 35px;
     text-indent: -9999em;
     overflow: hidden;
     width: 1em;
     height: 1em;
     border-radius: 50%;
-    margin: 1em auto;
+    margin: .8em auto;
     position: relative;
     -webkit-animation: load6 1.7s infinite ease;
     animation: load6 1.7s infinite ease;
@@ -586,10 +587,10 @@ footer ul li {
 .charts-content .charts-content-datepicker .btn-group-sm {
     display: inline-block;
     margin-bottom: 5px;
-    transition: all 0.5s;
-    -moz-transition: all 0.5s; /* Firefox 4 */
-    -webkit-transition: all 0.5s; /* Safari 和 Chrome */
-    -o-transition: all 0.5s; /* Opera */
+    /*transition: all 0.5s;*/
+    /*-moz-transition: all 0.5s; !* Firefox 4 *!*/
+    /*-webkit-transition: all 0.5s; !* Safari 和 Chrome *!*/
+    /*-o-transition: all 0.5s; !* Opera *!*/
 }
 
 .datetimepicker {
