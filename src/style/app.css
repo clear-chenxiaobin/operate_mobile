@@ -400,6 +400,12 @@ td {
     background: #5C99FD;
 }
 
+.loading-page .loading-top img {
+    width: 18px;
+    margin-top: 16px;
+    margin-left: 10px;
+}
+
 .load-container {
     /*border: 1px solid rgba(255, 255, 255, 0.2);*/
     width: 240px;

@@ -157,11 +157,25 @@
                 }
             }
 
+            /**
+             * loading回退到菜单
+             */
+            self.backHome = function () {
+                $state.go('app.home');
+                $scope.loading = false;
+            }
+
+            /**
+             * 打开项目选择页面
+             */
             self.openProject = function () {
                 $scope.app.maskParams = {};
                 $scope.app.showHideMask(true,'pages/selectProject.html');
             }
 
+            /**
+             * 打开loading
+             */
             $scope.$on("loading", function (event, msg) {
                 $scope.loading = msg;
             })
