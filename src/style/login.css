@@ -14,9 +14,18 @@
     height: calc(100% - 20px);
 }
 
+.login-logo {
+    position: relative;
+    top: 8%;
+}
+
+.login-logo > img {
+    width: 80px;
+}
+
 .login-box-content {
     position: relative;
-    top: 20%;
+    top: 15%;
     background: hsla(0,0%,100%,.25) border-box;
     overflow: hidden;
     border-radius: .5em;
@@ -36,5 +45,9 @@
     z-index: -1;
     -webkit-filter: blur(20px);
     filter: blur(20px);
+}
+
+.login-btn {
+    background: #f05ea9;
 }
 
