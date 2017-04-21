@@ -1,9 +1,13 @@
 .login-page {
     height: 100%;
-    background: -webkit-linear-gradient(60deg, #f05ea9, #5c98fc); /* Safari 5.1 - 6.0 */
-    background: -o-linear-gradient(60deg, #f05ea9, #5c98fc); /* Opera 11.1 - 12.0 */
-    background: -moz-linear-gradient(60deg, #f05ea9, #5c98fc); /* Firefox 3.6 - 15 */
-    background: linear-gradient(30deg, #f05ea9, #5c98fc); /* 标准的语法 */
+    background: url(../img/bg.png)no-repeat center bottom, -webkit-linear-gradient(60deg, #62A6EF, #3865C5, #042B91); /* Safari 5.1 - 6.0 */
+    background: url(../img/bg.png)no-repeat center bottom, -o-linear-gradient(60deg, #62A6EF, #3865C5, #042B91); /* Opera 11.1 - 12.0 */
+    background: url(../img/bg.png)no-repeat center bottom, -moz-linear-gradient(60deg, #62A6EF, #3865C5, #042B91); /* Firefox 3.6 - 15 */
+    background: url(../img/bg.png)no-repeat center bottom, linear-gradient(30deg, #62A6EF, #3865C5, #042B91); /* 标准的语法 */
+    -moz-background-size:contain;
+    -webkit-background-size:contain;
+    -o-background-size:contain;
+    background-size:contain;
 }
 
 .login-box {

@@ -3661,9 +3661,6 @@
                             pointFormat: '{point.name}: <b>{point.percentage:.2f}%</b>'
                             // percentageDecimals: 2
                         },
-                        legend: {
-
-                        },
                         credits: {
                             enabled: false
                         },
@@ -3673,17 +3670,17 @@
                                 cursor: 'pointer',
                                 dataLabels: {
                                     enabled: true,
-                                    format: '<b>{point.name}</b>: {point.percentage:.2f} %',
-                                    connectorColor: 'silver'
+                                    distance: -30,
+                                    // format: '<b>{point.name}</b>: {point.percentage:.2f} %',
+                                    // connectorColor: 'silver'
                                 },
-                                showInLegend: true
+                                showInLegend: true,
                             }
                         },
                         series: [{
                             type: 'pie',
                             name: '',
-                            data: [
-                            ]
+                            data: []
                         }]
                     }
                 }

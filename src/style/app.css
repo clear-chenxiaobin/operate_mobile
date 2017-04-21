@@ -578,10 +578,10 @@ footer ul li {
     /*page-top*/
     .page-top {
         height: 44px;
-        background: -webkit-linear-gradient(45deg, #FD5EA3, #5C99FD); /* Safari 5.1 - 6.0 */
-        background: -o-linear-gradient(45deg, #FD5EA3, #5C99FD); /* Opera 11.1 - 12.0 */
-        background: -moz-linear-gradient(45deg, #FD5EA3, #5C99FD); /* Firefox 3.6 - 15 */
-        background: linear-gradient(45deg, #FD5EA3, #5C99FD); /* 标准的语法 */
+        background: -webkit-linear-gradient(45deg, #62A6EF, #3865C5, #042B91); /* Safari 5.1 - 6.0 */
+        background: -o-linear-gradient(45deg, #62A6EF, #3865C5, #042B91); /* Opera 11.1 - 12.0 */
+        background: -moz-linear-gradient(45deg, #62A6EF, #3865C5, #042B91); /* Firefox 3.6 - 15 */
+        background: linear-gradient(45deg, #62A6EF, #3865C5, #042B91); /* 标准的语法 */
     }
 
     .page-top-back {
