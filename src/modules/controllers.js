@@ -904,11 +904,11 @@
                 if ($scope.showDate == true) {
                     switch ($scope.category) {
                         case 0:
-                            return datetime.substring(5, 10);
+                            return datetime.substring(0, 10);
                         case 1:
-                            return datetime.substring(5, 10);
+                            return datetime.substring(0, 10);
                         case 2:
-                            return datetime.substring(5, 7);
+                            return datetime.substring(0, 7);
                         case 3:
                             return datetime.substring(0, 4);
                     }
@@ -917,9 +917,9 @@
                         case 0:
                             return datetime.substring(5, 16);
                         case 1:
-                            return datetime.substring(5, 10);
+                            return datetime.substring(0, 10);
                         case 2:
-                            return datetime.substring(5, 10);
+                            return datetime.substring(0, 10);
                         case 3:
                             return datetime.substring(0, 7);
                     }
@@ -1874,7 +1874,7 @@
                  * @param orderby
                  */
                 self.changeOrderby = function (orderby) {
-                    // self.orderby.sort = orderby;
+                    // self.orderby.sort = orderby;x
                     self.desc = !self.desc;
                 }
 
@@ -1887,11 +1887,11 @@
                     if ($scope.showDate == true) {
                         switch ($scope.category) {
                             case 0:
-                                return datetime.substring(5, 10);
+                                return datetime.substring(0, 10);
                             case 1:
-                                return datetime.substring(5, 10);
+                                return datetime.substring(0, 10);
                             case 2:
-                                return datetime.substring(5, 7);
+                                return datetime.substring(0, 7);
                             case 3:
                                 return datetime.substring(0, 4);
                         }
@@ -1900,7 +1900,7 @@
                             case 0:
                                 return datetime.substring(5, 16);
                             case 1:
-                                return datetime.substring(5, 10);
+                                return datetime.substring(0, 10);
                             case 2:
                                 return datetime.substring(0, 10);
                             case 3:
