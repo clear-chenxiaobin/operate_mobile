@@ -392,13 +392,24 @@
                 title: {
                     text: ''
                 },
+                subtitle: {
+                    text: ''
+                },
                 xAxis: {
                     categories: [],
-                    tickInterval: 1
+                    tickInterval: 1,
+                    crosshair: {
+                        width: 1,
+                        color: "gary"
+                    }
                 },
                 yAxis: {
                     title: {
                         text: ''
+                    },
+                    crosshair: {
+                        width: 1,
+                        color: "gary"
                     }
                 },
                 tooltip: {
@@ -411,6 +422,17 @@
                 plotOptions: {
                     areaspline: {
                         fillOpacity: 0.5,
+                        marker: {
+                            enabled: false
+                        }
+                    },
+                    line: {
+                        stacking : "normal",
+                        lineWidth : 1,
+                        dataLabels : {
+                            // enabled : true,
+                            color : "gray",
+                        },
                         marker: {
                             enabled: false
                         }
@@ -431,6 +453,8 @@
 
             self.loadData = function () {
                 var deferred = $q.defer();
+
+                self.charts.subtitle.text = "";
                 switch (self.activerow) {
                     case 0:
                         loadOnlineRate();
@@ -673,7 +697,9 @@
                     });
                 }
 
-                //每终端营收
+                /**
+                 * 平均营收
+                 */
                 function loadRevenue() {
                     if($scope.showDate){
                         //自定义
@@ -709,6 +735,7 @@
                             self.dataSet = [];
                             self.charts.xAxis.categories = [];
                             self.charts.series = [];
+                            self.charts.subtitle.text = "日均营收:" + (data.dayPerRevenue / 100).toFixed(2) + "元";
 
                             checkDataLength(data.timeList);
 
@@ -726,15 +753,12 @@
                             });
 
                             self.charts.series.push(
-                                {name: "平均每终端营收", data: [], tooltip: {valueSuffix: ' 元'}},
-                                {name: "日均营收", data: [], tooltip: {valueSuffix: ' 元'}}
-                                );
+                                {name: "平均每终端营收", data: [], tooltip: {valueSuffix: ' 元'}}
+                            );
                             data.revenue.forEach(function (el, index) {
                                 self.charts.series[0].data.push(Number((el / 100).toFixed(2)));
-                                self.charts.series[1].data.push(Number((data.dayPerRevenue / 100).toFixed(2)));
                                 self.dataSet[index].d = (el / 100).toFixed(2);
                             });
-
 
                             deferred.resolve();
                         } else if (data.rescode == '401') {
@@ -1968,6 +1992,11 @@
                         enabled: false
                     },
                     plotOptions: {
+                        series:{
+                                groupPadding:0.3,
+                                borderRadius: 4,
+                                colorByPoint: true,
+                        },
                         bar: {
                             dataLabels: {
                                 enabled: true,
@@ -2548,9 +2577,9 @@
                         action: 'getSortedProjectOnlineRateInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -2582,7 +2611,15 @@
                                 self.charts.xAxis.categories.push(self.dataSet[i].b);
                                 self.charts.series[0].data.push(parseFloat(self.dataSet[i].e));
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -2603,9 +2640,9 @@
                         action: 'getSortedProjectActiveRateInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -2637,7 +2674,15 @@
                                 self.charts.xAxis.categories.push(self.dataSet[i].b);
                                 self.charts.series[0].data.push(parseFloat(self.dataSet[i].e));
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -2658,9 +2703,9 @@
                         action: 'getSortedProjectPayRateInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -2692,7 +2737,15 @@
                                 self.charts.xAxis.categories.push(self.dataSet[i].b);
                                 self.charts.series[0].data.push(parseFloat(self.dataSet[i].e));
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -2713,9 +2766,9 @@
                         action: 'getSortedProjectPerRevenueInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -2746,7 +2799,15 @@
                                 self.charts.xAxis.categories.push(self.dataSet[i].b);
                                 self.charts.series[0].data.push(parseFloat(self.dataSet[i].e));
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -2767,9 +2828,9 @@
                         action: 'getSortedProjectPerActiveInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -2798,8 +2859,15 @@
                             for(var i=0;i<length;i++){
                                 self.charts.xAxis.categories.push(self.dataSet[i].b);
                                 self.charts.series[0].data.push(parseFloat(self.dataSet[i].e));
-                            }
+                            }deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -2817,7 +2885,7 @@
                         EndTime: $scope.dateRangeEnd,
                         page:1,
                         per_page:1000,
-                        "project":["all"]
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -2845,8 +2913,15 @@
                                 self.rest[3]+=self.dataSet[i].e;
                                 
                             }
-
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -2867,9 +2942,9 @@
                         action: 'getSortedProjectOnlineInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -2907,9 +2982,15 @@
                             if(rest!=0){
                                 self.charts.series[0].data.push(['其他',rest]);
                             }
-
-
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -2929,9 +3010,9 @@
                         action: 'getSortedProjectActiveInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -2969,7 +3050,15 @@
                             if(rest!=0){
                                 self.charts.series[0].data.push(['其他',rest]);
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -2989,9 +3078,9 @@
                         action: 'getSortedProjectPayedInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -3029,7 +3118,15 @@
                             if(rest!=0){
                                 self.charts.series[0].data.push(['其他',rest]);
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -3049,9 +3146,9 @@
                         action: 'getSortedProjectNewAddInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -3089,7 +3186,15 @@
                             if(rest!=0){
                                 self.charts.series[0].data.push(['其他',rest]);
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -3107,9 +3212,9 @@
                         action: 'getSortedProjectAllOrderCountInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -3132,7 +3237,15 @@
                                 self.rest[0]+=self.dataSet[i].b;
                                 self.rest[1]+=self.dataSet[i].c;
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -3151,9 +3264,9 @@
                         action: 'getSortedProjectAllSingleOrderCountInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -3174,7 +3287,15 @@
                                 self.rest[0]+=self.dataSet[i].b;
                                 self.rest[1]+=self.dataSet[i].c;
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -3194,9 +3315,9 @@
                         action: 'getSortedProjectAllPackageOrderCountInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -3218,7 +3339,15 @@
                                 self.rest[0]+=self.dataSet[i].b;
                                 self.rest[1]+=self.dataSet[i].c;                                
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -3239,9 +3368,9 @@
                         action: 'getSortedProjectRevenueInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -3279,7 +3408,15 @@
                             if(Number(rest.toFixed(2))>0){
                                 self.charts.series[0].data.push(['其他',rest]);
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -3299,9 +3436,9 @@
                         action: 'getSortedProjectSingleRevenueInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -3339,7 +3476,15 @@
                             if(Number(rest.toFixed(2))>0){
                                 self.charts.series[0].data.push(['其他',rest]);
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -3359,9 +3504,9 @@
                         action: 'getSortedProjectPackageRevenueInfo',
                         StartTime: $scope.dateRangeStart,
                         EndTime: $scope.dateRangeEnd,
-                        "page":1,
-                        "per_page":1000,
-                        "project":["all"]
+                        page:1,
+                        per_page:1000,
+                        project:["all"]
                     })
                     $scope.$emit("loading", true);
                     $http({
@@ -3399,7 +3544,15 @@
                             if(Number(rest.toFixed(2))>0){
                                 self.charts.series[0].data.push(['其他',rest]);
                             }
+                            deferred.resolve();
+                        }else if (data.rescode == '401') {
+                            alert('访问超时，请重新登录');
+                            $location.path("pages/login.html");
+                        } else {
+                            alert(data.errInfo);
+                            deferred.reject();
                         }
+                        return deferred.promise;
                     }, function errorCallback(response) {
                         alert('连接服务器出错');
                         deferred.reject();
@@ -3443,7 +3596,8 @@
                 if(self.indexNum<5){
                     self.charts = {
                         chart: {
-                            type: 'bar'
+                            type: 'bar',
+                            animation: false
                         },
                         title: {
                             text: ''
@@ -3469,12 +3623,11 @@
                             enabled: false
                         },
                         plotOptions: {
-                            series:
-                                {
-                                    groupPadding:0.4,
-                                    borderRadius: 4,
-                                    colorByPoint: true,
-                                }
+                            series:{
+                                groupPadding:0.4,
+                                borderRadius: 4,
+                                colorByPoint: true,
+                            },
                         },
                         series: [
                             {
