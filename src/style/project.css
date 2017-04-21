@@ -1,6 +1,7 @@
 @media screen and (max-width: 768px) {
     .project-page {
         background: #f3efe7;
+        height: 100%;
     }
 
     .project-page .dropdown-menu {
@@ -56,6 +57,7 @@
         padding: 10px;
         font-size: 12px;
         margin-bottom: 10px;
+        border-radius: 3px;
     }
     .project-table table tr>td:nth-child(1){
         max-width:5rem;
