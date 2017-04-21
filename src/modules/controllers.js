@@ -1111,10 +1111,19 @@
                 },
                 xAxis: {
                     categories: [],
+                    tickInterval: 1,
+                    crosshair: {
+                        width: 1,
+                        color: "gary"
+                    }
                 },
                 yAxis: {
                     title: {
-                        text: ''      //y轴
+                        text: ''
+                    },
+                    crosshair: {
+                        width: 1,
+                        color: "gary"
                     }
                 },
                 tooltip: {
