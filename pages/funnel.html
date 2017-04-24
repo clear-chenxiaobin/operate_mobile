@@ -1,7 +1,7 @@
-<div ng-controller="overviewController as overview" ng-init="overview.init()" class="specific-page">
+<div ng-controller="funnelController as funnel" ng-init="funnel.init()" class="specific-page">
     <div class="panel-header page-top">
         <a class="page-top-back" ui-sref="app.home" ng-click="app.backHome()"><img src="dist/img/返回.png"></a>
-        <div class="page-top-title text-center"><img src="dist/img/仪表盘白.png">&nbsp;概览</div>
+        <div class="page-top-title text-center"><img src="dist/img/漏斗白.png">&nbsp;漏斗</div>
         <div uib-dropdown class="project-dropdown">
             <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/小抽屉.png" ng-click="app.openProject()"></a>
         </div>
@@ -10,43 +10,21 @@
     <!--筛选条件-->
     <div class="body-top">
         <ul>
-            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:0 == overview.activerow}"
-                ng-click="overview.isCurrent(0)">
+            <li class="col-xs-6 specific-sift-menu" ng-click="">
                 <span>
                     <a class="specific-sift-menu-btn">
-                        开机率
+                        <!--<img src="dist/img/漏斗.png">-->
+                        <i class="glyphicon glyphicon-filter"></i>
+                        选择
                     </a>
                 </span>
             </li>
-            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:1 == overview.activerow}"
-                ng-click="overview.isCurrent(1)">
+            <li class="col-xs-6 specific-sift-menu" ng-click="">
                 <span>
                     <a class="specific-sift-menu-btn">
-                        活跃率
-                    </a>
-                </span>
-            </li>
-            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:2 == overview.activerow}"
-                ng-click="overview.isCurrent(2)">
-                <span>
-                    <a class="specific-sift-menu-btn">
-                        付费转化
-                    </a>
-                </span>
-            </li>
-            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:3 == overview.activerow}"
-                ng-click="overview.isCurrent(3)">
-                <span>
-                    <a class="specific-sift-menu-btn">
-                        平均营收
-                    </a>
-                </span>
-            </li>
-            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:4 == overview.activerow}"
-                ng-click="overview.isCurrent(4)">
-                <span>
-                    <a class="specific-sift-menu-btn">
-                        平均活跃
+                        <!--<img src="dist/img/plus-2.png">-->
+                        <i class="glyphicon glyphicon-plus"></i>
+                        新增
                     </a>
                 </span>
             </li>
@@ -59,18 +37,18 @@
             <div class="btn-group col-xs-12 charts-content-datepicker">
                 <div class="btn-group-sm" ng-class="{'col-xs-12': !showDate, 'col-xs-9': showDate}">
                     <label class="btn btn-default col-xs-2 style-color" ng-model="shotcut" uib-btn-radio="0"
-                           ng-click="overview.categoryChange()">日</label>
+                           ng-click="funnel.categoryChange()">日</label>
                     <label class="btn btn-default col-xs-2 style-color" ng-model="shotcut" uib-btn-radio="1"
-                           ng-click="overview.categoryChange()">周</label>
+                           ng-click="funnel.categoryChange()">周</label>
                     <label class="btn btn-default col-xs-2 style-color" ng-model="shotcut" uib-btn-radio="2"
-                           ng-click="overview.categoryChange()">月</label>
+                           ng-click="funnel.categoryChange()">月</label>
                     <label class="btn btn-default col-xs-2 style-color" ng-model="shotcut" uib-btn-radio="3"
-                           ng-click="overview.categoryChange()">年</label>
+                           ng-click="funnel.categoryChange()">年</label>
                     <label class="btn btn-default col-xs-4 style-color" ng-model="shotcut" uib-btn-radio="4"
-                           ng-click="overview.categoryChange()">自定义</label>
+                           ng-click="funnel.categoryChange()">自定义</label>
                 </div>
                 <div class="btn-group-sm padding-0-1" ng-class="{'col-xs-0': !showDate, 'col-xs-3': showDate}">
-                    <select class="select-charts-time" ng-class="{'active': showDate}" ng-model="category" ng-change="overview.loadData()"
+                    <select class="select-charts-time" ng-class="{'active': showDate}" ng-model="category" ng-change="funnel.loadData()"
                             ng-options="x.id as x.name for x in granularity">
                     </select>
                 </div>
@@ -89,7 +67,7 @@
                                             data-datetimepicker-config="{dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
                                             data-on-set-time="startDateOnSetTime()"
                                             data-before-render="startDateBeforeRender($view, $dates)"
-                                            ng-change="overview.loadData()">
+                                            ng-change="funnel.loadData()">
                             </datetimepicker>
                         </ul>
                     </div>
@@ -108,7 +86,7 @@
                                             data-datetimepicker-config="{dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
                                             data-on-set-time="endDateOnSetTime()"
                                             data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"
-                                            ng-change="overview.loadData()">
+                                            ng-change="funnel.loadData()">
                             </datetimepicker>
                         </ul>
 
@@ -117,20 +95,20 @@
                 </div>
             </div>
 
-            <highchart class="chart-container-big" config="overview.charts" style="width: 100%; height: 335px"></highchart>
+            <highchart class="chart-container-big" config="funnel.charts" style="width: 100%; height: 335px"></highchart>
         </div>
         <div class="specific-table">
             <!-- table 开始-->
-            <table class="table">
-                <th ng-repeat="n in overview.th"><a ng-click="overview.changeOrderby()">{{n}}</a></th>
-                <tr ng-repeat="n in overview.dataSet track by $index">
-                    <td ng-repeat="(key, value) in n">{{value}}</td>
+            <table class="table" ng-hide="funnel.noData">
+                <th ng-repeat="n in funnel.th">{{n}}</th>
+                <tr ng-repeat="n in funnel.dataSet track by $index">
+                    <td ng-repeat="item in n track by $index">{{item}}</td>
                 </tr>
             </table>
             <!-- table 结束-->
 
             <!-- 无数据 开始-->
-            <div ng-show="overview.noData" class="text-center style-color">暂无数据</div>
+            <div ng-show="funnel.noData" class="text-center">暂无数据</div>
             <!-- 无数据 结束-->
         </div>
     </div>

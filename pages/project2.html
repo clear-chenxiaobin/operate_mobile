@@ -1,0 +1,136 @@
+<div ng-controller="project2Controller as project" ng-init="project.init()" class="project-page">
+    <div class="panel-header page-top">
+        <a class="page-top-back" ui-sref="app.project"><img src="dist/img/返回.png"></a>
+        <div class="page-top-title text-center"><img src="dist/img/项目白.png">&nbsp;
+            {{project.current}}</div>
+
+    </div>
+    <div class="body-top" ng-show="project.termShow">
+        <ul>
+            <li class="col-xs-4ths specific-sift-menu" ng-class="{activedClass:0 == project.activerow}"
+                ng-click="project.isCurrent(0)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        累计
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-4ths specific-sift-menu" ng-class="{activedClass:1 == project.activerow}"
+                ng-click="project.isCurrent(1)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        上线
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-4ths specific-sift-menu" ng-class="{activedClass:2 == project.activerow}"
+                ng-click="project.isCurrent(2)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        活跃
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-4ths specific-sift-menu" ng-class="{activedClass:3 == project.activerow}"
+                ng-click="project.isCurrent(3)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        付费
+                    </a>
+                </span>
+            </li>
+           <!--  <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:4 == project.activerow}"
+                ng-click="project.isCurrent(4)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        新增
+                    </a>
+                </span>
+            </li> -->
+        </ul>
+    </div>
+    <div class="body-top" ng-show="project.orderShow">
+        <ul>
+            <li class="col-xs-2ths specific-sift-menu" ng-class="{activedClass:0 == project.activerow}"
+                ng-click="project.isCurrent(0)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        总订单
+                    </a>
+                </span>
+            </li>
+            <li class="col-xs-2ths specific-sift-menu" ng-class="{activedClass:1 == project.activerow}"
+                ng-click="project.isCurrent(1)">
+                <span>
+                    <a class="specific-sift-menu-btn">
+                        已支付
+                    </a>
+                </span>
+            </li>
+        </ul>
+    </div>       
+    <div class="box-content" ng-class="{'isTop':project.indexNum<5||project.indexNum>8}">
+        <div class="charts-content">
+            <div class="btn-group col-xs-12 " ng-class="{'charts-content-datepicker':project.showClass}">
+                <div class="btn-group-sm col-xs-12 select-date-box" >
+                    <div class="form-group-sm dropdown col-xs-5 padding-0-1">
+                        <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="" href="">
+                            <div class="input-group date">
+                                <input type="text" class="form-control style-color" ng-model="dateRangeStart">
+                                <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar style-color"></i>
+                                </span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker ng-model="dateRangeStart"
+                                            data-datetimepicker-config="{dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                            data-on-set-time="startDateOnSetTime()"
+                                            data-before-render="startDateBeforeRender($view, $dates)"
+                                            ng-change="project.loadChart(project.indexNum)">
+                            </datetimepicker>
+                        </ul>
+                    </div>
+                    <div class="form-group-sm col-xs-2 padding-0-1 text-center style-color"><span style="line-height: 30px">-</span></div>
+                    <div class="form-group-sm dropdown col-xs-5 padding-0-1">
+                        <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="" href="">
+                            <div class="input-group date">
+                                <input type="text" class="form-control style-color" ng-model="dateRangeEnd">
+                                <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar style-color"></i>
+                                </span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker ng-model="dateRangeEnd"
+                                            data-datetimepicker-config="{dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                            data-on-set-time="endDateOnSetTime()"
+                                            data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"
+                                            ng-change="project.loadChart(project.indexNum)">
+                            </datetimepicker>
+                        </ul>
+
+                    </div>
+
+                </div>
+            </div>
+
+            <highchart class="chart-container-big" config="project.charts" style="width: 100%; height: 335px"></highchart>
+        </div>
+        <div class="project-table">
+            <!-- table 开始-->
+            <table class="table">
+                <th ng-repeat="n in project.th">
+                    <a ng-click="project.changeOrderby()">{{n}}</a>
+                </th>
+                <tr ng-repeat="n in project.dataSet | orderBy: 'n' : project.desc">
+                    <td ng-repeat="(key, value) in n">{{value}}</td>
+                </tr>
+            </table>
+            <!-- table 结束-->
+        </div>
+    </div>
+
+
+
+</div>

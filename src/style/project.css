@@ -1,0 +1,84 @@
+@media screen and (max-width: 768px) {
+    .project-page {
+        background: #f3efe7;
+        height: 100%;
+    }
+
+    .project-page .dropdown-menu {
+        min-width: 50px;
+        font-size: 12px;
+    }
+
+    .project-dropdown .dropdown-menu {
+        right: 0px;
+        left: inherit;
+        top: 45px;
+    }
+
+    .project-page .dropdown-menu > li > a {
+        padding: 3px 5px;
+    }
+
+    .body-top {
+        background: white;
+        height: 45px;
+    }
+
+    .body-top i {
+        position: relative;
+        top: 3px;
+    }
+
+    .project-sift-menu {
+        padding: 0px;
+        text-align: center;
+        line-height: 45px;
+    }
+
+    .project-sift-menu-btn {
+        color: #9B9B9B;
+        font-size: 14px;
+    }
+
+    .activedClass .project-sift-menu-btn {
+        color: #4C9EFA;
+    }
+
+    .page-body {
+        padding-bottom: 45px;
+    }
+
+    .page-body .nav-tabs {
+        display: none;
+    }
+
+    .project-table {
+        background: white;
+        padding: 10px;
+        font-size: 12px;
+        margin-bottom: 10px;
+        border-radius: 3px;
+    }
+    .project-table table tr>td:nth-child(1){
+        max-width:5rem;
+    }
+    .project-top{
+        margin: 0 0 10px 0;
+    }
+    .project-li{
+        height: 48px;
+        padding: 13px 18px 13px 20px;
+        color: #9B9B9B;
+        font-size: 14px;
+    }
+    .project-item-li{
+        background: #f3efe7;
+    }
+    .right{
+        float: right;
+    }
+    .isTop{
+        /*margin-top:-10px;*/
+        height: calc(100% - 45px);
+    }
+}

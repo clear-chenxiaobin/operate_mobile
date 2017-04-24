@@ -1,9 +1,23 @@
 <div ng-controller="homeController as home" ng-init="home.init()" class="home-page">
     <div class="panel-header">
-        <a class="home-logout" ng-click="home.logout()"><i class="glyphicon glyphicon-remove"></i></a>
+        <!--<a class="home-logout" ng-click="home.logout()"><i class="glyphicon glyphicon-remove"></i></a>-->
         <div class="home-title text-center">运营数据平台</div>
+        <div uib-dropdown class="user-dropdown">
+            <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/user_down.png"></a>
+            <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="project-dropdown">
+                <li class="user-header">
+                    <img src="dist/img/default_user.jpg" class="img-circle" alt="User Image">
+                    <p id="bar"></p>
+                    <span class="style-color">{{home.username}}</span>
+                    <!--<a id="repassword" class="index-header-user-option">修改密码 </a>-->
+                    <a id="logout" class="index-header-user-option " ng-click="home.logout()">
+                        <i class="glyphicon glyphicon-log-out"></i>&nbsp;退出
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-    <div class="panel-body">
+    <div class="panel-body home-body">
         <div class="home-logo text-center">
             <img src="dist/img/logo.png">
         </div>
@@ -16,11 +30,15 @@
             <ul>
                 <li ui-sref-active="active"><a ui-sref="app.overview"><img class="home-menu-ico" src="dist/img/仪表盘.png">&nbsp;概览</a></li>
                 <li ui-sref-active="active"><a ui-sref="app.specific"><img class="home-menu-ico" src="dist/img/具体.png">&nbsp;具体</a></li>
-                <li><a ui-sref="app.event"><img class="home-menu-ico" src="dist/img/折线图.png">&nbsp;事件</a></li>
+                <!--<li><a><img class="home-menu-ico" src="dist/img/折线图.png">&nbsp;事件</a></li>-->
                 <li><a ui-sref="app.funnel"><img class="home-menu-ico" src="dist/img/漏斗.png">&nbsp;漏斗</a></li>
-                <li><a ui-sref="app.remain"><img class="home-menu-ico" src="dist/img/留存.png">&nbsp;留存</a></li>
-                <li><a ui-sref="app.user"><img class="home-menu-ico" src="dist/img/用户.png">&nbsp;用户</a></li>
+                <li><a ui-sref="app.project"><img class="home-menu-ico" src="dist/img/项目.png">&nbsp;项目</a></li>
+                <!--<li><a><img class="home-menu-ico" src="dist/img/plus-2.png"></a></li>-->
             </ul>
         </div>
     </div>
+
+    <!-- copyright 开始 -->
+    <div class="text-center copyright">© Copyright 2017 ClearTV</div>
+    <!-- copyright 结束 -->
 </div>

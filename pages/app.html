@@ -5,6 +5,7 @@
         <ui-view></ui-view>
         <!--pages-->
 
+
     <!--body-->
 
     <!--弹窗-->
@@ -22,6 +23,16 @@
         </ng-include>
     </div>
     <!--弹窗-->
+
+    <div ng-show="loading" class="loading-page">
+        <!--<div class="panel-header loading-top">-->
+            <!--<a class="page-top-back" ng-click="app.backHome()"><img src="dist/img/返回.png"></a>-->
+        <!--</div>-->
+        <div class="load-container load6">
+            <div class="loader">Loading...</div>
+        </div>
+        <div class="loading-text">拼命加载中...</div>
+    </div>
 
 </div>
 

@@ -1,60 +1,53 @@
 <div ng-controller="specificController as specific" ng-init="specific.init()" class="specific-page">
     <div class="panel-header page-top">
-        <a class="page-top-back" ui-sref="app.home"><img src="dist/img/返回.png"></a>
+        <a class="page-top-back" ui-sref="app.home" ng-click="app.backHome()"><img src="dist/img/返回.png"></a>
         <div class="page-top-title text-center"><img src="dist/img/具体白.png">&nbsp;具体</div>
         <div uib-dropdown class="project-dropdown">
-            <a class="page-top-project" href uib-dropdown-toggle><img src="dist/img/小抽屉.png"></a>
-            <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="project-dropdown">
-                <li ng-repeat="item in app.projectList">
-                    <a href ng-click="specific.changeProject(item.projectName)" class="style-color">
-                        {{item.projectNameCHZ}}
-                    </a>
-                </li>
-            </ul>
+            <a class="page-top-project" href><img src="dist/img/小抽屉.png" ng-click="app.openProject()"></a>
         </div>
     </div>
 
     <!--筛选条件-->
     <div class="body-top">
         <ul>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:0 == specific.activerow}"
+            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:0 == specific.activerow}"
                 ng-click="specific.isCurrent(0)">
                 <!--Simple dropdown -->
                 <span uib-dropdown>
                     <a href uib-dropdown-toggle class="specific-sift-menu-btn ">
                         终端指标
-                        <i class="glyphicon glyphicon-chevron-down"></i>
+                        <!--<i class="glyphicon glyphicon-chevron-down"></i>-->
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="term-dropdown">
                         <li ng-repeat="item in specific.term">
                             <a href ng-click="specific.selectTerm($index)" class="style-color">
                                 {{item.name}}&nbsp;
-                                <i class="glyphicon glyphicon-check style-color" ng-show="item.show"></i>
-                                <i class="glyphicon glyphicon-unchecked style-color" ng-hide="item.show"></i>
+                                <i class="glyphicon glyphicon-check style-color pull-right" ng-show="item.show"></i>
+                                <i class="glyphicon glyphicon-unchecked style-color pull-right" ng-hide="item.show"></i>
                             </a>
                         </li>
                     </ul>
                 </span>
             </li>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:1 == specific.activerow}"
+            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:1 == specific.activerow}"
                 ng-click="specific.isCurrent(1)">
                 <span uib-dropdown>
                     <a href uib-dropdown-toggle class="specific-sift-menu-btn">
-                        次数统计
-                        <i class="glyphicon glyphicon-chevron-down"></i>
+                        订单统计
+                        <!--<i class="glyphicon glyphicon-chevron-down"></i>-->
                     </a>
                     <ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="count-dropdown">
                         <li ng-repeat="item in specific.countStatistics">
-                            <a href ng-click="specific.selectCountStatistics($index)" class="style-color">
+                            <a href ng-click="specific.selectMenu(specific.countStatistics, $index)" class="style-color">
                                 {{item.name}}&nbsp;
-                                <i class="glyphicon glyphicon-check style-color" ng-show="item.show"></i>
-                                <i class="glyphicon glyphicon-unchecked style-color" ng-hide="item.show"></i>
+                                <i class="glyphicon glyphicon-check style-color pull-right" ng-show="item.show"></i>
+                                <i class="glyphicon glyphicon-unchecked style-color pull-right" ng-hide="item.show"></i>
                             </a>
                         </li>
                     </ul>
                 </span>
             </li>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:2 == specific.activerow}"
+            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:2 == specific.activerow}"
                 ng-click="specific.isCurrent(2)">
                 <span>
                     <a class="specific-sift-menu-btn">
@@ -62,83 +55,127 @@
                     </a>
                 </span>
             </li>
-            <li class="col-xs-3 specific-sift-menu" ng-class="{activedClass:3 == specific.activerow}"
+            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:3 == specific.activerow}"
                 ng-click="specific.isCurrent(3)">
                 <!--Simple dropdown -->
                 <span uib-dropdown>
                     <a href uib-dropdown-toggle class="specific-sift-menu-btn">
-                        活跃时长
+                        活跃指标
                         <!--<i class="glyphicon glyphicon-chevron-down"></i>-->
                     </a>
-                    <!--<ul class="dropdown-menu" uib-dropdown-menu aria-labelledby="simple-dropdown">-->
-                        <!--<li ng-repeat="item in specific.other">-->
-                            <!--<a href ng-click="specific.selectOther($index)">-->
-                                <!--{{item.name}}&nbsp;-->
-                                <!--<i class="glyphicon glyphicon-check" ng-show="item.show"></i>-->
-                                <!--<i class="glyphicon glyphicon-unchecked" ng-hide="item.show"></i>-->
-                            <!--</a>-->
-                        <!--</li>-->
-                    <!--</ul>-->
+                    <ul class="dropdown-menu pull-right" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                        <li ng-repeat="item in specific.active">
+                            <a href ng-click="specific.selectMenu(specific.active, $index)" class="style-color">
+                                {{item.name}}&nbsp;
+                                <i class="glyphicon glyphicon-check style-color pull-right" ng-show="item.show"></i>
+                                <i class="glyphicon glyphicon-unchecked style-color pull-right" ng-hide="item.show"></i>
+                            </a>
+                        </li>
+                    </ul>
+                </span>
+            </li>
+            <li class="col-xs-5ths specific-sift-menu" ng-class="{activedClass:4 == specific.activerow}"
+                ng-click="specific.isCurrent(4)">
+                <!--Simple dropdown -->
+                <span uib-dropdown>
+                    <a href uib-dropdown-toggle class="specific-sift-menu-btn">
+                        点播统计
+                        <!--<i class="glyphicon glyphicon-chevron-down"></i>-->
+                    </a>
+                    <ul class="dropdown-menu pull-right" uib-dropdown-menu aria-labelledby="simple-dropdown">
+                        <li ng-repeat="item in specific.OD">
+                            <a href ng-click="specific.selectMenu(specific.OD, $index)" class="style-color">
+                                {{item.name}}&nbsp;
+                                <i class="glyphicon glyphicon-check" ng-show="item.show"></i>
+                                <i class="glyphicon glyphicon-unchecked" ng-hide="item.show"></i>
+                            </a>
+                        </li>
+                    </ul>
                 </span>
             </li>
         </ul>
     </div>
     <!--筛选条件-->
 
-    <div class="">
+    <div class="box-content">
         <div class="charts-content">
-            <div class="col-xs-12">
-                <div class="dropdown col-xs-8">
-                    <a class="dropdown-toggle" id="dropdownEnd0" role="button" data-toggle="dropdown" data-target=""
-                       href="">
-                        <div class="input-group date">
-                            <input type="text" class="form-control style-color" ng-model="specific.searchDate">
-                            <span class="input-group-addon"><i class="glyphicon glyphicon-calendar style-color"></i></span>
-                        </div>
-                    </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <datetimepicker ng-model="specific.searchDate" ng-if="!specific.isDate"
-                                        data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'hour', modelType: 'YYYY-MM-DD HH:mm'}"
-                                        data-on-set-time="endDateOnSetDatetime()"
-                                        data-before-render="endDateBeforeRender($dates)"
-                                        ng-change="specific.loadChart()">
-
-                        </datetimepicker>
-                        <datetimepicker ng-model="specific.searchDate" ng-if="specific.isDate"
-                                        data-datetimepicker-config="{dropdownSelector: '#dropdownEnd0', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
-                                        data-on-set-time="endDateOnSetTime()"
-                                        data-before-render="endDateBeforeRender($dates)"
-                                        ng-change="specific.loadChart()">
-
-                        </datetimepicker>
-                    </ul>
-
+            <div class="btn-group col-xs-12 charts-content-datepicker">
+                <div class="btn-group-sm" ng-class="{'col-xs-12': !showDate, 'col-xs-9': showDate}">
+                    <label class="btn btn-default col-xs-2 style-color" ng-model="shotcut" uib-btn-radio="0"
+                           ng-click="specific.categoryChange()">日</label>
+                    <label class="btn btn-default col-xs-2 style-color" ng-model="shotcut" uib-btn-radio="1"
+                           ng-click="specific.categoryChange()">周</label>
+                    <label class="btn btn-default col-xs-2 style-color" ng-model="shotcut" uib-btn-radio="2"
+                           ng-click="specific.categoryChange()">月</label>
+                    <label class="btn btn-default col-xs-2 style-color" ng-model="shotcut" uib-btn-radio="3"
+                           ng-click="specific.categoryChange()">年</label>
+                    <label class="btn btn-default col-xs-4 style-color" ng-model="shotcut" uib-btn-radio="4"
+                           ng-click="specific.categoryChange()">自定义</label>
                 </div>
-                <div class="col-xs-2">
-                    <select class="select-charts-time" ng-model="specific.selectDur" ng-change="specific.loadChart()"
-                            ng-options="x for x in durationList">
-                    </select>
-                </div>
-                <div class="col-xs-2">
-                    <select class="select-charts-time" ng-model="specific.selectGra"
-                            ng-change="specific.changeGra(specific.selectGra)"
+                <div class="btn-group-sm padding-0-1" ng-class="{'col-xs-0': !showDate, 'col-xs-3': showDate}">
+                    <select class="select-charts-time" ng-class="{'active': showDate}" ng-model="category" ng-change="specific.loadData()"
                             ng-options="x.id as x.name for x in granularity">
                     </select>
+                </div>
+                <div class="btn-group-sm col-xs-12 select-date-box" ng-show="showDate">
+                    <div class="form-group-sm dropdown col-xs-5 padding-0-1">
+                        <a class="dropdown-toggle" id="dropdownStart" role="button" data-toggle="dropdown" data-target="" href="">
+                            <div class="input-group date">
+                                <input type="text" class="form-control style-color" ng-model="dateRangeStart">
+                                <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar style-color"></i>
+                                </span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker ng-model="dateRangeStart"
+                                            data-datetimepicker-config="{dropdownSelector: '#dropdownStart', renderOn: 'end-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                            data-on-set-time="startDateOnSetTime()"
+                                            data-before-render="startDateBeforeRender($view, $dates)"
+                                            ng-change="specific.loadData()">
+                            </datetimepicker>
+                        </ul>
+                    </div>
+                    <div class="form-group-sm col-xs-2 padding-0-1 text-center style-color"><span style="line-height: 30px">-</span></div>
+                    <div class="form-group-sm dropdown col-xs-5 padding-0-1">
+                        <a class="dropdown-toggle" id="dropdownEnd" role="button" data-toggle="dropdown" data-target="" href="">
+                            <div class="input-group date">
+                                <input type="text" class="form-control style-color" ng-model="dateRangeEnd">
+                                <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar style-color"></i>
+                                </span>
+                            </div>
+                        </a>
+                        <ul class="dropdown-menu pull-right" role="menu" aria-labelledby="dLabel">
+                            <datetimepicker ng-model="dateRangeEnd"
+                                            data-datetimepicker-config="{dropdownSelector: '#dropdownEnd', renderOn: 'start-date-changed', minView: 'day', modelType: 'YYYY-MM-DD'}"
+                                            data-on-set-time="endDateOnSetTime()"
+                                            data-before-render="endDateBeforeRender($view, $dates, $leftDate, $upDate, $rightDate)"
+                                            ng-change="specific.loadData()">
+                            </datetimepicker>
+                        </ul>
+
+                    </div>
+
                 </div>
             </div>
 
             <highchart class="chart-container-big" config="specific.charts"
-                       style="width: 100%; height: 346px"></highchart>
+                       style="width: 100%; height: 325px"></highchart>
         </div>
         <div class="specific-table">
             <!-- table 开始-->
-            <table class="table">
+            <table class="table" ng-hide="specific.noData">
                 <th ng-repeat="n in specific.th"><a ng-click="specific.changeOrderby()">{{n}}</a></th>
-                <tr ng-repeat="n in specific.dataSet | orderBy: 'a' : specific.desc">
+                <tr ng-repeat="n in specific.dataSet track by $index">
                     <td ng-repeat="(key, value) in n">{{value}}</td>
                 </tr>
             </table>
             <!-- table 结束-->
+
+            <!-- 无数据 开始-->
+            <div ng-show="specific.noData" class="text-center">暂无数据</div>
+            <!-- 无数据 结束-->
         </div>
     </div>
 </div>

@@ -1,0 +1,77 @@
+<div ng-controller="projectController as project" ng-init="project.init()" class="project-page">
+    <div class="panel-header page-top">
+        <a class="page-top-back" ui-sref="app.home" ng-click="app.backHome()"><img src="dist/img/返回.png"></a>
+        <div class="page-top-title text-center"><img src="dist/img/项目白.png">&nbsp;项目</div>
+    </div>
+    <!--筛选条件-->
+
+    <div class="project-top">
+        <ul class="" >
+            <li class="list-group-item project-li " ng-repeat="item in project.probability"
+            ng-click="project.changeProbability(item.name,$index)" >
+                {{item.name}}
+                <i class="glyphicon glyphicon-chevron-right right"></i>
+            </li>
+
+        </ul>
+    </div>
+    <!--筛选条件-->
+
+     <!--筛选条件-->
+    <div class="project-bottom">
+        <ul class="">
+            <li class="list-group-item project-li" ng-click="project.changeProbability('终端指标',$index+5)">终端指标
+                <i class="glyphicon glyphicon-chevron-right right"></i>
+            </li>            
+            <li class="list-group-item project-li" >订单统计
+                <i class="glyphicon right" ng-class="{'glyphicon-plus':project.drop[1],'glyphicon-minus':!project.drop[1]}"
+                ng-click="project.changeOrderShow()">
+                </i>
+            </li>
+            <li class="list-group-item project-li project-item-li" ng-repeat="item in project.order"
+             ng-show="item.show" ng-click="project.changeProbability(item.name,$index+6)" >
+             {{item.name}}
+                <i class="glyphicon glyphicon-chevron-right right"></i>
+            </li>
+
+            <li class="list-group-item project-li" >营收统计
+                <i class="glyphicon glyphicon-plus right" ng-class="{'glyphicon-plus':project.drop[2],'glyphicon-minus':!project.drop[2]}"
+                ng-click="project.changeRevenueShow()">
+                </i>
+            </li>
+            <li class="list-group-item project-li project-item-li" ng-repeat="item in project.revenue" ng-show="item.show" ng-click="project.changeProbability(item.name,$index+9)">{{item.name}}
+                <i class="glyphicon glyphicon-chevron-right right"></i>
+            </li>
+
+           
+
+            
+           <!--  <li class="list-group-item project-li"  ng-show="term.show">上线终端
+                <i class="glyphicon glyphicon-chevron-right right"></i>
+            </li>
+            <li class="list-group-item project-li" ng-show="term.show">活跃终端
+                <i class="glyphicon glyphicon-chevron-right right"></i>
+            </li>
+            <li class="list-group-item project-li" ng-show="term.show">付费终端
+                <i class="glyphicon glyphicon-chevron-right right"></i>
+            </li>
+            <li class="list-group-item project-li" ng-show="term.show">新增终端
+                <i class="glyphicon glyphicon-chevron-right right"></i>
+            </li> -->
+
+           <!--  <li class="list-group-item project-li">订单统计
+                <i class="glyphicon glyphicon-chevron-down right"></i>
+            </li>
+            <li class="list-group-item project-li">营收统计
+                <i class="glyphicon glyphicon-chevron-down right"></i>
+            </li>
+            <li class="list-group-item project-li">平均营收
+                <i class="glyphicon glyphicon-chevron-down right"></i>
+            </li>
+            <li class="list-group-item project-li">活跃指标</li> -->
+        </ul>
+    </div>
+    <!--筛选条件-->
+
+
+</div>
