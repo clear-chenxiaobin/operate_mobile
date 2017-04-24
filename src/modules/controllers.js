@@ -1678,7 +1678,7 @@
                                     tooltip: {valueSuffix: ' 元'}
                                 });
                                 data.avgMoney.forEach(function (el, index) {
-                                    self.charts.series[2].data.push((el / 100).toFixed(2));
+                                    self.charts.series[2].data.push(Number((el / 100).toFixed(2)));
                                     self.dataSet[index].d = (el / 100).toFixed(2);
                                 });
 
