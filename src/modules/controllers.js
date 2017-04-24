@@ -2332,11 +2332,11 @@
 
             function loadTermItem(){               
                 self.charts.series[0].data=[];
-                var rest=self.rest.concat();                
+                var rest=self.rest.concat();             
                 switch(self.activerow){
                     case 0:
                         self.charts.series[0].name="累计终端";
-                        self.dataSet.forEach(function(el,index){
+                        self.dataSet.sort(function(a,b){return b.b-a.b}).forEach(function(el,index){
                             el.f=(self.rest[0]==0)?'0.00%':util.FloatMul(el.b/self.rest[0], 100).toFixed(2) + "%";
                         })
                         self.dataSet.forEach(function(el,index){
@@ -2355,12 +2355,12 @@
                             }
                         })
                         if(rest[0]>0){
-                            self.charts.series[0].data.push(['其他',self.rest[0]]);
+                            self.charts.series[0].data.push(['其他',rest[0]]);
                         }
                         break;
                     case 1:
                         self.charts.series[0].name="上线终端";
-                        self.dataSet.forEach(function(el,index){
+                        self.dataSet.sort(function(a,b){return b.c-a.c}).forEach(function(el,index){
                             el.f=(self.rest[1]==0)?'0.00%':util.FloatMul(el.c/self.rest[1], 100).toFixed(2) + "%";
                         })
                         self.dataSet.forEach(function(el,index){
@@ -2385,7 +2385,7 @@
                         break;
                     case 2:
                         self.charts.series[0].name="活跃终端";
-                        self.dataSet.forEach(function(el,index){                                
+                        self.dataSet.sort(function(a,b){return b.d-a.d}).forEach(function(el,index){                                
                             // el.g=util.FloatMul(el.d/self.rest[2], 100).toFixed(2) + "%";
                             el.f=(self.rest[2]==0)?'0.00%':util.FloatMul(el.d/self.rest[2], 100).toFixed(2) + "%";
                         })
@@ -2411,12 +2411,12 @@
                         break;
                     case 3:
                         self.charts.series[0].name="付费终端";
-                        self.dataSet.forEach(function(el,index){
+                        self.dataSet.sort(function(a,b){return b.e-a.e}).forEach(function(el,index){
                             el.f=(self.rest[3]==0)?'0.00%':util.FloatMul(el.e/self.rest[3], 100).toFixed(2) + "%";
                         })
                         self.dataSet.forEach(function(el,index){
                             if(index<5){
-                                rest[3]-=el.c;
+                                rest[3]-=el.e;
                                 if(index==0){
                                     self.charts.series[0].data.push({
                                         name:el.a,
@@ -2442,7 +2442,7 @@
                 switch(self.activerow){
                     case 0:
                         self.charts.series[0].name="总订单";
-                        self.dataSet.forEach(function(el,index){
+                        self.dataSet.sort(function(a,b){return b.b-a.b}).forEach(function(el,index){
                             if(index<5){
                                 rest[0]-=el.b;
                                 if(index==0){
@@ -2463,7 +2463,7 @@
                         break;
                     case 1:
                         self.charts.series[0].name="已支付";
-                        self.dataSet.forEach(function(el,index){
+                        self.dataSet.sort(function(a,b){return b.c-a.c}).forEach(function(el,index){
                             if(index<5){
                                 rest[1]-=el.c;
                                 if(index==0){
