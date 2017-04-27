@@ -3,7 +3,7 @@
 (function () {
     var app = angular.module('app.services', [])
 
-        .factory('util', ['$cookies', '$sessionStorage', '$translate', 'CONFIG', function ($cookies, $sessionStorage, $translate, CONFIG) {
+        .factory('util', ['$sessionStorage', '$translate', 'CONFIG', function ($sessionStorage, $translate, CONFIG) {
 
 
 
@@ -62,7 +62,7 @@
                  * @param value {String}
                  */
                 'setParams': function (paramsName, value) {
-                    $cookies.put(paramsName, JSON.stringify(value))
+                    $sessionStorage[paramsName] = JSON.stringify(value);
                 },
                 /**
                  * 获取变量
@@ -70,8 +70,8 @@
                  * @returns {*}
                  */
                 'getParams': function (paramsName) {
-                    if($cookies.get(paramsName)) {
-                        return JSON.parse($cookies.get(paramsName));
+                    if($sessionStorage[paramsName] != undefined) {
+                        return JSON.parse($sessionStorage[paramsName]);
                     }
                     else {
                         return false;

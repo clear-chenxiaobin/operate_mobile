@@ -10,7 +10,6 @@
         'app.directives',
         'app.services',
         'angular-md5',
-        'ngCookies',
         'ngTable',
         'ngStorage',
         'ui.bootstrap',
@@ -43,6 +42,7 @@
                 url: '/home',
                 templateUrl: 'pages/home.html'
             })
+            //openvod
             .state('app.overview', {
                 url: '/overview',
                 templateUrl: 'pages/overview.html'
@@ -66,6 +66,23 @@
              .state('app.project2', {
                 url: '/project2',
                 templateUrl: 'pages/project2.html'
+            })
+            //西塘
+            .state('app.XT_overview', {
+                url: '/XT_overview',
+                templateUrl: 'pages/xitang/overview.html'
+            })
+            .state('app.XT_specific', {
+                url: '/XT_specific',
+                templateUrl: 'pages/xitang/specific.html'
+            })
+            .state('app.XT_menu', {
+                url: '/XT_menu',
+                templateUrl: 'pages/xitang/menu.html'
+            })
+            .state('app.XT_funnel', {
+                url: '/XT_funnel',
+                templateUrl: 'pages/xitang/funnel.html'
             })
     }])
 

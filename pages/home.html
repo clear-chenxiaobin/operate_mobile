@@ -22,18 +22,24 @@
             <img src="dist/img/logo.png">
         </div>
         <div class="text-center home-project">
-            <select ng-model="home.selectProject">
-                <option ng-repeat="item in home.projectList" value="{{item.projectName}}">{{item.projectNameCHZ}}</option>
-            </select>
+            <select ng-model="home.selectType" ng-change="home.changePro()" ng-options="x.id as x.name for x in home.projectList"></select>
         </div>
         <div class="home-menu">
-            <ul>
+            <ul ng-show="home.projectList[0].show">
                 <li ui-sref-active="active"><a ui-sref="app.overview"><img class="home-menu-ico" src="dist/img/仪表盘.png">&nbsp;概览</a></li>
                 <li ui-sref-active="active"><a ui-sref="app.specific"><img class="home-menu-ico" src="dist/img/具体.png">&nbsp;具体</a></li>
                 <!--<li><a><img class="home-menu-ico" src="dist/img/折线图.png">&nbsp;事件</a></li>-->
-                <li><a ui-sref="app.funnel"><img class="home-menu-ico" src="dist/img/漏斗.png">&nbsp;漏斗</a></li>
-                <li><a ui-sref="app.project"><img class="home-menu-ico" src="dist/img/项目.png">&nbsp;项目</a></li>
+                <li ui-sref-active="active"><a ui-sref="app.funnel"><img class="home-menu-ico" src="dist/img/漏斗.png">&nbsp;漏斗</a></li>
+                <li ui-sref-active="active"><a ui-sref="app.project"><img class="home-menu-ico" src="dist/img/项目.png">&nbsp;项目</a></li>
                 <!--<li><a><img class="home-menu-ico" src="dist/img/plus-2.png"></a></li>-->
+            </ul>
+            <ul ng-show="home.projectList[1].show">
+                <li ui-sref-active="active"><a ui-sref="app.XT_overview"><img class="home-menu-ico" src="dist/img/仪表盘.png">&nbsp;概览</a></li>
+                <li ui-sref-active="active"><a ui-sref="app.XT_specific"><img class="home-menu-ico" src="dist/img/具体.png">&nbsp;具体</a></li>
+                <li ui-sref-active="active"><a ui-sref="app.XT_menu"><img class="home-menu-ico" src="dist/img/折线图.png">&nbsp;菜单</a></li>
+                <li ui-sref-active="active"><a ui-sref="app.XT_funnel"><img class="home-menu-ico" src="dist/img/漏斗.png">&nbsp;漏斗</a></li>
+                <li ui-sref-active="active"><a ui-sref="app.XT_user"><img class="home-menu-ico" src="dist/img/项目.png">&nbsp;用户</a></li>
+                <li ui-sref-active="active"><a><img class="home-menu-ico" src="dist/img/plus-2.png"></a></li>
             </ul>
         </div>
     </div>

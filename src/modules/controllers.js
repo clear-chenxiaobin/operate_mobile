@@ -12,6 +12,7 @@
             }
         ])
 
+        //登录
         .controller('loginController', ['$scope', '$http', '$state', '$filter', '$q', '$sessionStorage', 'md5', 'util',
             function ($scope, $http, $state, $filter, $q, $sessionStorage, md5, util) {
                 var self = this;
@@ -115,7 +116,7 @@
             }
         ])
 
-
+        //main
         .controller('appController', ['$http', '$scope', '$state', '$stateParams', '$q', '$filter', '$location', '$sessionStorage', 'util', 'CONFIG',
             function ($http, $scope, $state, $stateParams, $q, $filter, $location, $sessionStorage, util, CONFIG) {
                 var self = this;
@@ -301,7 +302,18 @@
                         {id: 0, name: "OpenVoD", show: true},
                         {id: 1, name: "西塘", show: false}
                     ]
-                    self.selectProject = 0;
+
+                    if (util.getParams('type') == undefined) {
+                        self.selectType = 0;
+                        util.setParams('type', self.selectType);
+                    } else {
+                        self.selectType = util.getParams('type');
+                        self.projectList.forEach(function (el) {
+                            el.show = false;
+                        })
+                        self.projectList[self.selectType].show = true;
+                    }
+
                     self.username = util.getParams('userName');
                 }
 
@@ -320,7 +332,9 @@
                     self.projectList.forEach(function (el) {
                         el.show = false;
                     })
-                    self.projectList[self.selectProject].show = true;
+                    util.setParams('type', self.selectType);
+                    self.projectList[self.selectType].show = true;
+
                 }
             }
 
