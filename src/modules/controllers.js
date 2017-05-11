@@ -299,11 +299,11 @@
                 var self = this;
                 self.init = function () {
                     self.projectList = [
-                        {id: 0, name: "OpenVoD", show: true},
+                        {id: 0, name: "openvod", show: true},
                         {id: 1, name: "西塘", show: false}
                     ]
 
-                    if (util.getParams('type') == undefined) {
+                    if (util.getParams('type') == false) {
                         self.selectType = 0;
                         util.setParams('type', self.selectType);
                     } else {
@@ -340,7 +340,7 @@
 
         ])
 
-        //openvod概览模块
+        //openvod 概览模块
         .controller('overviewController', ['$http', '$scope', '$state', '$location', '$filter', '$stateParams', '$q', 'util', 'CONFIG',
             function ($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
                 var self = this;
@@ -3766,9 +3766,9 @@
             }
         ])
 
-        //西塘概览模块
-        .controller('XT_overviewController', ['$http', '$scope', '$state', '$location', '$filter', '$stateParams', '$q', 'util', 'CONFIG',
-            function ($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
+        //西塘 概览模块
+        .controller('XT_overviewController', ['$http', '$scope', '$state', '$location', '$stateParams', '$q', 'util',
+            function ($http, $scope, $state, $location, $stateParams, $q, util) {
                 var self = this;
 
                 self.init = function () {
@@ -3841,7 +3841,7 @@
 
                 self.charts = {
                     chart: {
-                        type: 'areaspline'
+                        type: 'area'
                     },
                     title: {
                         text: ''
@@ -3874,21 +3874,16 @@
                         enabled: false
                     },
                     plotOptions: {
-                        areaspline: {
-                            fillOpacity: 0.5,
-                            marker: {
-                                enabled: false
-                            }
+                        column: {
+                            stacking: 'percent'
                         },
-                        line: {
-                            stacking: "normal",
+                        area: {
+                            stacking: 'percent',
+                            lineColor: '#ffffff',
                             lineWidth: 1,
-                            dataLabels: {
-                                // enabled : true,
-                                color: "gray",
-                            },
                             marker: {
-                                enabled: false
+                                lineWidth: 1,
+                                lineColor: '#ffffff'
                             }
                         }
                     },
@@ -3909,25 +3904,39 @@
                     var deferred = $q.defer();
 
                     self.charts.subtitle.text = "";
+                    self.charts.chart.type = "line";
+                    self.charts.tooltip = {
+                        shared: true,
+                        valueSuffix: ''
+                    }
+
                     switch (self.activerow) {
                         case 0:
-                            loadOnlineRate();
+                            loadBuyTickets();
                             break;
                         case 1:
-                            loadActiveRate();
+                            loadBuyTicketsRate();
                             break;
                         case 2:
-                            loadPayRate();
+                            loadFollowRate();
                             break;
                         case 3:
-                            loadRevenue();
+                            loadOTA();
                             break;
                         case 4:
-                            loadActiveDur();
+                            loadAverageRevenue();
                             break;
                     }
-                    //获取开机率
-                    function loadOnlineRate() {
+
+                    /**
+                     * 获取购票占比
+                     */
+                    function loadBuyTickets() {
+                        self.charts.tooltip = {
+                            pointFormat: '<span style="color:{series.color}">{series.name}</span>: <b>{point.percentage:.2f}%</b> ({point.y:,.0f} 张)<br/>',
+                            shared: true
+                        }
+
                         if ($scope.showDate) {
                             //自定义
                             var data = JSON.stringify({
@@ -3939,6 +3948,12 @@
                                 type: 0,
                                 category: $scope.category
                             })
+
+                            if ($scope.category == 0) {
+                                self.charts.chart.type = 'area';
+                            } else {
+                                self.charts.chart.type = 'column';
+                            }
                         } else {
                             //快捷
                             var data = JSON.stringify({
@@ -4007,8 +4022,10 @@
                         });
                     }
 
-                    //获取活跃率
-                    function loadActiveRate() {
+                    /**
+                     * 获取购票转化率
+                     */
+                    function loadBuyTicketsRate() {
                         if ($scope.showDate) {
                             //自定义
                             var data = JSON.stringify({
@@ -4086,9 +4103,10 @@
                         });
                     }
 
-
-                    //付费转化率
-                    function loadPayRate() {
+                    /**
+                     * 获取付费转化率
+                     */
+                    function loadFollowRate() {
                         if ($scope.showDate) {
                             //自定义
                             var data = JSON.stringify({
@@ -4164,7 +4182,7 @@
                     /**
                      * 平均营收
                      */
-                    function loadRevenue() {
+                    function loadOTA() {
                         if ($scope.showDate) {
                             //自定义
                             var data = JSON.stringify({
@@ -4176,6 +4194,11 @@
                                 type: 0,
                                 category: $scope.category
                             })
+                            if ($scope.category == 0) {
+                                self.charts.chart.type = 'area';
+                            } else {
+                                self.charts.chart.type = 'column';
+                            }
                         } else {
                             //快捷
                             var data = JSON.stringify({
@@ -4199,7 +4222,6 @@
                                 self.dataSet = [];
                                 self.charts.xAxis.categories = [];
                                 self.charts.series = [];
-                                self.charts.subtitle.text = "日均营收:" + (data.dayPerRevenue / 100).toFixed(2) + "元";
 
                                 checkDataLength(data.timeList);
 
@@ -4240,8 +4262,10 @@
                         });
                     }
 
-                    //获取时长分布
-                    function loadActiveDur() {
+                    /**
+                     * 日均营收
+                     */
+                    function loadAverageRevenue() {
                         if ($scope.showDate) {
                             //自定义
                             var data = JSON.stringify({
@@ -4393,7 +4417,7 @@
 
         ])
 
-        //西塘具体模块
+        //西塘 具体模块
         .controller('XT_specificController', ['$http', '$scope', '$state', '$location', '$filter', '$stateParams', '$q', 'util', 'CONFIG',
             function ($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
                 var self = this;
@@ -5377,7 +5401,7 @@
             }
         ])
 
-        //西塘漏斗模块
+        //西塘 漏斗模块
         .controller('XT_funnelController', ['$http', '$scope', '$state', '$location', '$filter', '$stateParams', '$q', 'util', 'CONFIG',
             function ($http, $scope, $state, $location, $filter, $stateParams, $q, util, CONFIG) {
                 var self = this;
