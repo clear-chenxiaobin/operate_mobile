@@ -348,6 +348,7 @@
                 self.init = function () {
                     self.activerow = 0;
                     self.dateType = 1;
+                    self.desc = false;
                     self.loadData();
                 }
 
@@ -542,15 +543,15 @@
 
                                 data.timeList.forEach(function (el, index) {
                                     self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                    self.dataSet.push({a: self.dtSubstr(el)});
+                                    self.dataSet.push([self.dtSubstr(el)]);
                                 });
 
                                 data.totalCount.forEach(function (el, index) {
-                                    self.dataSet[index].b = el;
+                                    self.dataSet[index].push(el);
                                 });
 
                                 data.onlineCount.forEach(function (el, index) {
-                                    self.dataSet[index].c = el;
+                                    self.dataSet[index].push(el);
                                 });
 
                                 self.charts.series.push({
@@ -561,7 +562,7 @@
                                 });
                                 data.onlineRate.forEach(function (el, index) {
                                     self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                    self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + "%";
+                                    self.dataSet[index].push(util.FloatMul(el, 100).toFixed(2) + "%");
                                 });
 
                                 deferred.resolve();
@@ -622,15 +623,15 @@
 
                                 data.timeList.forEach(function (el, index) {
                                     self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                    self.dataSet.push({a: self.dtSubstr(el)});
+                                    self.dataSet.push([self.dtSubstr(el)]);
                                 });
 
                                 data.onlineCount.forEach(function (el, index) {
-                                    self.dataSet[index].b = el;
+                                    self.dataSet[index].push(el);
                                 });
 
                                 data.activeCount.forEach(function (el, index) {
-                                    self.dataSet[index].c = el;
+                                    self.dataSet[index].push(el);
                                 });
 
                                 self.charts.series.push({
@@ -641,7 +642,7 @@
                                 });
                                 data.activeRate.forEach(function (el, index) {
                                     self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                    self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + "%";
+                                    self.dataSet[index].push(util.FloatMul(el, 100).toFixed(2) + "%");
                                 });
 
                                 deferred.resolve();
@@ -702,21 +703,21 @@
 
                                 data.timeList.forEach(function (el, index) {
                                     self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                    self.dataSet.push({a: self.dtSubstr(el)});
+                                    self.dataSet.push([self.dtSubstr(el)]);
                                 });
 
                                 data.activeCount.forEach(function (el, index) {
-                                    self.dataSet[index].b = el;
+                                    self.dataSet[index].push(el);
                                 });
 
                                 data.payCount.forEach(function (el, index) {
-                                    self.dataSet[index].c = el;
+                                    self.dataSet[index].push(el);
                                 });
 
                                 self.charts.series.push({name: "终端付费转化率", data: [], tooltip: {valueSuffix: '%'}});
                                 data.payRate.forEach(function (el, index) {
                                     self.charts.series[0].data.push(util.FloatMul(el, 100));
-                                    self.dataSet[index].d = util.FloatMul(el, 100).toFixed(2) + '%';
+                                    self.dataSet[index].push(util.FloatMul(el, 100).toFixed(2) + '%');
                                 });
 
                                 deferred.resolve();
@@ -779,15 +780,15 @@
 
                                 data.timeList.forEach(function (el, index) {
                                     self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                    self.dataSet.push({a: self.dtSubstr(el)});
+                                    self.dataSet.push([self.dtSubstr(el)]);
                                 });
 
                                 data.activeCount.forEach(function (el, index) {
-                                    self.dataSet[index].b = el;
+                                    self.dataSet[index].push(el);
                                 });
 
                                 data.totalMoney.forEach(function (el, index) {
-                                    self.dataSet[index].c = (el / 100).toFixed(2);
+                                    self.dataSet[index].push((el / 100).toFixed(2));
                                 });
 
                                 self.charts.series.push(
@@ -795,7 +796,7 @@
                                 );
                                 data.revenue.forEach(function (el, index) {
                                     self.charts.series[0].data.push(Number((el / 100).toFixed(2)));
-                                    self.dataSet[index].d = (el / 100).toFixed(2);
+                                    self.dataSet[index].push((el / 100).toFixed(2));
                                 });
 
                                 deferred.resolve();
@@ -855,11 +856,11 @@
 
                                 data.timeList.forEach(function (el, index) {
                                     self.charts.xAxis.categories.push(self.dtSubstr(el));
-                                    self.dataSet.push({a: self.dtSubstr(el)});
+                                    self.dataSet.push([self.dtSubstr(el)]);
                                 });
 
                                 data.activeCount.forEach(function (el, index) {
-                                    self.dataSet[index].b = el;
+                                    self.dataSet[index].push(el);
                                 });
 
                                 data.activeTime.forEach(function (el, index) {
@@ -878,7 +879,7 @@
                                     var m = Math.floor((el - h * 3600) / 60);
                                     var s = (el - h * 3600 - m * 60).toFixed(0);
 
-                                    self.dataSet[index].d = h + ":" + zeroFill(m) + ":" + zeroFill(s);
+                                    self.dataSet[index].push(h + ":" + zeroFill(m) + ":" + zeroFill(s));
 
                                 });
 
@@ -929,8 +930,24 @@
                  * 列表排序
                  * @param orderby
                  */
-                self.changeOrderby = function (orderby) {
-                    self.desc = !self.desc;
+                self.changeOrderby = function ($index) {
+                    self.dataSet.sort(function(a, b) {
+                        if (typeof a[$index] == 'number') {
+                            if (self.desc) {
+                                return b[$index] - a[$index];
+                            } else {
+                                return a[$index] - b[$index];
+                            }
+                        } else {
+                            if (self.desc) {
+                                return b[$index].localeCompare(a[$index]);
+                            } else {
+                                return a[$index].localeCompare(b[$index]);
+                            }
+                        }
+
+                    });
+                    self.desc = !self.desc
                 }
 
                 /**
@@ -1797,13 +1814,13 @@
                                     });
 
                                     data.movieNameCHZ.forEach(function (el, index) {
-                                        self.charts.xAxis.categories.push(el);
+                                        if (index < 10) self.charts.xAxis.categories.push(el.toString());
                                         self.dataSet[index].b = el;
                                     });
 
                                     self.charts.series.push({name: "点播量", data: [], tooltip: {valueSuffix: '次'}});
                                     data.count.forEach(function (el, index) {
-                                        self.charts.series[0].data.push(el);
+                                        if (index < 10) self.charts.series[0].data.push(el);
                                         self.dataSet[index].c = el;
                                     });
 
@@ -1867,13 +1884,13 @@
                                     });
 
                                     data.movieNameCHZ.forEach(function (el, index) {
-                                        self.charts.xAxis.categories.push(el);
+                                        if (index < 10) self.charts.xAxis.categories.push(el.toString());
                                         self.dataSet[index].b = el;
                                     });
 
                                     self.charts.series.push({name: "营收金额", data: [], tooltip: {valueSuffix: '元'}});
                                     data.price.forEach(function (el, index) {
-                                        self.charts.series[0].data.push(el / 100);
+                                        if (index < 10) self.charts.series[0].data.push(el / 100);
                                         self.dataSet[index].c = el / 100;
                                     });
 

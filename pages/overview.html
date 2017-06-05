@@ -122,9 +122,9 @@
         <div class="specific-table">
             <!-- table 开始-->
             <table class="table">
-                <th ng-repeat="n in overview.th"><a ng-click="overview.changeOrderby()">{{n}}</a></th>
+                <th ng-repeat="n in overview.th"><a ng-click="overview.changeOrderby($index)">{{n}}</a></th>
                 <tr ng-repeat="n in overview.dataSet track by $index">
-                    <td ng-repeat="(key, value) in n">{{value}}</td>
+                    <td ng-repeat="item in n track by $index">{{item}}</td>
                 </tr>
             </table>
             <!-- table 结束-->
